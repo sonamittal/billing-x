@@ -1,7 +1,7 @@
 
-
-export default function Home() {
+const  Home = () => {
   return (
-   <h2>hello worls</h2>
+   <h2>hello world</h2>
   );
 }
+export default Home
