@@ -1,6 +1,6 @@
 // zod schena >>>>>>>>>>>>>\
 import * as z from "zod";
-export const formSchema = z
+export const supFormSchema = z
   .object({
     name: z.string().min(1, { message: "name is  required" }),
     email: z.email().min(1, { message: "email is required" }),
@@ -24,4 +24,17 @@ export const formSchema = z
       });
     }
   });
-export type SignupFormSchema = z.infer<typeof formSchema>;
+export type SignupFormSchema = z.infer<typeof supFormSchema>;
+
+// sigin schema >>>>>>>>>>
+export const sinFormSchema = z.object({
+  email: z.email().min(1, { message: "email is required" }),
+  password: z
+    .string()
+    .min(6, { message: "password must be atleast 6 character" })
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/,
+      "Password must contain at least one letter and one number"
+    ),
+});
+export type SigninFormSchema = z.infer<typeof sinFormSchema>;

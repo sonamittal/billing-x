@@ -15,7 +15,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@bprogress/next/app";
-import { formSchema } from "@/components/validation/validation";
+import { supFormSchema } from "@/components/validation/validation";
 import type { SignupFormSchema } from "@/components/validation/validation";
 const CredentialsSignup = () => {
   const router = useRouter();
@@ -24,7 +24,7 @@ const CredentialsSignup = () => {
   const callbackUrl = searchParams.get("callbackUrl") || null;
   // form handling >>>>>>>>>>>>>
   const form = useForm<SignupFormSchema>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(supFormSchema),
     defaultValues: {
       name: "",
       email: "",
