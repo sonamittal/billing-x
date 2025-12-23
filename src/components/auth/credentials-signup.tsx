@@ -11,17 +11,46 @@ import {
   FormField,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
+import Message from "@/components/ui/message";
+// import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "@bprogress/next/app";
+import { useRouter } from "next/navigation";
 import { supFormSchema } from "@/components/validation/validation";
 import type { SignupFormSchema } from "@/components/validation/validation";
+import { signUp } from "@/lib/auth-client";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 const CredentialsSignup = () => {
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
+  // Sign up handling >>>>>>>>>>>>>>>
+  const {
+    mutate,
+    isPending: isSignupPending,
+    error: signupError,
+  } = useMutation({
+    mutationFn: async (data: SignupFormSchema) => {
+      try {
+        const res = await signUp.email({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        });
+        return res;
+      } catch (error: any) {
+        throw new Error(error.res?.data?.error || "Signup failed");
+      }
+    },
+    onSuccess: () => {
+      alert("Signup successful!");
+      router.push(
+        `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
+      );
+    },
+  });
   // form handling >>>>>>>>>>>>>
   const form = useForm<SignupFormSchema>({
     resolver: zodResolver(supFormSchema),
@@ -35,11 +64,17 @@ const CredentialsSignup = () => {
   const { reset } = form;
   const onSubmit = (data: SignupFormSchema) => {
     console.log("Form Data Submitted:", data);
+    mutate(data);
     reset();
   };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Message
+          variant={signupError ? "destructive" : "default"}
+          message={signupError?.message}
+          className="mt-3"
+        />
         <FormField
           control={form.control}
           name="name"
@@ -94,7 +129,16 @@ const CredentialsSignup = () => {
             )}
           />
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-full" disabled={isSignupPending}>
+          {isSignupPending ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin mr-2" />
+              please wait
+            </>
+          ) : (
+            "Sign up"
+          )}
+        </Button>
       </form>
     </Form>
   );
