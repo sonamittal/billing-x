@@ -3,7 +3,7 @@ import * as z from "zod";
 export const supFormSchema = z
   .object({
     name: z.string().min(1, { message: "name is  required" }),
-    email: z.email().min(1, { message: "email is required" }),
+    email: z.email({ message: "Email is required" }),
     password: z
       .string()
       .min(6, { message: "password must be atleast 6 character" })
@@ -28,7 +28,7 @@ export type SignupFormSchema = z.infer<typeof supFormSchema>;
 
 // sigin schema >>>>>>>>>>
 export const sinFormSchema = z.object({
-  email: z.email().min(1, { message: "email is required" }),
+  email: z.email({ message: "Email is required" }),
   password: z
     .string()
     .min(6, { message: "password must be atleast 6 character" })

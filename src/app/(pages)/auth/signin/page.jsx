@@ -29,7 +29,7 @@ const SignInForm = () => {
             <div className="space-y-2 text-center lg:text-left">
               <CardTitle>Sign in</CardTitle>
               <CardDescription>
-                Sign in for an account and billing software.
+              Sign into your account to continue
               </CardDescription>
             </div>
             <Image

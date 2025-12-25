@@ -21,6 +21,7 @@ import type { SigninFormSchema } from "@/components/validation/validation";
 import { signIn } from "@/lib/auth-client";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 const CredentialsSignin = () => {
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
@@ -33,15 +34,15 @@ const CredentialsSignin = () => {
     error: signinError,
   } = useMutation({
     mutationFn: async (data: SigninFormSchema) => {
-      try {
-        const response = await signIn.email({
-          email: data.email,
-          password: data.password,
-        });
-        return response;
-      } catch (error: any) {
-        throw new Error(error?.response?.data?.error || "Signin failed");
+      const response = await signIn.email({
+        email: data.email,
+        password: data.password,
+      });
+      if (response.error) {
+        throw new Error(response.error?.message || "signin failed");
       }
+
+      return response.data;
     },
     onSuccess: () => {
       alert("Signin Successful!");
@@ -93,6 +94,12 @@ const CredentialsSignin = () => {
                 <Input type="password" placeholder="·········" {...field} />
               </FormControl>
               <FormMessage />
+              <Link
+                href="/auth/forgot-password"
+                className="mt-5 text-sm text-right hover:underline"
+              >
+                Forgot password?
+              </Link>
             </FormItem>
           )}
         />
@@ -100,8 +107,8 @@ const CredentialsSignin = () => {
         <Button type="submit" className="w-full" disabled={signinPending}>
           {signinPending ? (
             <>
-              <Loader2 className="animate-spin h-5 w-5" />
-              please wait
+              <Loader2 className="animate-spin h-5 w-5 mr-2" />
+              Please wait
             </>
           ) : (
             "Sign in"

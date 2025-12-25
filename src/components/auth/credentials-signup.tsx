@@ -33,16 +33,16 @@ const CredentialsSignup = () => {
     error: signupError,
   } = useMutation({
     mutationFn: async (data: SignupFormSchema) => {
-      try {
-        const res = await signUp.email({
-          name: data.name,
-          email: data.email,
-          password: data.password,
-        });
-        return res;
-      } catch (error: any) {
-        throw new Error(error.res?.data?.error || "Signup failed");
+      const response = await signUp.email({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+      if (response.error) {
+        throw new Error(response.error?.message || "signin failed");
       }
+
+      return response.data;
     },
     onSuccess: () => {
       alert("Signup successful!");
