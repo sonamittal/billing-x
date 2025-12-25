@@ -39,7 +39,7 @@ const CredentialsSignup = () => {
         password: data.password,
       });
       if (response.error) {
-        throw new Error(response.error?.message || "signin failed");
+        throw new Error(response.error?.message || "signup failed");
       }
 
       return response.data;
