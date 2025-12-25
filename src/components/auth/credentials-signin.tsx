@@ -11,17 +11,44 @@ import {
   FormField,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
+// import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@bprogress/next/app";
 import { sinFormSchema } from "@/components/validation/validation";
 import type { SigninFormSchema } from "@/components/validation/validation";
+import { signIn } from "@/lib/auth-client";
+import Message from "@/components/ui/message";
+import { Loader2 } from "lucide-react";
 const CredentialsSignin = () => {
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
+  //sign in handling>>>>>>>>>>>>>>
+  const {
+    mutate,
+    isPending: signinPending,
+    error: signinError,
+  } = useMutation({
+    mutationFn: async (data: SigninFormSchema) => {
+      try {
+        const response = await signIn.email({
+          email: data.email,
+          password: data.password,
+        });
+        return response;
+      } catch (error: any) {
+        throw new Error(error?.response?.data?.error || "Signin failed");
+      }
+    },
+    onSuccess: () => {
+      alert("Signin Successful!");
+      reset();
+      router.push(callbackUrl || "/");
+    },
+  });
   // form handling >>>>>>>>>>>>>
   const form = useForm<SigninFormSchema>({
     resolver: zodResolver(sinFormSchema),
@@ -33,11 +60,16 @@ const CredentialsSignin = () => {
   const { reset } = form;
   const onSubmit = (data: SigninFormSchema) => {
     console.log("Form Data Submitted:", data);
-    reset();
+    mutate(data);
   };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Message
+          variant={signinError ? "destructive" : "default"}
+          message={signinError?.message}
+          className="mt-3"
+        />
         <FormField
           control={form.control}
           name="email"
@@ -65,7 +97,16 @@ const CredentialsSignin = () => {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-full" disabled={signinPending}>
+          {signinPending ? (
+            <>
+              <Loader2 className="animate-spin h-5 w-5" />
+              please wait
+            </>
+          ) : (
+            "Sign in"
+          )}
+        </Button>
       </form>
     </Form>
   );

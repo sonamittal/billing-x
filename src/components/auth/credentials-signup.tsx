@@ -46,6 +46,7 @@ const CredentialsSignup = () => {
     },
     onSuccess: () => {
       alert("Signup successful!");
+      reset();
       router.push(
         `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
       );
@@ -65,7 +66,6 @@ const CredentialsSignup = () => {
   const onSubmit = (data: SignupFormSchema) => {
     console.log("Form Data Submitted:", data);
     mutate(data);
-    reset();
   };
   return (
     <Form {...form}>
