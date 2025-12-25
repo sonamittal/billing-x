@@ -6,14 +6,14 @@ export const supFormSchema = z
     email: z.email({ message: "Email is required" }),
     password: z
       .string()
-      .min(6, { message: "password must be atleast 6 character" })
+      .min(8, { message: "password must be atleast 8 character" })
       .regex(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/,
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
         "Password must contain at least one letter and one number"
       ),
     confirmPassword: z
       .string()
-      .min(6, { message: "password must be atleast 6 character." }),
+      .min(6, { message: "password must be atleast 8 character." }),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
@@ -31,9 +31,9 @@ export const sinFormSchema = z.object({
   email: z.email({ message: "Email is required" }),
   password: z
     .string()
-    .min(6, { message: "password must be atleast 6 character" })
+    .min(8, { message: "password must be atleast 8 character" })
     .regex(
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/,
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
       "Password must contain at least one letter and one number"
     ),
 });

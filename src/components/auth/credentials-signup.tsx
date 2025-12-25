@@ -26,6 +26,16 @@ const CredentialsSignup = () => {
   // Getting callback url from query params >>>>>>>>>>>>>>>
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
+  // form handling >>>>>>>>>>>>>
+  const form = useForm<SignupFormSchema>({
+    resolver: zodResolver(supFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
   // Sign up handling >>>>>>>>>>>>>>>
   const {
     mutate,
@@ -50,16 +60,6 @@ const CredentialsSignup = () => {
       router.push(
         `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
       );
-    },
-  });
-  // form handling >>>>>>>>>>>>>
-  const form = useForm<SignupFormSchema>({
-    resolver: zodResolver(supFormSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
     },
   });
   const { reset } = form;

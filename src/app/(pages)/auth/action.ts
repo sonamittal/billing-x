@@ -1,28 +1,31 @@
-"use server";
 import { auth } from "@/lib/auth";
 
 export const handleSignup = async (
+  name: string,
   email: string,
-  password: string,
-  name: string
+  password: string
 ) => {
   try {
-    const response = await auth.api.signUpEmail({
+    await auth.api.signUpEmail({
       body: { name, email, password },
     });
-    return response;
-  } catch (error: any) {
-    throw new Error(error.message);
+
+    return await auth.api.signInEmail({
+      body: { email, password },
+    });
+  } catch (error) {
+    console.error("SIGNUP ERROR:", error);
+    throw error;
   }
 };
 
 export const handleSignin = async (email: string, password: string) => {
   try {
-    const response = await auth.api.signInEmail({
+    return await auth.api.signInEmail({
       body: { email, password },
     });
-    return response;
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error) {
+    console.error("SIGNIN ERROR:", error);
+    throw error;
   }
 };
