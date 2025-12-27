@@ -8,6 +8,13 @@
       "when": 1766230888930,
       "tag": "0000_overjoyed_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1766700693445,
+      "tag": "0001_thin_omega_red",
+      "breakpoints": true
     }
   ]
 }
