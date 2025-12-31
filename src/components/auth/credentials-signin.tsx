@@ -18,7 +18,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@bprogress/next/app";
 import { sinFormSchema } from "@/components/validation/validation";
 import type { SigninFormSchema } from "@/components/validation/validation";
-import { signIn } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -44,9 +44,10 @@ const CredentialsSignin = () => {
 
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       alert("Signin Successful!");
       reset();
+
       router.push(callbackUrl || "/");
     },
   });
