@@ -38,3 +38,10 @@ export const sinFormSchema = z.object({
     ),
 });
 export type SigninFormSchema = z.infer<typeof sinFormSchema>;
+
+// otp schema >>>>>>>>>>
+export const otpFormSchema = z.object({
+  email: z.email(),
+  verificationCode: z.string().min(6).max(6),
+});
+export type OtpFormSchema = z.infer<typeof otpFormSchema>;

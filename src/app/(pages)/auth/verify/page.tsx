@@ -6,12 +6,12 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import CredentialsSignin from "@/components/auth/credentials-signin";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { MoveLeft } from "lucide-react";
+import VerifyAccount from "@/components/auth/verify-account";
 import { useSearchParams } from "next/navigation";
-const SignInForm = () => {
+const VerifyForm = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
   return (
@@ -26,9 +26,9 @@ const SignInForm = () => {
           </Link>
           <div className="flex flex-col-reverse lg:flex-row gap-5 lg:gap-10 items-center justify-between">
             <div className="space-y-2 text-center lg:text-left">
-              <CardTitle>Sign in</CardTitle>
+              <CardTitle>Verify your account</CardTitle>
               <CardDescription>
-                Sign into your account to continue
+                An verification code has been sent on your email
               </CardDescription>
             </div>
             <Image
@@ -41,16 +41,16 @@ const SignInForm = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <CredentialsSignin />
+          <VerifyAccount />
           <p className="text-sm mt-5 ">
             Already have an account?{" "}
             <Link
               className="font-medium"
-              href={`/auth/signup${
+              href={`/auth/signin${
                 callbackUrl ? `?callbackUrl=${callbackUrl}` : ""
               }`}
             >
-              Signup
+              Sign in
             </Link>
           </p>
         </CardContent>
@@ -58,4 +58,4 @@ const SignInForm = () => {
     </div>
   );
 };
-export default SignInForm;
+export default VerifyForm;
