@@ -47,7 +47,6 @@ const CredentialsSignin = () => {
     onSuccess: async () => {
       alert("Signin Successful!");
       reset();
-
       router.push(callbackUrl || "/");
     },
   });

@@ -16,13 +16,44 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "@bprogress/next/app";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { otpFormSchema } from "@/components/validation/validation";
 import type { OtpFormSchema } from "@/components/validation/validation";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState, useRef } from "react";
+import { authClient } from "@/lib/auth-client";
 
 const VerifyAccount = () => {
+  const router = useRouter();
+  // Getting callback url from query params >>>>>>>>>>>>>>>
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || null;
+  const [email, setEmail] = useState<string | null>(null);
+  const otpSentRef = useRef(false);
+  // get email from localStorage
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email");
+    if (!storedEmail) {
+      router.push(
+        `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
+      );
+    } else {
+      setEmail(storedEmail);
+    }
+  }, [router, callbackUrl]);
+  // send otp
+  useEffect(() => {
+    if (!email || otpSentRef.current) return;
+    otpSentRef.current = true;
+    authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: "sign-in",
+    });
+  }, [email]);
+
   // form handling >>>>>>>>>>>>>
   const form = useForm<OtpFormSchema>({
     resolver: zodResolver(otpFormSchema),
@@ -31,13 +62,66 @@ const VerifyAccount = () => {
       verificationCode: "",
     },
   });
+  //set email in form
+  useEffect(() => {
+    if (email) {
+      form.setValue("email", email);
+    }
+  }, [email, form]);
+  //verify accont handling>>>>>>>>>>>>>>
+  //OTP verify + login
+  const {
+    mutate: verifyOtp,
+    error: verifyError,
+    isPending: isVerifyPending,
+  } = useMutation({
+    mutationFn: async (data: OtpFormSchema) => {
+      const response = await authClient.signIn.emailOtp({
+        email: data.email,
+        otp: data.verificationCode,
+      });
+      if (response.error) {
+        throw new Error(response.error.message || "Verification failed");
+      }
+      return response.data;
+    },
+    onSuccess: () => {
+      setTimeout(() => {
+        localStorage.removeItem("email");
+        router.push(callbackUrl || "/");
+      }, 3000);
+    },
+  });
+
+  // resend otp
+  const resendOtp = async () => {
+    if (!email) return;
+    await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: "sign-in",
+    });
+  };
+
+  // submit
   const onSubmit = (data: OtpFormSchema) => {
     console.log("Form Data Submitted:", data);
+    verifyOtp(data);
   };
+  if (!email) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <Loader2 className="w-6 h-6 animate-spin" />
+      </div>
+    );
+  }
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Message className="mt-3" />
+        <Message
+          variant="destructive"
+          message={verifyError?.message}
+          className="mt-3"
+        />
         <FormField
           control={form.control}
           name="verificationCode"
@@ -45,7 +129,10 @@ const VerifyAccount = () => {
             <FormItem>
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <FormLabel className="mt-5">Verification Code</FormLabel>
-                <FormLabel className="text-primary cursor-pointer hover:underline">
+                <FormLabel
+                  onClick={resendOtp}
+                  className="text-primary cursor-pointer hover:underline"
+                >
                   Resend Code
                 </FormLabel>
               </div>
@@ -69,8 +156,14 @@ const VerifyAccount = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Verify Account
+        <Button type="submit" className="w-full" disabled={isVerifyPending}>
+          {isVerifyPending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
+            </>
+          ) : (
+            "Verify Account"
+          )}
         </Button>
       </form>
     </Form>

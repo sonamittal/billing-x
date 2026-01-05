@@ -54,11 +54,12 @@ const CredentialsSignup = () => {
 
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      localStorage.setItem("email", data.user.email);
       alert("Signup successful!");
       reset();
       router.push(
-        `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
+        `/auth/verify${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
       );
     },
   });
