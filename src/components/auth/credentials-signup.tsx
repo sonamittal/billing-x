@@ -21,6 +21,7 @@ import type { SignupFormSchema } from "@/components/validation/validation";
 import { signUp } from "@/lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 const CredentialsSignup = () => {
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
@@ -54,8 +55,15 @@ const CredentialsSignup = () => {
 
       return response.data;
     },
-    onSuccess: (data) => {
-      localStorage.setItem("email", data.user.email);
+    onSuccess: async (data) => {
+      const email = data.user.email;
+      if (!email) return;
+      await authClient.emailOtp.sendVerificationOtp({
+        email,
+         type: "sign-in", // required
+      });
+
+      localStorage.setItem("email", email);
       alert("Signup successful!");
       reset();
       router.push(
