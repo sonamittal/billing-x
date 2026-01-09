@@ -1,7 +1,9 @@
-
-const  Home = () => {
+import User from "@/components/website/layout/user";
+const Page = () => {
   return (
-   <h2>hello world</h2>
+    <>
+      <User />
+    </>
   );
-}
-export default Home
+};
+export default Page;

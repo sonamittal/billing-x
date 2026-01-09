@@ -68,7 +68,7 @@ const VerifyAccount = () => {
     isPending: isVerifyPending,
   } = useMutation({
     mutationFn: async (data: OtpFormSchema) => {
-      const response = await  authClient.signIn.emailOtp({
+      const response = await authClient.signIn.emailOtp({
         email: data.email,
         otp: data.verificationCode,
       });
