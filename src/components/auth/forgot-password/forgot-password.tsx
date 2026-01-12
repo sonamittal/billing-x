@@ -14,8 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Message from "@/components/ui/message";
 import { useSearchParams } from "next/navigation";
-import { otpFormSchema } from "@/components/validation/validation";
-import type { OtpFormSchema } from "@/components/validation/validation";
+import { forgotPasswordFormSchema } from "@/components/validation/validation";
+import type { ForgotPasswordFormSchema } from "@/components/validation/validation";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Loader2 } from "lucide-react";
@@ -27,8 +27,8 @@ const ForgotPassword = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
   //form handling
-  const form = useForm({
-    resolver: zodResolver(otpFormSchema),
+  const form = useForm<ForgotPasswordFormSchema>({
+    resolver: zodResolver(forgotPasswordFormSchema),
     defaultValues: {
       email: "",
     },
@@ -40,16 +40,17 @@ const ForgotPassword = () => {
     isPending: isSendVerificationCodePending,
     error: sendVerificationCodeError,
   } = useMutation({
-    mutationFn: async (data: OtpFormSchema) => {
+    mutationFn: async (data: ForgotPasswordFormSchema) => {
       const res = await authClient.forgetPassword.emailOtp({
         email: data.email,
       });
+      console.log("OTP response:", res);
       if (res.error) {
-        throw new Error(res.error?.message);
+        throw new Error(res.error.message);
       }
       return res.data;
     },
-    onSuccess: (_data ,variables) => {
+    onSuccess: (_data, variables) => {
       alert("Verification code sent on your email.");
       reset();
       setEmailReceived(variables.email);
@@ -57,12 +58,12 @@ const ForgotPassword = () => {
   });
   // submit
   const { reset } = form;
-  const onSubmit = (data: OtpFormSchema) => {
+  const onSubmit = (data: ForgotPasswordFormSchema) => {
     console.log("form data submitted:", data);
     sendVerificationCode(data);
   };
   if (emailReceived) {
-    return <SetPassword email = {emailReceived}  />;
+    return <SetPassword email={emailReceived} />;
   }
 
   return (
@@ -71,7 +72,7 @@ const ForgotPassword = () => {
         {sendVerificationCodeError && (
           <Message
             variant="destructive"
-            message={sendVerificationCodeError?.message}
+            message={sendVerificationCodeError.message}
           />
         )}
         <FormField
@@ -81,7 +82,11 @@ const ForgotPassword = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="johndoe@example.com" {...field} />
+                <Input
+                  type="email"
+                  placeholder="johndoe@example.com"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

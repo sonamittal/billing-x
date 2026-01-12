@@ -48,9 +48,14 @@ export const otpFormSchema = z.object({
 export type OtpFormSchema = z.infer<typeof otpFormSchema>;
 
 // forgot password schema >>>>>>>>>
-export const forgotPasswordFormSchema = z
+export const forgotPasswordFormSchema = z.object({
+  email: z.email({ message: "Email is required" }),
+});
+export type ForgotPasswordFormSchema = z.infer<typeof forgotPasswordFormSchema>;
+// set password schema >>>>>>>>>
+export const setPasswordFormSchema = z
   .object({
-    email: z.email({ message: "Email is required" }),
+    // email: z.email({ message: "Email is required" }),
     verificationCode: z
       .string()
       .min(1, { message: "Verification code is required" })
@@ -76,4 +81,4 @@ export const forgotPasswordFormSchema = z
       });
     }
   });
-export type ForgotPasswordFormSchema = z.infer<typeof forgotPasswordFormSchema>;
+export type SetPasswordFormSchema = z.infer<typeof setPasswordFormSchema>;
