@@ -44,7 +44,6 @@ const ForgotPassword = () => {
       const res = await authClient.forgetPassword.emailOtp({
         email: data.email,
       });
-      console.log("OTP response:", res);
       if (res.error) {
         throw new Error(res.error.message);
       }
