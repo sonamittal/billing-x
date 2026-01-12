@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "@bprogress/next/app";
+import { useRouter } from "next/navigation";
 import { sinFormSchema } from "@/components/validation/validation";
 import type { SigninFormSchema } from "@/components/validation/validation";
 import { signIn } from "@/lib/auth-client";
