@@ -39,7 +39,7 @@ import {
 interface SetPasswordProps {
   email: string;
 }
-const SetPassword = ({ email }: SetPasswordProps) => {
+const SetPasswordForm = ({ email }: SetPasswordProps) => {
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
   const searchParams = useSearchParams();
@@ -105,8 +105,8 @@ const SetPassword = ({ email }: SetPasswordProps) => {
     setPassword(data);
   };
   return (
-    <div className="container flex justify-center items-center w-full h-screen">
-      <Card className="w-full md:w-[90%] mx-auto border max-h-[90vh] overflow-auto">
+    <div className="container flex items-center justify-center  w-full h-screen">
+      <Card className="w-full md:w-[50%] mx-auto max-h-[90vh] overflow-auto">
         <CardHeader>
           <Link
             href="/"
@@ -232,4 +232,4 @@ const SetPassword = ({ email }: SetPasswordProps) => {
     </div>
   );
 };
-export default SetPassword;
+export default SetPasswordForm;
