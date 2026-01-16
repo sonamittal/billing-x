@@ -20,7 +20,6 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Loader2, MoveLeft } from "lucide-react";
 import React, { useState } from "react";
-import SetPassword from "@/components/auth/forgot-password/set-password";
 import Image from "next/image";
 import Link from "next/link";
 import {

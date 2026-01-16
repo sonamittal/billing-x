@@ -1,5 +1,4 @@
 // zod schena >>>>>>>>>>>>>\
-import { verification } from "@/drizzle/schema/schema";
 import * as z from "zod";
 export const supFormSchema = z
   .object({
@@ -82,3 +81,20 @@ export const setPasswordFormSchema = z
     }
   });
 export type SetPasswordFormSchema = z.infer<typeof setPasswordFormSchema>;
+
+// organization set    schema
+export const organizationSchema = z.object({
+  name: z.string().min(1, { message: " organization name is  required" }),
+  industry: z.string().min(1, { message: "Industry is required" }),
+  country: z.string().min(1, { message: "country is required" }),
+  state: z.string().min(1, "State is required"),
+  address: z.string().min(1, { message: "Location is required" }),
+  currency: z.string().length(3, "Use 3-letter currency code"),
+  language: z.string().trim().min(1, { message: "Language is required" }),
+  timezone: z.string().trim().min(1, { message: "Timezone is required" }),
+  invoicingMethod: z
+    .string()
+    .trim()
+    .min(1, { message: "Invoicing method is required" }),
+});
+export type OrganizationSchema = z.infer<typeof organizationSchema>;
