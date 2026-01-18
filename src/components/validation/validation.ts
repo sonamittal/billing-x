@@ -9,7 +9,7 @@ export const supFormSchema = z
       .min(8, { message: "password must be atleast 8 character" })
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain at least one letter and one number"
+        "Password must contain at least one letter and one number",
       ),
     confirmPassword: z
       .string()
@@ -34,7 +34,7 @@ export const sinFormSchema = z.object({
     .min(8, { message: "password must be atleast 8 character" })
     .regex(
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least one letter and one number"
+      "Password must contain at least one letter and one number",
     ),
 });
 export type SigninFormSchema = z.infer<typeof sinFormSchema>;
@@ -65,7 +65,7 @@ export const setPasswordFormSchema = z
       .min(8, { message: "password must be atleast 8 character" })
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain at least one letter and one number"
+        "Password must contain at least one letter and one number",
       ),
     confirmPassword: z
       .string()
@@ -82,7 +82,7 @@ export const setPasswordFormSchema = z
   });
 export type SetPasswordFormSchema = z.infer<typeof setPasswordFormSchema>;
 
-// organization set    schema
+// organization setup schema
 export const organizationSchema = z.object({
   name: z.string().min(1, { message: " organization name is  required" }),
   industry: z.string().min(1, { message: "Industry is required" }),

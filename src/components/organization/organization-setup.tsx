@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 
 const OrganizationSetup = () => {
+  const router = useRouter();
   const form = useForm<OrganizationSchema>({
     resolver: zodResolver(organizationSchema),
     defaultValues: {
@@ -234,7 +235,12 @@ const OrganizationSetup = () => {
           <Button type="submit" className="">
             Get Started
           </Button>
-          <Button type="submit" className="">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.back()}
+            className=""
+          >
             Go Back
           </Button>
         </div>

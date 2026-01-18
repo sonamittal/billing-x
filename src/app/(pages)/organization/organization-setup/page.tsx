@@ -26,9 +26,10 @@ const OrganizationSetupForm = () => {
           </Link>
           <div className="flex flex-col-reverse lg:flex-row gap-5 lg:gap-10 items-center justify-between">
             <div className="space-y-2 text-center lg:text-left">
-              <CardTitle>Verify your account</CardTitle>
+              <CardTitle className="text-2xl">Organization Setup </CardTitle>
+              <CardTitle className="mt-5">Welcome, Mohit Kumawat! 🤝</CardTitle>
               <CardDescription>
-                An verification code has been sent on your email
+                Enter your organization details to start using Ehuna Invoice.
               </CardDescription>
             </div>
             <Image

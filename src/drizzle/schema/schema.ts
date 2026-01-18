@@ -73,9 +73,10 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ one, many }) => ({
   sessions: many(session),
   accounts: many(account),
+  organization: one(organization),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -88,6 +89,31 @@ export const sessionRelations = relations(session, ({ one }) => ({
 export const accountRelations = relations(account, ({ one }) => ({
   user: one(user, {
     fields: [account.userId],
+    references: [user.id],
+  }),
+}));
+
+export const organization = pgTable("organization", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" })
+    .unique(),
+  name: text("name").notNull(),
+  industry: text("industry").notNull(),
+  country: text("country").notNull(),
+  state: text("state").notNull(),
+  address: text("address").notNull(),
+  currency: text("currency").notNull(),
+  language: text("language").notNull(),
+  timezone: text("timezone").notNull(),
+  invoicingMethod: text("invoicing_method").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const organizationRelations = relations(organization, ({ one }) => ({
+  user: one(user, {
+    fields: [organization.userId],
     references: [user.id],
   }),
 }));
