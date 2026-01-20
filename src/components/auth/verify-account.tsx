@@ -97,6 +97,7 @@ const VerifyAccount = () => {
       </div>
     );
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -147,4 +148,5 @@ const VerifyAccount = () => {
     </Form>
   );
 };
+
 export default VerifyAccount;

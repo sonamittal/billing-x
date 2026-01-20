@@ -18,7 +18,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { supFormSchema } from "@/components/validation/validation";
 import type { SignupFormSchema } from "@/components/validation/validation";
-import { signUp } from "@/lib/auth-client";
+// import { signUp } from "@/lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -44,7 +44,7 @@ const CredentialsSignup = () => {
     error: signupError,
   } = useMutation({
     mutationFn: async (data: SignupFormSchema) => {
-      const response = await signUp.email({
+      const response = await authClient.signUp.email({
         name: data.name,
         email: data.email,
         password: data.password,

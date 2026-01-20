@@ -18,11 +18,14 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { sinFormSchema } from "@/components/validation/validation";
 import type { SigninFormSchema } from "@/components/validation/validation";
-import { signIn } from "@/lib/auth-client";
+// import { signIn } from "@/lib/auth-client";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+
 const CredentialsSignin = () => {
+
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
   const searchParams = useSearchParams();
@@ -34,7 +37,7 @@ const CredentialsSignin = () => {
     error: signinError,
   } = useMutation({
     mutationFn: async (data: SigninFormSchema) => {
-      const response = await signIn.email({
+      const response = await authClient.signIn.email({
         email: data.email,
         password: data.password,
       });
@@ -63,6 +66,7 @@ const CredentialsSignin = () => {
     console.log("Form Data Submitted:", data);
     mutate(data);
   };
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

@@ -30,4 +30,5 @@ const ResendVerificationCode = ({ email }: { email: string }) => {
     </p>
   );
 };
+
 export default ResendVerificationCode;
