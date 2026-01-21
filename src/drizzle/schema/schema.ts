@@ -103,6 +103,7 @@ export const organization = pgTable("organization", {
   industry: text("industry").notNull(),
   country: text("country").notNull(),
   state: text("state").notNull(),
+  city: text("city").notNull(),
   address: text("address").notNull(),
   currency: text("currency").notNull(),
   language: text("language").notNull(),

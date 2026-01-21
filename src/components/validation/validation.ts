@@ -88,6 +88,7 @@ export const organizationSchema = z.object({
   industry: z.string().min(1, { message: "Industry is required" }),
   country: z.string().min(1, { message: "country is required" }),
   state: z.string().min(1, "State is required"),
+  city: z.string().min(1, { message: "city is required" }),
   address: z.string().min(1, { message: "Location is required" }),
   currency: z.string().length(3, "Use 3-letter currency code"),
   language: z.string().trim().min(1, { message: "Language is required" }),
