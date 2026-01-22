@@ -43,17 +43,6 @@ const OrganizationSetupForm = () => {
         </CardHeader>
         <CardContent>
           <OrganizationSetup />
-          <p className="text-sm mt-5 ">
-            Already have an account?{" "}
-            <Link
-              className="font-medium"
-              href={`/auth/signin${
-                callbackUrl ? `?callbackUrl=${callbackUrl}` : ""
-              }`}
-            >
-              Sign in
-            </Link>
-          </p>
         </CardContent>
       </Card>
     </div>

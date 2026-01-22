@@ -108,6 +108,8 @@ export const organization = pgTable("organization", {
   currency: text("currency").notNull(),
   language: text("language").notNull(),
   timezone: text("timezone").notNull(),
+  gstRegistered: boolean("gst_registered").notNull().default(false),
+  gstNumber: text("gst_number"),
   invoicingMethod: text("invoicing_method").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

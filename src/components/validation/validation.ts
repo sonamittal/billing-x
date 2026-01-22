@@ -83,19 +83,31 @@ export const setPasswordFormSchema = z
 export type SetPasswordFormSchema = z.infer<typeof setPasswordFormSchema>;
 
 // organization setup schema
-export const organizationSchema = z.object({
-  name: z.string().min(1, { message: " organization name is  required" }),
-  industry: z.string().min(1, { message: "Industry is required" }),
-  country: z.string().min(1, { message: "country is required" }),
-  state: z.string().min(1, "State is required"),
-  city: z.string().min(1, { message: "city is required" }),
-  address: z.string().min(1, { message: "Location is required" }),
-  currency: z.string().length(3, "Use 3-letter currency code"),
-  language: z.string().trim().min(1, { message: "Language is required" }),
-  timezone: z.string().trim().min(1, { message: "Timezone is required" }),
-  invoicingMethod: z
-    .string()
-    .trim()
-    .min(1, { message: "Invoicing method is required" }),
-});
+export const organizationSchema = z
+  .object({
+    name: z.string().min(1, { message: " organization name is  required" }),
+    industry: z.string().min(1, { message: "Industry is required" }),
+    country: z.string().min(1, { message: "country is required" }),
+    state: z.string().min(1, "State is required"),
+    city: z.string().min(1, { message: "city is required" }),
+    address: z.string().min(1, { message: "Location is required" }),
+    currency: z.string().length(3, "Use 3-letter currency code"),
+    language: z.string().trim().min(1, { message: "Language is required" }),
+    timezone: z.string().trim().min(1, { message: "Timezone is required" }),
+    gstRegistered: z.boolean(),
+    gstNumber: z.string().trim().optional(),
+    invoicingMethod: z
+      .string()
+      .trim()
+      .min(1, { message: "Invoicing method is required" }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.gstRegistered && !data.gstNumber) {
+      ctx.addIssue({
+        path: ["gstNumber"],
+        message: "GST Number is required when business is GST registered",
+        code: "custom",
+      });
+    }
+  });
 export type OrganizationSchema = z.infer<typeof organizationSchema>;

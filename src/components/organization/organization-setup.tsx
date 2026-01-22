@@ -36,10 +36,15 @@ import {
 import "react-country-state-city/dist/react-country-state-city.css";
 import { INDUSTRY_TYPES, CURRENCY_TYPE } from "@/lib/constants";
 import UseTimezone from "@/hooks/use-Timezone";
+import { Switch } from "@/components/ui/switch";
+import axios from "axios";
 
 const OrganizationSetup = () => {
   const { timezoneOptions } = UseTimezone();
   const router = useRouter();
+  // Getting callback url from query params >>>>>>>>>>>>>>>
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || null;
   // city state country
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
@@ -61,9 +66,39 @@ const OrganizationSetup = () => {
       currency: "",
       language: "",
       timezone: "",
+      gstRegistered: false,
+      gstNumber: "",
       invoicingMethod: "",
     },
   });
+  // organization set up handling >>>>>>>>>>>>>>>
+  const {
+    mutate,
+    isPending: isOrgPending,
+    error: orgError,
+  } = useMutation({
+    mutationFn: async (data: OrganizationSchema) => {
+      const response = await axios.post("api/", data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log("organization successfully submitted:", data);
+      reset();
+      router.push(`/${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`);
+    },
+    onError: (error: any) => {
+      console.log("Error:", error);
+    },
+  });
+
+  // gstresgistered
+  const gstRegistered = form.watch("gstRegistered");
+  // useEffect gstresgistered
+  useEffect(() => {
+    if (!gstRegistered) {
+      form.setValue("gstNumber", "");
+    }
+  }, [gstRegistered, form]);
   //  Fetch countries & languages
   useEffect(() => {
     GetCountries().then((result) => {
@@ -88,8 +123,10 @@ const OrganizationSetup = () => {
   }, [country, selectedState]);
 
   // submit
+  const { reset } = form;
   const onSubmit = (data: OrganizationSchema) => {
     console.log("Organization Data:", data);
+    mutate(data);
   };
 
   return (
@@ -341,6 +378,41 @@ const OrganizationSetup = () => {
             </FormItem>
           )}
         />
+        {/* gstregistered */}
+        <FormField
+          name="gstRegistered"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex justify-between items-center">
+                <FormLabel>Is this business registered for GST?</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* GST Number*/}
+        {gstRegistered && (
+          <FormField
+            name="gstNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>GST Number</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter GST Number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         {/* Invoicing Method */}
         <FormField
           name="invoicingMethod"
@@ -355,8 +427,15 @@ const OrganizationSetup = () => {
           )}
         />
         <div className="flex items-center gap-3">
-          <Button type="submit" className="">
-            Get Started
+          <Button type="submit" className="" disabled={isOrgPending}>
+            {isOrgPending ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                please wait
+              </>
+            ) : (
+              "Get Started"
+            )}
           </Button>
           <Button
             type="button"
