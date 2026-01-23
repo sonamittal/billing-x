@@ -9,7 +9,7 @@ export default async function SignUpPage() {
   });
   console.log("SESSION:", session);
   if (session?.user) {
-    redirect("/");
+    redirect("/organization/setup");
   }
   return <SignUpForm />;
 }

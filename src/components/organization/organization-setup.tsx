@@ -84,7 +84,7 @@ const OrganizationSetup = () => {
     onSuccess: (data) => {
       console.log("organization successfully submitted:", data);
       reset();
-      router.push(`/${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`);
+      router.push(callbackUrl || "/organization/setup");
     },
     onError: (error: any) => {
       console.log(error.response?.data?.message);

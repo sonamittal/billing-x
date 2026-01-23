@@ -50,7 +50,7 @@ const CredentialsSignin = () => {
     onSuccess: async () => {
       alert("Signin Successful!");
       reset();
-      router.push(callbackUrl || "/");
+      router.push(callbackUrl || "/organization/setup");
     },
   });
   // form handling >>>>>>>>>>>>>

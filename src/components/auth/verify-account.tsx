@@ -80,7 +80,7 @@ const VerifyAccount = () => {
     onSuccess: () => {
       setTimeout(() => {
         localStorage.removeItem("email");
-        router.push(callbackUrl || "/");
+        router.push(callbackUrl || "/organization/setup");
       }, 3000);
     },
   });

@@ -35,21 +35,23 @@ export const INDUSTRY_TYPES = [
   { label: "Other", value: "Other" },
 ];
 
-// Currency types
+// lib/constants.ts
 export const CURRENCY_TYPE = [
-  { label: "USD - US Dollar", value: "USD" },
-  { label: "CAD - Canadian Dollar", value: "CAD" },
-  { label: "GBP - British Pound", value: "GBP" },
-  { label: "EUR - Euro", value: "EUR" },
-  { label: "AUD - Australian Dollar", value: "AUD" },
-  { label: "JPY - Japanese Yen", value: "JPY" },
-  { label: "CNY - Chinese Yuan", value: "CNY" },
-  { label: "INR - Indian Rupee", value: "INR" },
-  { label: "CHF - Swiss Franc", value: "CHF" },
-  { label: "NZD - New Zealand Dollar", value: "NZD" },
-  { label: "SGD - Singapore Dollar", value: "SGD" },
-  { label: "MXN - Mexican Peso", value: "MXN" },
-  { label: "BRL - Brazilian Real", value: "BRL" },
-  { label: "ZAR - South African Rand", value: "ZAR" },
+  { label: "USD - US Dollar ($)", value: "USD" },
+  { label: "CAD - Canadian Dollar (CA$)", value: "CAD" },
+  { label: "GBP - British Pound (£)", value: "GBP" },
+  { label: "EUR - Euro (€)", value: "EUR" },
+  { label: "AUD - Australian Dollar (A$)", value: "AUD" },
+  { label: "JPY - Japanese Yen (¥)", value: "JPY" },
+  { label: "CNY - Chinese Yuan (¥)", value: "CNY" },
+  { label: "INR - Indian Rupee (₹)", value: "INR" },
+  { label: "CHF - Swiss Franc (CHF)", value: "CHF" },
+  { label: "NZD - New Zealand Dollar (NZ$)", value: "NZD" },
+  { label: "SGD - Singapore Dollar (S$)", value: "SGD" },
+  { label: "MXN - Mexican Peso (MX$)", value: "MXN" },
+  { label: "BRL - Brazilian Real (R$)", value: "BRL" },
+  { label: "ZAR - South African Rand (R)", value: "ZAR" },
+  { label: "KRW - South Korean Won (₩)", value: "KRW" },
   { label: "Other", value: "Other" },
 ];
+
