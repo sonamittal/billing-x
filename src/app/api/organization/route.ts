@@ -24,12 +24,12 @@ export const POST = async (req: Request) => {
     });
     if (existingOrg) {
       return Response.json(
-        {message: "organization has already exist"},
-        {status: 400,}
+        { message: "organization has already exist" },
+        { status: 400 },
       );
     }
     // create organization
-    const createOrganization = await db
+    const [createOrganization] = await db
       .insert(organization)
       .values({
         ...body,
@@ -37,13 +37,13 @@ export const POST = async (req: Request) => {
       })
       .returning();
     return Response.json(
-      {message: "Organization created successfully"},
-      {status: 201}
+      {
+        message: "Organization created successfully",
+        organization: createOrganization,
+      },
+      { status: 201 },
     );
   } catch (error) {
-    return Response.json(
-      {error: "failed to organization"},
-      {status: 500},
-    );
+    return Response.json({ error: "failed to organization" }, { status: 500 });
   }
 };

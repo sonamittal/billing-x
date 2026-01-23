@@ -39,7 +39,7 @@ const VerifyAccount = () => {
     const storedEmail = localStorage.getItem("email");
     if (!storedEmail) {
       router.push(
-        `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
+        `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`,
       );
     } else {
       setEmail(storedEmail);

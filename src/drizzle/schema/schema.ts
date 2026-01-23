@@ -94,7 +94,7 @@ export const accountRelations = relations(account, ({ one }) => ({
 }));
 
 export const organization = pgTable("organization", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" })
@@ -112,10 +112,10 @@ export const organization = pgTable("organization", {
   gstNumber: text("gst_number"),
   invoicingMethod: text("invoicing_method").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
+   updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
 });
 
 export const organizationRelations = relations(organization, ({ one }) => ({
