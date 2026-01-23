@@ -112,6 +112,10 @@ export const organization = pgTable("organization", {
   gstNumber: text("gst_number"),
   invoicingMethod: text("invoicing_method").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
 });
 
 export const organizationRelations = relations(organization, ({ one }) => ({

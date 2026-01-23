@@ -91,7 +91,7 @@ export const organizationSchema = z
     state: z.string().min(1, "State is required"),
     city: z.string().min(1, { message: "city is required" }),
     address: z.string().min(1, { message: "Location is required" }),
-    currency: z.string().length(3, "Use 3-letter currency code"),
+    currency: z.string().min(1, { message: "currency is required" }),
     language: z.string().trim().min(1, { message: "Language is required" }),
     timezone: z.string().trim().min(1, { message: "Timezone is required" }),
     gstRegistered: z.boolean(),

@@ -78,7 +78,7 @@ const OrganizationSetup = () => {
     error: orgError,
   } = useMutation({
     mutationFn: async (data: OrganizationSchema) => {
-      const response = await axios.post("api/", data);
+      const response = await axios.post("/api/organization", data);
       return response.data;
     },
     onSuccess: (data) => {
@@ -87,7 +87,7 @@ const OrganizationSetup = () => {
       router.push(`/${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`);
     },
     onError: (error: any) => {
-      console.log("Error:", error);
+      console.log(error.response?.data?.message);
     },
   });
 
@@ -132,6 +132,11 @@ const OrganizationSetup = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Message
+          variant={orgError ? "destructive" : "default"}
+          message={orgError?.message}
+          className="mt-3"
+        />
         {/* Organization Name */}
         <FormField
           name="name"
