@@ -12,24 +12,24 @@ export const POST = async (req: Request) => {
     // check user logged in or not
     if (!session?.user?.id) {
       return Response.json(
-        { message: "Organization created successfully" },
-        { status: 201 },
+        { message: "you need to logged in  account  ", success: false },
+        { status: 400 },
       );
     }
     const body = await req.json();
 
     // check organization exists
     const existingOrg = await db.query.organization.findFirst({
-      where: (org) => eq(org.userId, session.user.id),
+      where: (org) => eq(org.id, session.user.id),
     });
     if (existingOrg) {
       return Response.json(
-        { message: "organization has already exist" },
+        { message: "organization has already exist", success: false },
         { status: 400 },
       );
     }
     // create organization
-    const [createOrganization] = await db
+    const [createdOrganization] = await db
       .insert(organization)
       .values({
         ...body,
@@ -39,7 +39,8 @@ export const POST = async (req: Request) => {
     return Response.json(
       {
         message: "Organization created successfully",
-        organization: createOrganization,
+        success: true,
+        organization: createdOrganization,
       },
       { status: 201 },
     );

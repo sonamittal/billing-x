@@ -24,7 +24,7 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
-const CredentialsSignin = () => {
+const SigninForm = () => {
 
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
@@ -50,7 +50,7 @@ const CredentialsSignin = () => {
     onSuccess: async () => {
       alert("Signin Successful!");
       reset();
-      router.push(callbackUrl || "/organization/setup");
+      router.push(callbackUrl || "/auth/callback");
     },
   });
   // form handling >>>>>>>>>>>>>
@@ -123,4 +123,4 @@ const CredentialsSignin = () => {
   );
 };
 
-export default CredentialsSignin;
+export default SigninForm;

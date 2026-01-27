@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import SignUpForm from "@/app/(pages)/auth/signup/signupform";
+import CredentialsSignup from "@/components/auth/credentials-signup/credentials-signup";
 
 export default async function SignUpPage() {
   const session = await auth.api.getSession({
@@ -9,7 +9,7 @@ export default async function SignUpPage() {
   });
   console.log("SESSION:", session);
   if (session?.user) {
-    redirect("/organization/setup");
+    redirect("/auth/callback");
   }
-  return <SignUpForm />;
+  return <CredentialsSignup />;
 }

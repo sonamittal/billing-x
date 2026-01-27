@@ -6,12 +6,12 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import CredentialsSignin from "@/components/auth/credentials-signin";
+import SigninForm from "@/components/auth/credentials-signin/signin-form";
 import Image from "next/image";
 import Link from "next/link";
 import { MoveLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-const SignInForm = () => {
+const CredentialsSignin = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
   return (
@@ -41,7 +41,7 @@ const SignInForm = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <CredentialsSignin />
+          <SigninForm />
           <p className="text-sm mt-5 ">
             Already have an account?{" "}
             <Link
@@ -58,4 +58,4 @@ const SignInForm = () => {
     </div>
   );
 };
-export default SignInForm;
+export default CredentialsSignin;

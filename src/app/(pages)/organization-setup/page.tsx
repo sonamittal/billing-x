@@ -1,12 +1,12 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import OrganizationSetupForm from "@/app/(pages)/organization/setup/organizationset";
+import OrganizationSetup from "@/components/website/pages/organization-setup/organization-setup";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/database/db-connect";
 import { eq } from "drizzle-orm";
-import OrgAccessInvoiceBtn from "@/components/organization/org-access-invoice";
+import OrgAccessInvoiceBtn from "@/components/website/pages/organization-setup/org-access-invoice";
 
-export default async function OrganizationSetupPage() {
+const Page = async() => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -14,12 +14,11 @@ export default async function OrganizationSetupPage() {
   if (!session?.user) {
     redirect("/auth/signin");
   }
-  const existingOrg = await db.query.organization.findFirst({
-    where: (org) => eq(org.userId, session.user.id),
-  });
+  const existingOrg = await db.query.organization.findFirst();
   if (existingOrg) {
     return <OrgAccessInvoiceBtn orgName={existingOrg.name} />;
   }
 
-  return <OrganizationSetupForm />;
+  return <OrganizationSetup />;
 }
+export default Page;

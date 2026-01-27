@@ -19,7 +19,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@bprogress/next/app";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
 import { otpFormSchema } from "@/components/validation/validation";
 import type { OtpFormSchema } from "@/components/validation/validation";
 import { useSearchParams } from "next/navigation";
@@ -80,7 +79,7 @@ const VerifyAccount = () => {
     onSuccess: () => {
       setTimeout(() => {
         localStorage.removeItem("email");
-        router.push(callbackUrl || "/organization/setup");
+        router.push(callbackUrl || "/auth/callback");
       }, 3000);
     },
   });

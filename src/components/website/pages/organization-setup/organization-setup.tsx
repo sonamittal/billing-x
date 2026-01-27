@@ -9,9 +9,9 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { MoveLeft } from "lucide-react";
-import OrganizationSetup from "@/components/organization/organization-setup";
+import OrganizationSetupForm from "@/components/website/pages/organization-setup/organization-setup-form";
 import { useSearchParams } from "next/navigation";
-const OrganizationSetupForm = () => {
+const OrganizationSetup = () => {
   // const searchParams = useSearchParams();
   // const callbackUrl = searchParams.get("callbackUrl") || null;
   return (
@@ -42,10 +42,10 @@ const OrganizationSetupForm = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <OrganizationSetup />
+          <OrganizationSetupForm />
         </CardContent>
       </Card>
     </div>
   );
 };
-export default OrganizationSetupForm;
+export default OrganizationSetup;

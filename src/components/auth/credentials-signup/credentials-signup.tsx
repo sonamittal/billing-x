@@ -6,12 +6,13 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import CredentialsSignup from "@/components/auth/credentials-signup";
+import SignUpForm from "@/components/auth/credentials-signup/signup-form";
 import Image from "next/image";
 import Link from "next/link";
 import { MoveLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-const SignUpForm = () => {
+
+const CredentialsSignup = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
   return (
@@ -41,7 +42,7 @@ const SignUpForm = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <CredentialsSignup />
+          <SignUpForm />
           <p className="text-sm mt-5 ">
             Already have an account?{" "}
             <Link
@@ -58,4 +59,4 @@ const SignUpForm = () => {
     </div>
   );
 };
-export default SignUpForm;
+export default CredentialsSignup;

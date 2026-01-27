@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import SignInForm from "@/app/(pages)/auth/signin/signinform";
+import CredentialsSignin from "@/components/auth/credentials-signin/credentials-signin";
 
 export default async function SignInPage() {
   const session = await auth.api.getSession({
@@ -9,7 +9,7 @@ export default async function SignInPage() {
   });
   console.log("SESSION:", session);
   if (session?.user) {
-    redirect("/organization/setup");
+   redirect("/auth/callback");
   }
-  return <SignInForm />;
+  return <CredentialsSignin />;
 }

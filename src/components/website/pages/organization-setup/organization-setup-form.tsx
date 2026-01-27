@@ -39,7 +39,7 @@ import UseTimezone from "@/hooks/use-Timezone";
 import { Switch } from "@/components/ui/switch";
 import axios from "axios";
 
-const OrganizationSetup = () => {
+const OrganizationSetupForm = () => {
   const { timezoneOptions } = UseTimezone();
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
@@ -78,13 +78,13 @@ const OrganizationSetup = () => {
     error: orgError,
   } = useMutation({
     mutationFn: async (data: OrganizationSchema) => {
-      const response = await axios.post("/api/organization", data);
+      const response = await axios.post("/api/organization-setup", data);
       return response.data;
     },
     onSuccess: (data) => {
       console.log("organization successfully submitted:", data);
       reset();
-      router.push(callbackUrl || "/organization/setup");
+      router.push(callbackUrl || "/auth/callback");
     },
     onError: (error: any) => {
       console.log(error.response?.data?.message);
@@ -456,4 +456,4 @@ const OrganizationSetup = () => {
   );
 };
 
-export default OrganizationSetup;
+export default OrganizationSetupForm;
