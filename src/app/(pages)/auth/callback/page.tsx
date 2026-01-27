@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/database/db-connect";
+import checkOrgExsitence from "@/app/_server_actions/check-existence-org"
 
 const CallbackPage =async() => {
   const session = await auth.api.getSession({
@@ -10,9 +10,7 @@ const CallbackPage =async() => {
   if (!session?.user) {
     redirect("/auth/signin");
   }
-  const existingOrg = await db.query.organization.findFirst({
-    where: (org, { eq }) => eq(org.id, session.user.id),
-  });
+  const existingOrg = await checkOrgExsitence();
   if (existingOrg) {
     redirect("/"); 
   }

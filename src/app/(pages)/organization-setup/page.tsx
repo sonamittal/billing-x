@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/database/db-connect";
 import { eq } from "drizzle-orm";
 import OrgAccessInvoiceBtn from "@/components/website/pages/organization-setup/org-access-invoice";
+import checkOrgExsitence from "@/app/_server_actions/check-existence-org"
 
 const Page = async() => {
   const session = await auth.api.getSession({
@@ -14,8 +15,8 @@ const Page = async() => {
   if (!session?.user) {
     redirect("/auth/signin");
   }
-  const existingOrg = await db.query.organization.findFirst();
-  if (existingOrg) {
+  const existingOrg = await checkOrgExsitence();
+    if (existingOrg) {
     return <OrgAccessInvoiceBtn orgName={existingOrg.name} />;
   }
 
