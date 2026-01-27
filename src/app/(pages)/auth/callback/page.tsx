@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import checkOrgExsitence from "@/app/_server_actions/check-existence-org"
+import GetFirstOrg from "@/app/_server_actions/organization";
 
 const CallbackPage =async() => {
   const session = await auth.api.getSession({
@@ -10,7 +10,7 @@ const CallbackPage =async() => {
   if (!session?.user) {
     redirect("/auth/signin");
   }
-  const existingOrg = await checkOrgExsitence();
+ const existingOrg = await GetFirstOrg();
   if (existingOrg) {
     redirect("/"); 
   }
