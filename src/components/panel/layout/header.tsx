@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from 'react'
 import { cn } from '@/utils'
 import { Separator } from '@/components/ui/separator'

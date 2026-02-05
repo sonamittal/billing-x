@@ -1,9 +1,9 @@
 
-import {DashboardLayout} from "@/components/panel/layout/dashboard-layout"
+import User from "@/components/website/layout/user";
 const Page = () => {
   return (
     <>
-      <DashboardLayout/> 
+     <User/>
     </>
   );
 };

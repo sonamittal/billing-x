@@ -12,7 +12,7 @@ const CallbackPage =async() => {
   }
  const existingOrg = await GetFirstOrg();
   if (existingOrg) {
-    redirect("/"); 
+    redirect("/panel/dashboard"); 
   }
 
   redirect("/organization-setup");
