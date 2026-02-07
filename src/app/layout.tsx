@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Mona_Sans as FontSans, Syncopate } from "next/font/google";
 import { cn } from "@/utils/index";
 import "@/styles/globals.css";
-import ThemeProvider from "@/providers/theme-provider";
+import {ThemeProvider} from "@/providers/theme-provider";
 import ReactQueryProvider from "@/providers/react-query";
 import BprogressProvider from "@/providers/bprogress";
 export const fontSans = FontSans({

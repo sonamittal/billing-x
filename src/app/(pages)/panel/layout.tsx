@@ -4,8 +4,7 @@ import { SearchProvider } from "@/providers/search-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/panel/layout/app-sidebar";
 import { SkipToMain } from "@/components/panel/layout/skip-to-main";
-import { CommandMenu } from "@/components/panel/layout/command-menu"
-
+import { CommandMenu } from "@/components/panel/layout/command-menu";
 type DashboardLayoutProps = {
   children?: React.ReactNode;
 };
@@ -14,27 +13,27 @@ const Layout = ({ children }: DashboardLayoutProps) => {
   const defaultOpen = getCookie("sidebar_state") !== "false";
   return (
     <SearchProvider>
-       <CommandMenu />
-        <SidebarProvider defaultOpen={defaultOpen}>
-          <SkipToMain />
-          <AppSidebar />
-          <SidebarInset
-            className={cn(
-              // Set content container, so we can use container queries
-              "@container/content",
+      <CommandMenu />
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <SkipToMain />
+        <AppSidebar />
+        <SidebarInset
+          className={cn(
+            // Set content container, so we can use container queries
+            "@container/content",
 
-              // If layout is fixed, set the height
-              // to 100svh to prevent overflow
-              "has-data-[layout=fixed]:h-svh",
+            // If layout is fixed, set the height
+            // to 100svh to prevent overflow
+            "has-data-[layout=fixed]:h-svh",
 
-              // If layout is fixed and sidebar is inset,
-              // set the height to 100svh - spacing (total margins) to prevent overflow
-              "peer-data-[variant=inset]:has-data-[layout=fixed]:h-[calc(100svh-(var(--spacing)*4))]",
-            )}
-          >
-            {children}
-          </SidebarInset>
-        </SidebarProvider>
+            // If layout is fixed and sidebar is inset,
+            // set the height to 100svh - spacing (total margins) to prevent overflow
+            "peer-data-[variant=inset]:has-data-[layout=fixed]:h-[calc(100svh-(var(--spacing)*4))]",
+          )}
+        >
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
     </SearchProvider>
   );
 };
