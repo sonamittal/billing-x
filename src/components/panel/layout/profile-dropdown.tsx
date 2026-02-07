@@ -27,23 +27,32 @@ export function ProfileDropdown() {
       console.error("Logout failed:", error);
     }
   };
+  if (!data?.user) return null;
   return (
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-              <AvatarFallback>SN</AvatarFallback>
+              <AvatarImage
+                src={data.user.image ?? "/avatars/01.png"}
+                alt={data.user.name ?? "User"}
+              />
+              <AvatarFallback>
+                {" "}
+                {data.user.name?.charAt(0).toUpperCase() ?? "U"}
+              </AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col gap-1.5">
-              <p className="text-sm leading-none font-medium">satnaing</p>
+              <p className="text-sm leading-none font-medium">
+                {data.user.name}
+              </p>
               <p className="text-xs leading-none text-muted-foreground">
-                satnaingdev@gmail.com
+                {data.user.email}
               </p>
             </div>
           </DropdownMenuLabel>

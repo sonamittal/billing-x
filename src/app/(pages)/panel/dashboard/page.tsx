@@ -4,7 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Header } from "@/components/panel/layout/header"
 import { Main } from "@/components/panel/layout/main"
 import { ProfileDropdown } from "@/components/panel/layout/profile-dropdown"
-import { Search } from "@/components/panel/layout/search"
+import { Search } from "@/components/panel/layout/search";
+import{ConfigSettingDrawer} from "@/components/panel/layout/config-settings-drawer"
 
 export default function Dashboard() {
   return (
@@ -13,6 +14,7 @@ export default function Dashboard() {
       <Header>
         <div className="ms-auto flex items-center space-x-4">
           <Search />
+          <ConfigSettingDrawer/>
           <ProfileDropdown />
         </div>
       </Header>

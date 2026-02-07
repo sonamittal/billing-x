@@ -1,6 +1,5 @@
 import { getCookie } from "@/lib/cookies";
 import { cn } from "@/utils";
-import { LayoutProvider } from "@/providers/layout-provider";
 import { SearchProvider } from "@/providers/search-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/panel/layout/app-sidebar";
@@ -16,7 +15,6 @@ const Layout = ({ children }: DashboardLayoutProps) => {
   return (
     <SearchProvider>
        <CommandMenu />
-      <LayoutProvider>
         <SidebarProvider defaultOpen={defaultOpen}>
           <SkipToMain />
           <AppSidebar />
@@ -37,7 +35,6 @@ const Layout = ({ children }: DashboardLayoutProps) => {
             {children}
           </SidebarInset>
         </SidebarProvider>
-      </LayoutProvider>
     </SearchProvider>
   );
 };

@@ -1,3 +1,16 @@
+import {
+  Building2,
+  User,
+  Users,
+  Palette,
+  UserCheck,
+  FileText,
+  DollarSign,
+  FileDigit,
+  File,
+  Mail,
+} from "lucide-react";
+// industry
 export const INDUSTRY_TYPES = [
   { label: "Accounting", value: "Accounting" },
   { label: "Advertising", value: "Advertising" },
@@ -35,7 +48,7 @@ export const INDUSTRY_TYPES = [
   { label: "Other", value: "Other" },
 ];
 
-// lib/constants.ts
+// currency
 export const CURRENCY_TYPE = [
   { label: "USD - US Dollar ($)", value: "USD" },
   { label: "CAD - Canadian Dollar (CA$)", value: "CAD" },
@@ -55,3 +68,22 @@ export const CURRENCY_TYPE = [
   { label: "Other", value: "Other" },
 ];
 
+// Full menu items with icon
+export const SETTINGS_ITEM = [
+  {
+    id: "organization profile",
+    label: "Organization profile",
+    icon: Building2,
+  },
+  { id: "Appearance", label: "Appearance", icon: Palette },
+  { id: "Users", label: "Users", icon: Users },
+  { id: "roles", label: "Roles", icon: User },
+  { id: "taxes", label: "Taxes", icon: FileDigit },
+  { id: "direct-taxes", label: "Direct Taxes", icon: File },
+  { id: "customer-portal", label: "Customer Portal", icon: UserCheck },
+  { id: "customers", label: "Customers", icon: UserCheck },
+  { id: "quotes", label: "Quotes", icon: FileText },
+  { id: "invoices", label: "Invoices", icon: File },
+  { id: "expenses", label: "Expenses", icon: DollarSign },
+  { id: "email-notification", label: "Email Notification", icon: Mail },
+];
