@@ -1,9 +1,8 @@
 
-import User from "@/components/website/layout/user";
 const Page = () => {
   return (
     <>
-     <User/>
+    <h2>Hello world!!</h2>
     </>
   );
 };

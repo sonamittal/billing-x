@@ -1,126 +1,117 @@
 import {
-  Construction,
   LayoutDashboard,
   Monitor,
-  Bug,
-  ListTodo,
-  FileX,
   HelpCircle,
-  Lock,
   Bell,
   Package,
   Palette,
-  ServerOff,
   Settings,
   Wrench,
   UserCog,
-  UserX,
   Users,
-  MessagesSquare,
-  ShieldCheck,
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
   ReceiptText,
-} from 'lucide-react'
-import { ClerkLogo } from '@/assets/clerk-logo'
-import { type SidebarData } from '../types'
+} from "lucide-react";
+import { ClerkLogo } from "@/assets/clerk-logo";
+import { type SidebarData } from "../types";
 
 export const sidebarData: SidebarData = {
   user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
+    name: "satnaing",
+    email: "satnaingdev@gmail.com",
+    avatar: "/avatars/shadcn.jpg",
   },
   teams: [
     {
-      name: 'Invoice',
+      name: "Invoice",
       logo: Command,
-      plan: 'Vite + ShadcnUI',
+      plan: "Vite + ShadcnUI",
     },
     {
-      name: 'Acme Inc',
+      name: "Acme Inc",
       logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
+      plan: "Enterprise",
     },
     {
-      name: 'Acme Corp.',
+      name: "Acme Corp.",
       logo: AudioWaveform,
-      plan: 'Startup',
+      plan: "Startup",
     },
   ],
   navGroups: [
     {
-      title: 'General',
+      title: "General",
       items: [
         {
-          title: 'Dashboard',
-          url: '/',
+          title: "Dashboard",
+          url: "/",
           icon: LayoutDashboard,
         },
         {
-          title: 'Customers',
-          url: '/customers',
+          title: "Customers",
+          url: "/customers",
           icon: Users,
         },
         {
-          title: 'Quotes',
-          url: '/quotes',
+          title: "Quotes",
+          url: "/quotes",
           icon: Package,
         },
         {
-          title: 'Invoices',
-          url: '/invoices',
-          badge: '3',
-          icon: ReceiptText ,
+          title: "Invoices",
+          url: "/invoices",
+          badge: "3",
+          icon: ReceiptText,
         },
         {
-          title: 'Expenses',
-          url: '/expenses',
+          title: "Expenses",
+          url: "/expenses",
           icon: Users,
         },
       ],
     },
     {
-      title: 'Other',
+      title: "Other",
       items: [
         {
-          title: 'Settings',
+          title: "Settings",
           icon: Settings,
           items: [
             {
-              title: 'Profile',
-              url: '/settings',
+              title: "Profile",
+              url: "/settings",
               icon: UserCog,
             },
             {
-              title: 'Account',
-              url: '/settings/account',
+              title: "Account",
+              url: "/settings/account",
               icon: Wrench,
             },
             {
-              title: 'Appearance',
-              url: '/settings/appearance',
+              title: "Appearance",
+              url: "/settings/appearance",
               icon: Palette,
             },
             {
-              title: 'Notifications',
-              url: '/settings/notifications',
+              title: "Notifications",
+              url: "/settings/notifications",
               icon: Bell,
             },
             {
-              title: 'Display',
-              url: '/settings/display',
+              title: "Display",
+              url: "/settings/display",
               icon: Monitor,
             },
           ],
         },
         {
-          title: 'Help Center',
-          url: '/help-center',
+          title: "Help Center",
+          url: "/help-center",
           icon: HelpCircle,
         },
       ],
     },
   ],
-}
+};

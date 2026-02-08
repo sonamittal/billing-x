@@ -1,12 +1,9 @@
-import { useState } from 'react'
-import {SETTINGS_ITEM} from "@/lib/constants"
-import {
-  Settings,
-  X,
-  Search,
-} from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
+"use client";
+import { useState } from "react";
+import { SETTINGS_ITEM } from "@/lib/constants";
+import { Settings, X, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -14,15 +11,15 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 export function ConfigSettingDrawer() {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("");
 
-  const filteredItems = SETTINGS_ITEM.filter(item =>
-    item.label.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredItems = SETTINGS_ITEM.filter((item) =>
+    item.label.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <Sheet>
@@ -32,10 +29,7 @@ export function ConfigSettingDrawer() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent
-        side="right"
-        className="w-80 p-0 flex flex-col h-full"
-      >
+      <SheetContent side="right" className="w-80 p-0 flex flex-col h-full">
         {/* Header */}
         <SheetHeader className="pb-2 text-start px-4 pt-4">
           <SheetTitle>Settings</SheetTitle>
@@ -53,7 +47,7 @@ export function ConfigSettingDrawer() {
             />
             {search && (
               <button
-                onClick={() => setSearch('')}
+                onClick={() => setSearch("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 aria-label="Clear search"
               >
@@ -68,8 +62,8 @@ export function ConfigSettingDrawer() {
         {/* Menu Items  */}
         <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1">
           {filteredItems.length > 0 ? (
-            filteredItems.map(item => {
-              const Icon = item.icon
+            filteredItems.map((item) => {
+              const Icon = item.icon;
               return (
                 <div
                   key={item.id}
@@ -78,7 +72,7 @@ export function ConfigSettingDrawer() {
                   <Icon className="h-4 w-4 text-muted-foreground" />
                   <span>{item.label}</span>
                 </div>
-              )
+              );
             })
           ) : (
             <p className="text-sm text-muted-foreground px-3 py-2">
@@ -95,6 +89,5 @@ export function ConfigSettingDrawer() {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
-

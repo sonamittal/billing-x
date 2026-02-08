@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import { Check, Moon, Sun } from 'lucide-react'
 import { cn } from '@/utils'
-import { useTheme } from '@/providers/theme-provider'
+import { useTheme } from "next-themes";
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 export function ThemeSwitch() {
-  const { theme, setTheme } = useTheme()
+   const { theme, setTheme } = useTheme();
 
   /* Update theme-color meta tag
    * when theme is updated */

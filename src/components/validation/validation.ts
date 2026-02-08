@@ -1,4 +1,4 @@
-// zod schena >>>>>>>>>>>>>\
+// zod schema >>>>>>>>>>>>>\
 import * as z from "zod";
 export const supFormSchema = z
   .object({

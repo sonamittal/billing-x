@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Mona_Sans as FontSans, Syncopate } from "next/font/google";
 import { cn } from "@/utils/index";
 import "@/styles/globals.css";
-import {ThemeProvider} from "@/providers/theme-provider";
+import ThemeProvider from "@/providers/theme-provider";
 import ReactQueryProvider from "@/providers/react-query";
 import BprogressProvider from "@/providers/bprogress";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 export const fontSans = FontSans({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
   display: "swap",
@@ -38,11 +39,13 @@ export default function RootLayout({
           fontSyncopate.variable
         )}
       >
+          <NuqsAdapter>
         <BprogressProvider>
           <ReactQueryProvider>
             <ThemeProvider>{children}</ThemeProvider>
           </ReactQueryProvider>
         </BprogressProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );
