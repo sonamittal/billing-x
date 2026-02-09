@@ -1,15 +1,15 @@
 "use client";
- 
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import {
   CheckCircle,
   CheckCircle2,
-  DollarSign,
   MoreHorizontal,
   Text,
   XCircle,
   Pencil,
-  Trash2
+  Trash2,
+  AlertCircle,
+  Mail,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
@@ -26,62 +26,63 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDataTable } from "@/hooks/use-data-table";
- 
-interface Project {
+
+interface User {
   id: string;
-  title: string;
-  status: "active" | "inactive";
-  budget: number;
+  username: string;
+  email: string;
+  status: "active" | "inactive" | "suspended" | "invited";
+  role: "admin" | "manager" | "staff";
 }
- 
-const data: Project[] = [
+
+const data: User[] = [
   {
     id: "1",
-    title: "Project Alpha",
+    username: "johndoe",
+    email: "john@example.com",
     status: "active",
-    budget: 50000,
+    role: "admin",
   },
   {
     id: "2",
-    title: "Project Beta",
+    username: "janedoe",
+    email: "jane@example.com",
     status: "inactive",
-    budget: 75000,
+    role: "manager",
   },
   {
     id: "3",
-    title: "Project Gamma",
+    username: "mike",
+    email: "mike@example.com",
     status: "active",
-    budget: 25000,
-  },
-  {
-    id: "4",
-    title: "Project Delta",
-    status: "active",
-    budget: 100000,
+    role: "staff",
   },
 ];
- 
+
 export function UsersTable() {
-  const [title] = useQueryState("title", parseAsString.withDefault(""));
+  const [username] = useQueryState("username", parseAsString.withDefault(""));
   const [status] = useQueryState(
     "status",
     parseAsArrayOf(parseAsString).withDefault([]),
   );
- 
+  const [role] = useQueryState(
+    "role",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
+
   // Ideally we would filter the data server-side, but for the sake of this example, we'll filter the data client-side
   const filteredData = React.useMemo(() => {
-    return data.filter((project) => {
-      const matchesTitle =
-        title === "" ||
-        project.title.toLowerCase().includes(title.toLowerCase());
-      const matchesStatus =
-        status.length === 0 || status.includes(project.status);
- 
-      return matchesTitle && matchesStatus;
+    return data.filter((user) => {
+      const matchUsername =
+        username === "" ||
+        user.username.toLowerCase().includes(username.toLowerCase());
+      const matchesStatus = status.length === 0 || status.includes(user.status);
+      const matchesRole = role.length === 0 || role.includes(user.role);
+      return matchUsername && matchesStatus && matchesRole;
     });
-  }, [title, status]);
- 
-  const columns = React.useMemo<ColumnDef<Project>[]>(
+  }, [username, status, role]);
+
+  const columns = React.useMemo<ColumnDef<User>[]>(
     () => [
       {
         id: "select",
@@ -109,33 +110,80 @@ export function UsersTable() {
         enableHiding: false,
       },
       {
-        id: "title",
-        accessorKey: "title",
-        header: ({ column }: { column: Column<Project, unknown> }) => (
-          <DataTableColumnHeader column={column} label="Title" />
+        id: "username",
+        accessorKey: "username",
+        header: ({ column }: { column: Column<User, unknown> }) => (
+          <DataTableColumnHeader column={column} label="Username" />
         ),
-        cell: ({ cell }) => <div>{cell.getValue<Project["title"]>()}</div>,
+        cell: ({ cell }) => <div>{cell.getValue<User["username"]>()}</div>,
         meta: {
-          label: "Title",
-          placeholder: "Search titles...",
+          label: "Username",
+          placeholder: "Search username...",
           variant: "text",
           icon: Text,
         },
         enableColumnFilter: true,
       },
       {
+        id: "email",
+        accessorKey: "email",
+        header: ({ column }: { column: Column<User, unknown> }) => (
+          <DataTableColumnHeader column={column} label="Email" />
+        ),
+        enableColumnFilter: false,
+      },
+      {
+        id: "role",
+        accessorKey: "role",
+        header: ({ column }: { column: Column<User, unknown> }) => (
+          <DataTableColumnHeader column={column} label="Role" />
+        ),
+        meta: {
+          label: "Role",
+          variant: "multiSelect",
+          options: [
+            { label: "Admin", value: "admin" },
+            { label: "Manager", value: "manager" },
+            { label: "User", value: "user" },
+          ],
+        },
+        enableColumnFilter: true,
+      },
+      {
         id: "status",
         accessorKey: "status",
-        header: ({ column }: { column: Column<Project, unknown> }) => (
+        header: ({ column }: { column: Column<User, unknown> }) => (
           <DataTableColumnHeader column={column} label="Status" />
         ),
         cell: ({ cell }) => {
-          const status = cell.getValue<Project["status"]>();
-          const Icon = status === "active" ? CheckCircle2 : XCircle;
- 
+          const status = cell.getValue<User["status"]>();
+
+          const statusConfig = {
+            active: {
+              icon: CheckCircle2,
+              className: "text-green-500",
+            },
+            inactive: {
+              icon: XCircle,
+              className: "text-gray-500",
+            },
+            suspended: {
+              icon: AlertCircle,
+              className: "text-yellow-600",
+            },
+            invited: {
+              icon: Mail,
+              className: "text-blue-600",
+            },
+          } as const;
+
+          const { icon: Icon, className } = statusConfig[status];
           return (
-            <Badge variant="outline" className="capitalize">
-              <Icon />
+            <Badge
+              variant="outline"
+              className={`capitalize flex items-center gap-1 ${className}`}
+            >
+              <Icon className="h-4 w-4" />
               {status}
             </Badge>
           );
@@ -146,26 +194,11 @@ export function UsersTable() {
           options: [
             { label: "Active", value: "active", icon: CheckCircle },
             { label: "Inactive", value: "inactive", icon: XCircle },
+            { label: "Suspended", value: "suspended", icon: AlertCircle },
+            { label: "Invited", value: "invited", icon: Mail },
           ],
         },
         enableColumnFilter: true,
-      },
-      {
-        id: "budget",
-        accessorKey: "budget",
-        header: ({ column }: { column: Column<Project, unknown> }) => (
-          <DataTableColumnHeader column={column} label="Budget" />
-        ),
-        cell: ({ cell }) => {
-          const budget = cell.getValue<Project["budget"]>();
- 
-          return (
-            <div className="flex items-center gap-1">
-              <DollarSign className="size-4" />
-             {budget.toLocaleString("en-US")}
-            </div>
-          );
-        },
       },
       {
         id: "actions",
@@ -180,10 +213,11 @@ export function UsersTable() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                  <Pencil/>
-                  Edit</DropdownMenuItem>
+                  <Pencil />
+                  Edit
+                </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive">
-                  <Trash2/>
+                  <Trash2 />
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -195,18 +229,18 @@ export function UsersTable() {
     ],
     [],
   );
- 
+
   const { table } = useDataTable({
     data: filteredData,
     columns,
     pageCount: 1,
     initialState: {
-      sorting: [{ id: "title", desc: true }],
+      sorting: [{ id: "username", desc: false }],
       columnPinning: { right: ["actions"] },
     },
     getRowId: (row) => row.id,
   });
- 
+
   return (
     <div className="data-table-container">
       <DataTable table={table}>
