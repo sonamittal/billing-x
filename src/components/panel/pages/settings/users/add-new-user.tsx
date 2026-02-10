@@ -25,9 +25,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MailPlus, Send, UserCheck, Users, CreditCard } from "lucide-react";
-import { userInvitedFormSchema } from "@/components/validation/validation";
-import type { UserInvitedFormSchema } from "@/components/validation/validation";
+import { UserPlus , UserCheck, Users, CreditCard } from "lucide-react";
+import {  addNewUserFormSchema } from "@/components/validation/validation";
+import type {  AddNewUserFormSchema } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // role
@@ -48,21 +48,23 @@ const roles = [
     icon: CreditCard,
   },
 ];
-interface UserInviteFormProps {
+interface AddNewUserFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-const UserInviteForm = ({ open, onOpenChange }: UserInviteFormProps) => {
+const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
   // invited user form handling >>>>>>>>>>>>>>>>>
-  const form = useForm<UserInvitedFormSchema>({
-    resolver: zodResolver(userInvitedFormSchema),
+  const form = useForm< AddNewUserFormSchema>({
+    resolver: zodResolver( addNewUserFormSchema),
     defaultValues: {
       username: "",
       email: "",
       role: "",
+      password:"",
+      confirmPassword: "",
     },
   });
-  const onSubmit = (data: UserInvitedFormSchema) => {
+  const onSubmit = (data:  AddNewUserFormSchema) => {
     console.log("Form Data Submitted:", data);
     form.reset();
     onOpenChange(false);
@@ -78,11 +80,10 @@ const UserInviteForm = ({ open, onOpenChange }: UserInviteFormProps) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-start">
           <DialogTitle className="flex items-center gap-2">
-            <MailPlus className="h-5 w-5" /> Invite User
+            <UserPlus  className="h-5 w-5" /> Add New User
           </DialogTitle>
           <DialogDescription>
-            Invite new user to join your team by sending them an email
-            invitation. Assign a role to define their access level.
+            Create new user here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -148,18 +149,41 @@ const UserInviteForm = ({ open, onOpenChange }: UserInviteFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="·········" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel> Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="·········" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </form>
         </Form>
         <DialogFooter className="gap-y-2">
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
           <Button type="submit" form="user-invite-form">
-            Invite <Send />
+            Save Changes 
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
-export default UserInviteForm;
+export default AddNewUserForm;

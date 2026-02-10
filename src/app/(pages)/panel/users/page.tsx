@@ -6,10 +6,10 @@ import { ProfileDropdown } from "@/components/panel/layout/profile-dropdown";
 import { Search } from "@/components/panel/layout/search";
 import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
 import UsersTable from "@/components/panel/pages/settings/users/users-table";
-import UserInviteForm from "@/components/panel/pages/settings/users/user-invited";
+import AddNewUserForm from "@/components/panel/pages/settings/users/add-new-user";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { MailPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 
 export default function Users() {
   const [invitedOpen, setInvitedOpen] = useState(false);
@@ -35,14 +35,14 @@ export default function Users() {
             </p>
           </div>
           <Button onClick={() => setInvitedOpen(true)}>
-            <MailPlus className="mt-0.6 h-4 w-4" />
-            Invite User
+            <UserPlus className="mt-0.6 h-4 w-4" />
+            Add User
           </Button>
         </div>
         {/* Users table */}
         <UsersTable />
         {/* invited User btn */}
-        <UserInviteForm open={invitedOpen} onOpenChange={setInvitedOpen} />
+        <AddNewUserForm open={invitedOpen} onOpenChange={setInvitedOpen} />
       </Main>
     </div>
   );
