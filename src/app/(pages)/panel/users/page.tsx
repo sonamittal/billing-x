@@ -1,13 +1,18 @@
-"use client"
-import { ConfigSettingDrawer } from '@/components/panel/layout/config-settings-drawer'
-import { Header } from '@/components/panel/layout/header'
-import { Main } from '@/components/panel/layout/main'
-import { ProfileDropdown } from '@/components/panel/layout/profile-dropdown'
-import { Search } from '@/components/panel/layout/search'
-import { ThemeSwitch } from '@/components/panel/layout/theme-switch'
-import { UsersTable } from '@/components/panel/pages/settings/users/users-table'
+"use client";
+import { ConfigSettingDrawer } from "@/components/panel/layout/config-settings-drawer";
+import { Header } from "@/components/panel/layout/header";
+import { Main } from "@/components/panel/layout/main";
+import { ProfileDropdown } from "@/components/panel/layout/profile-dropdown";
+import { Search } from "@/components/panel/layout/search";
+import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
+import UsersTable from "@/components/panel/pages/settings/users/users-table";
+import UserInviteForm from "@/components/panel/pages/settings/users/user-invited";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { MailPlus } from "lucide-react";
 
-export  default function Users() {
+export default function Users() {
+  const [invitedOpen, setInvitedOpen] = useState(false);
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
@@ -29,11 +34,16 @@ export  default function Users() {
               Manage your users and their roles here.
             </p>
           </div>
+          <Button onClick={() => setInvitedOpen(true)}>
+            <MailPlus className="mt-0.6 h-4 w-4" />
+            Invite User
+          </Button>
         </div>
-
         {/* Users table */}
         <UsersTable />
+        {/* invited User btn */}
+        <UserInviteForm open={invitedOpen} onOpenChange={setInvitedOpen} />
       </Main>
     </div>
-  )
+  );
 }

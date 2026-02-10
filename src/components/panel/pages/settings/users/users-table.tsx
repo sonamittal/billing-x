@@ -59,7 +59,7 @@ const data: User[] = [
   },
 ];
 
-export function UsersTable() {
+const UsersTable = () => {
   const [username] = useQueryState("username", parseAsString.withDefault(""));
   const [status] = useQueryState(
     "status",
@@ -248,4 +248,5 @@ export function UsersTable() {
       </DataTable>
     </div>
   );
-}
+};
+export default UsersTable;

@@ -1,5 +1,4 @@
 "use client";
-
 import type { Column, ColumnMeta, Table } from "@tanstack/react-table";
 import {
   CalendarIcon,
@@ -219,7 +218,8 @@ export function DataTableFilterList<TData>({
     <Sortable
       value={filters}
       onValueChange={setFilters}
-      getItemValue={(item) => item.filterId}
+    getItemValue={(item: ExtendedColumnFilter<TData>) => item.filterId}
+
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

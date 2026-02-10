@@ -111,3 +111,11 @@ export const organizationSchema = z
     }
   });
 export type OrganizationSchema = z.infer<typeof organizationSchema>;
+
+// user invited form schema
+export const userInvitedFormSchema = z.object({
+  username: z.string().min(1, { message: "username is required" }),
+  email: z.email({ message: "email is required" }),
+  role: z.string().min(1, { message: "role is required " }),
+});
+export type UserInvitedFormSchema = z.infer<typeof userInvitedFormSchema>;
