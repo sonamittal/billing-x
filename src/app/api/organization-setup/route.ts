@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/database/db-connect";
-import { organization } from "@/drizzle/schema/schema";
+import { organization } from "@/drizzle/schema/index";
 import { eq } from "drizzle-orm";
 
 export const POST = async (req: Request) => {
