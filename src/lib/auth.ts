@@ -2,6 +2,14 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/lib/database/db-connect"; // your drizzle instance
 import { emailOTP } from "better-auth/plugins";
+import { admin as adminPlugin } from "better-auth/plugins";
+import {
+  ac,
+  admin,
+  staff,
+  staffAssigned,
+  timesheetStaff,
+} from "@/lib/permissions";
 
 interface SendVerificationOtpParams {
   email: string;
@@ -42,6 +50,15 @@ export const auth = betterAuth({
         console.log("otp:", { email, otp, message });
       },
     }),
+    adminPlugin({
+      ac,
+      roles: {
+        admin,
+        staff,
+        staffAssigned,
+        timesheetStaff,
+      },
+    }),
   ],
   socialProviders: {
     google: {
@@ -49,5 +66,6 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: [process.env.NEXT_PUBLIC_BETTER_AUTH_URL || ''],
 });
+

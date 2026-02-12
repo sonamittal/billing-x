@@ -26,13 +26,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDataTable } from "@/hooks/use-data-table";
+import { USER_ROLES } from "@/lib/constants";
 
 interface User {
   id: string;
   username: string;
   email: string;
-  status: "active" | "inactive" | "suspended" | "invited";
-  role: "admin" | "manager" | "staff";
+  status: "active" | "inactive" | "suspended";
+  role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
 }
 
 const data: User[] = [
@@ -47,15 +48,22 @@ const data: User[] = [
     id: "2",
     username: "janedoe",
     email: "jane@example.com",
-    status: "inactive",
-    role: "manager",
+    status: "suspended",
+    role: "staff",
   },
   {
     id: "3",
+    username: "janedoe",
+    email: "jane@example.com",
+    status: "inactive",
+    role: "staffAssigned",
+  },
+  {
+    id: "4",
     username: "mike",
     email: "mike@example.com",
     status: "active",
-    role: "staff",
+    role: "timesheetStaff",
   },
 ];
 
@@ -141,11 +149,7 @@ const UsersTable = () => {
         meta: {
           label: "Role",
           variant: "multiSelect",
-          options: [
-            { label: "Admin", value: "admin" },
-            { label: "Manager", value: "manager" },
-            { label: "User", value: "user" },
-          ],
+          options: USER_ROLES.map((role) => ({ ...role })),
         },
         enableColumnFilter: true,
       },
@@ -169,11 +173,7 @@ const UsersTable = () => {
             },
             suspended: {
               icon: AlertCircle,
-              className: "text-yellow-600",
-            },
-            invited: {
-              icon: Mail,
-              className: "text-blue-600",
+              className: "text-red-500",
             },
           } as const;
 
@@ -195,7 +195,6 @@ const UsersTable = () => {
             { label: "Active", value: "active", icon: CheckCircle },
             { label: "Inactive", value: "inactive", icon: XCircle },
             { label: "Suspended", value: "suspended", icon: AlertCircle },
-            { label: "Invited", value: "invited", icon: Mail },
           ],
         },
         enableColumnFilter: true,

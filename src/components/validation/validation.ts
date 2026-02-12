@@ -82,7 +82,7 @@ export const setPasswordFormSchema = z
   });
 export type SetPasswordFormSchema = z.infer<typeof setPasswordFormSchema>;
 
-// organization setup schema
+// organization setup schema >>>>>>>>>>>
 export const organizationSchema = z
   .object({
     name: z.string().min(1, { message: " organization name is  required" }),
@@ -112,12 +112,14 @@ export const organizationSchema = z
   });
 export type OrganizationSchema = z.infer<typeof organizationSchema>;
 
-// user invited form schema
+// add user form schema >>>>>>>>>>
 export const addNewUserFormSchema = z
   .object({
     username: z.string().min(1, { message: "username is required" }),
     email: z.email({ message: "email is required" }),
-    role: z.string().min(1, { message: "role is required " }),
+    role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
+      message: "Role is required",
+    }),
     password: z
       .string()
       .min(8, { message: "password must be atleast 8 character" })
@@ -138,4 +140,4 @@ export const addNewUserFormSchema = z
       });
     }
   });
-export type  AddNewUserFormSchema = z.infer<typeof  addNewUserFormSchema>;
+export type AddNewUserFormSchema = z.infer<typeof addNewUserFormSchema>;

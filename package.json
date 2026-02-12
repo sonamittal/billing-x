@@ -5,6 +5,7 @@
   "scripts": {
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
+    "db:ba:generate": "npx @better-auth/cli@latest generate --output ./src/drizzle/schema/schema.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -60,7 +61,7 @@
     "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.18.1",
+    "drizzle-kit": "^0.31.9",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
     "tailwindcss": "^4",

@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -25,49 +24,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserPlus , UserCheck, Users, CreditCard } from "lucide-react";
-import {  addNewUserFormSchema } from "@/components/validation/validation";
-import type {  AddNewUserFormSchema } from "@/components/validation/validation";
+import { UserPlus, UserCheck, Users, CreditCard, Loader2 } from "lucide-react";
+import { addNewUserFormSchema } from "@/components/validation/validation";
+import type { AddNewUserFormSchema } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { authClient } from "@/lib/auth-client";
 // role
-const roles = [
-  {
-    label: "Admin",
-    value: "admin",
-    icon: UserCheck,
-  },
-  {
-    label: "Manager",
-    value: "manager",
-    icon: Users,
-  },
-  {
-    label: "Staff",
-    value: "staff",
-    icon: CreditCard,
-  },
-];
+import { USER_ROLES } from "@/lib/constants";
+
 interface AddNewUserFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
-  // invited user form handling >>>>>>>>>>>>>>>>>
-  const form = useForm< AddNewUserFormSchema>({
-    resolver: zodResolver( addNewUserFormSchema),
+  // add new user form handling >>>>>>>>>>>>>>>>>
+  const {
+    mutate,
+    isPending: userPending,
+    isError: userError,
+  } = useMutation({
+    mutationFn: async (data: AddNewUserFormSchema) => {
+      const res = await authClient.admin.createUser({
+        name: data.username,
+        email: data.email,
+        role: data.role as any,
+        password: data.password,
+        data: { customField: "customValue" },
+      });
+      if (res.error) {
+        throw new Error(res.error?.message || "Failed to create user");
+      }
+      return res.data;
+    },
+    onSuccess: async () => {
+      alert("create new user Successfully!! ");
+      form.reset();
+      onOpenChange(false);
+    },
+  });
+
+  // form handling >>>>>>>>>>>>>>>
+  const form = useForm<AddNewUserFormSchema>({
+    resolver: zodResolver(addNewUserFormSchema),
     defaultValues: {
       username: "",
       email: "",
-      role: "",
-      password:"",
+      role: undefined,
+      password: "",
       confirmPassword: "",
     },
   });
-  const onSubmit = (data:  AddNewUserFormSchema) => {
+  const onSubmit = (data: AddNewUserFormSchema) => {
     console.log("Form Data Submitted:", data);
-    form.reset();
-    onOpenChange(false);
+    mutate(data);
   };
   return (
     <Dialog
@@ -80,7 +91,7 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-start">
           <DialogTitle className="flex items-center gap-2">
-            <UserPlus  className="h-5 w-5" /> Add New User
+            <UserPlus className="h-5 w-5" /> Add New User
           </DialogTitle>
           <DialogDescription>
             Create new user here. Click save when you're done.
@@ -88,7 +99,7 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
         </DialogHeader>
         <Form {...form}>
           <form
-            id="user-invite-form"
+            id="user-form"
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4"
           >
@@ -128,23 +139,21 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {roles.map((role) => (
+                      {USER_ROLES.map((role) => (
                         <SelectItem key={role.value} value={role.value}>
                           {role.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -178,8 +187,14 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
           </form>
         </Form>
         <DialogFooter className="gap-y-2">
-          <Button type="submit" form="user-invite-form">
-            Save Changes 
+          <Button type="submit" form="user-form" disabled={userPending}>
+            {userPending ? (
+              <>
+                <Loader2 className="animate-spin h-5 w-5 mr-2" />
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

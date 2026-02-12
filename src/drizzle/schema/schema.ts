@@ -12,33 +12,10 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-});
-
-export const organization = pgTable("organization", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" })
-    .unique(),
-  name: text("name").notNull(),
-  industry: text("industry").notNull(),
-  country: text("country").notNull(),
-  state: text("state").notNull(),
-  city: text("city").notNull(),
-  address: text("address").notNull(),
-  currency: text("currency").notNull(),
-  language: text("language").notNull(),
-  timezone: text("timezone").notNull(),
-  gstRegistered: boolean("gst_registered").notNull().default(false),
-  gstNumber: text("gst_number"),
-  invoicingMethod: text("invoicing_method").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
+  role: text("role"),
+  banned: boolean("banned").default(false),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires"),
 });
 
 export const session = pgTable(
@@ -55,8 +32,8 @@ export const session = pgTable(
     userAgent: text("user_agent"),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" })
-      .unique(),
+      .references(() => user.id, { onDelete: "cascade" }),
+    impersonatedBy: text("impersonated_by"),
   },
   (table) => [index("session_userId_idx").on(table.userId)],
 );
@@ -69,8 +46,7 @@ export const account = pgTable(
     providerId: text("provider_id").notNull(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" })
-      .unique(),
+      .references(() => user.id, { onDelete: "cascade" }),
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     idToken: text("id_token"),
@@ -80,7 +56,6 @@ export const account = pgTable(
     password: text("password"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
-      .defaultNow()
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
@@ -103,17 +78,9 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-export const userRelations = relations(user, ({ one }) => ({
-  sessions: one(session),
-  accounts: one(account),
-  organization: one(organization),
-}));
-
-export const organizationRelations = relations(organization, ({ one }) => ({
-  user: one(user, {
-    fields: [organization.userId],
-    references: [user.id],
-  }),
+export const userRelations = relations(user, ({ many }) => ({
+  sessions: many(session),
+  accounts: many(account),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({

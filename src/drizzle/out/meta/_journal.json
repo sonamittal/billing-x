@@ -5,43 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1767173250802,
-      "tag": "0000_black_the_order",
+      "when": 1770856025365,
+      "tag": "0000_condemned_smiling_tiger",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1767174527481,
-      "tag": "0001_even_stepford_cuckoos",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1767174928853,
-      "tag": "0002_gray_tomorrow_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1769186292591,
-      "tag": "0003_dusty_ikaris",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1769199836779,
-      "tag": "0004_supreme_leper_queen",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1769200467355,
-      "tag": "0005_rapid_moira_mactaggert",
+      "when": 1770856492494,
+      "tag": "0001_eager_lifeguard",
       "breakpoints": true
     }
   ]
