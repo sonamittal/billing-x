@@ -15,6 +15,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,6 +34,11 @@ import { useMutation } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth-client";
 // role
 import { USER_ROLES } from "@/lib/constants";
+//Status
+import { USER_STATUS } from "@/lib/constants";
+import { Switch } from "@/components/ui/switch";
+import Message from "@/components/ui/message";
+import ImageUpload from "@/components/ui/image-upload";
 
 interface AddNewUserFormProps {
   open: boolean;
@@ -41,9 +47,11 @@ interface AddNewUserFormProps {
 const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
   // add new user form handling >>>>>>>>>>>>>>>>>
   const {
+    data: addUserData,
     mutate,
-    isPending: userPending,
-    isError: userError,
+    isPending: isAddUserPending,
+    isSuccess: isAddUserSuccess,
+    error: addUserError,
   } = useMutation({
     mutationFn: async (data: AddNewUserFormSchema) => {
       const res = await authClient.admin.createUser({
@@ -51,7 +59,12 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
         email: data.email,
         role: data.role as any,
         password: data.password,
-        data: { customField: "customValue" },
+        data: {
+          customField: "customValue",
+          image: data.image,
+          isVerified: data.isVerified,
+          isStatus: data.status,
+        },
       });
       if (res.error) {
         throw new Error(res.error?.message || "Failed to create user");
@@ -59,23 +72,26 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
       return res.data;
     },
     onSuccess: async () => {
-      alert("create new user Successfully!! ");
+      alert("new user create Successfully!! ");
       form.reset();
       onOpenChange(false);
     },
   });
 
   // form handling >>>>>>>>>>>>>>>
-  const form = useForm<AddNewUserFormSchema>({
+  const form = useForm({
     resolver: zodResolver(addNewUserFormSchema),
     defaultValues: {
+      image: "",
       username: "",
       email: "",
       role: undefined,
+      status: undefined,
       password: "",
-      confirmPassword: "",
+      isVerified: false,
     },
   });
+  // Submit
   const onSubmit = (data: AddNewUserFormSchema) => {
     console.log("Form Data Submitted:", data);
     mutate(data);
@@ -88,7 +104,7 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
         onOpenChange(state);
       }}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="overflow-auto w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
         <DialogHeader className="text-start">
           <DialogTitle className="flex items-center gap-2">
             <UserPlus className="h-5 w-5" /> Add New User
@@ -97,12 +113,50 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
             Create new user here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
+        <Message
+          variant={addUserError ? "destructive" : "default"}
+          message={
+            addUserError?.message ||
+            (isAddUserSuccess && addUserData
+              ? "user create Successfully!!"
+              : "")
+          }
+        />
         <Form {...form}>
           <form
             id="user-form"
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4"
           >
+            {/* Image */}
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">User image</FormLabel>
+                  <FormDescription>
+                    This image will be used for user avatar across the website.
+                  </FormDescription>
+                  <FormMessage />
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value}
+                      onChange={(value) => {
+                        if (value) {
+                          field.onChange(value);
+                        } else {
+                          field.onChange("");
+                        }
+                      }}
+                      maxUploadSize={2}
+                      uploadApi={"/api/panel/upload"}
+                      uploadAction={"uploadImage"}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="username"
@@ -160,6 +214,31 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
             />
             <FormField
               control={form.control}
+              name="status" // corrected from role
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a Status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {USER_STATUS.map((status) => (
+                        <SelectItem key={status.value} value={status.value}>
+                          {status.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -173,22 +252,30 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
             />
             <FormField
               control={form.control}
-              name="confirmPassword"
+              name="isVerified"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel> Confirm Password</FormLabel>
+                <FormItem className="rounded-md bg-background flex flex-row items-center justify-between border p-4 space-y-0 gap-3">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Verify</FormLabel>
+                    <FormDescription>
+                      Verifying a user will allow the user to sign in.
+                    </FormDescription>
+                    <FormMessage />
+                  </div>
                   <FormControl>
-                    <Input type="password" placeholder="·········" {...field} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
           </form>
         </Form>
         <DialogFooter className="gap-y-2">
-          <Button type="submit" form="user-form" disabled={userPending}>
-            {userPending ? (
+          <Button type="submit" form="user-form" disabled={isAddUserPending}>
+            {isAddUserPending ? (
               <>
                 <Loader2 className="animate-spin h-5 w-5 mr-2" />
               </>

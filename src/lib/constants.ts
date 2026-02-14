@@ -93,4 +93,10 @@ export const USER_ROLES = [
   { label: "Staff", value: "staff" },
   { label: "Staff (Assigned Customers Only)", value: "staffAssigned" },
   { label: "Timesheet Staff", value: "timesheetStaff" },
-]as const;
+] as const;
+//Status
+export const USER_STATUS = [
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
+  { label: "Suspended", value: "suspended" },
+] as const;

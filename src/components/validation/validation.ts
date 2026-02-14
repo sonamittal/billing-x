@@ -113,31 +113,24 @@ export const organizationSchema = z
 export type OrganizationSchema = z.infer<typeof organizationSchema>;
 
 // add user form schema >>>>>>>>>>
-export const addNewUserFormSchema = z
-  .object({
-    username: z.string().min(1, { message: "username is required" }),
-    email: z.email({ message: "email is required" }),
-    role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
-      message: "Role is required",
-    }),
-    password: z
-      .string()
-      .min(8, { message: "password must be atleast 8 character" })
-      .regex(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain at least one letter and one number",
-      ),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "password must be atleast 8 character." }),
-  })
-  .superRefine(({ confirmPassword, password }, ctx) => {
-    if (confirmPassword !== password) {
-      ctx.addIssue({
-        code: "custom",
-        message: "password and confirm password should match",
-        path: ["confirmPassword"],
-      });
-    }
-  });
+export const addNewUserFormSchema = z.object({
+  image: z.string().min(1, { message: "Image is required" }),
+  username: z.string().min(1, { message: "username is required" }),
+  email: z.email({ message: "email is required" }),
+  role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
+    message: "Role is required",
+  }),
+  status: z.enum(["active", "inactive", "suspended"],{
+      message: "status is required",
+}),
+  password: z
+    .string()
+    .min(8, { message: "password must be atleast 8 character" })
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must contain at least one letter and one number",
+    ),
+  isVerified: z.boolean().optional(),
+});
+
 export type AddNewUserFormSchema = z.infer<typeof addNewUserFormSchema>;
