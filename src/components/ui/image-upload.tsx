@@ -56,23 +56,32 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     onSuccess: (imageUrl) => {
       onChange(imageUrl);
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: (error: any) => {
+      console.error("Upload error:", error);
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong";
+      toast.error(message);
     },
   });
   // Drop handler >>>>>>>>
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
-      if (file && file.size <= maxUploadSize * 1024 * 1024) {
-        uploadImage(file);
-      } else if (file) {
-        toast.error(
+      if (!file) return;
+      if (file.size > maxUploadSize * 1024 * 1024) {
+        return toast.error(
           `File size exceeds the maximum limit of ${maxUploadSize}MB. Please upload a smaller file.`,
         );
       }
+      // preview locally
+      const previewUrl = URL.createObjectURL(file);
+      onChange(previewUrl);
+      // upload to server
+      uploadImage(file);
     },
-    [maxUploadSize, uploadImage],
+    [maxUploadSize, onChange, uploadImage],
   );
   // Dropzone props >>>>>>>>
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -97,7 +106,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           {value ? (
             <Image
               src={value}
-              alt="Selected profile"
+              alt="Selected image"
               width={64}
               height={64}
               className="object-cover w-full h-full"

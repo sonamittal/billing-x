@@ -120,9 +120,9 @@ export const addNewUserFormSchema = z.object({
   role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
     message: "Role is required",
   }),
-  status: z.enum(["active", "inactive", "suspended"],{
-      message: "status is required",
-}),
+  status: z.enum(["active", "inactive", "suspended"], {
+    message: "status is required",
+  }),
   password: z
     .string()
     .min(8, { message: "password must be atleast 8 character" })

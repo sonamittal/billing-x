@@ -142,16 +142,10 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
                   <FormControl>
                     <ImageUpload
                       value={field.value}
-                      onChange={(value) => {
-                        if (value) {
-                          field.onChange(value);
-                        } else {
-                          field.onChange("");
-                        }
-                      }}
-                      maxUploadSize={2}
-                      uploadApi={"/api/panel/upload"}
-                      uploadAction={"uploadImage"}
+                      onChange={field.onChange}
+                      maxUploadSize={5}
+                      uploadApi=""
+                      uploadAction="uploadImage"
                     />
                   </FormControl>
                 </FormItem>
