@@ -144,8 +144,8 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
                       value={field.value}
                       onChange={field.onChange}
                       maxUploadSize={5}
-                      uploadApi=""
-                      uploadAction="uploadImage"
+                      uploadApi={"/api/panel/upload"}
+                      uploadAction={"uploadImage"}
                     />
                   </FormControl>
                 </FormItem>

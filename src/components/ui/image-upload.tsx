@@ -50,7 +50,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         formData.append("action", uploadAction);
       }
       // Uploading image >>>>>>>>
-      const { data } = await axios.patch(uploadApi, formData);
+      const { data } = await axios.post(uploadApi, formData);
       return data.url;
     },
     onSuccess: (imageUrl) => {
