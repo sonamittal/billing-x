@@ -19,6 +19,7 @@ import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { authClient } from "@/lib/auth-client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,38 +37,9 @@ interface User {
   role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
 }
 
-const data: User[] = [
-  {
-    id: "1",
-    username: "johndoe",
-    email: "john@example.com",
-    status: "active",
-    role: "admin",
-  },
-  {
-    id: "2",
-    username: "janedoe",
-    email: "jane@example.com",
-    status: "suspended",
-    role: "staff",
-  },
-  {
-    id: "3",
-    username: "janedoe",
-    email: "jane@example.com",
-    status: "inactive",
-    role: "staffAssigned",
-  },
-  {
-    id: "4",
-    username: "mike",
-    email: "mike@example.com",
-    status: "active",
-    role: "timesheetStaff",
-  },
-];
-
 const UsersTable = () => {
+  const [users, setUsers] = React.useState<User[]>([]);
+  const [loading, setLoading] = React.useState(true);
   const [username] = useQueryState("username", parseAsString.withDefault(""));
   const [status] = useQueryState(
     "status",
@@ -78,9 +50,41 @@ const UsersTable = () => {
     parseAsArrayOf(parseAsString).withDefault([]),
   );
 
+  //Fetch users
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await authClient.admin.listUsers({
+          query: {
+            limit: 100,
+          },
+        });
+        if (error) {
+          console.error("users is not fetch", error);
+          setUsers([]);
+        } else {
+          const mappedUsers: User[] = (data?.users || []).map((u: any) => ({
+            id: u.id,
+            username: u.username || u.name || "Unknown",
+            email: u.email,
+            status: (u.status as User["status"]) || "active",
+            role: Array.isArray(u.role)
+              ? (u.role[0] as User["role"])
+              : (u.role as User["role"]),
+          }));
+          setUsers(mappedUsers);
+        }
+      } catch (error) {
+        console.error("something error:", error);
+      }
+      setLoading(false);
+    };
+    fetchUsers();
+  }, []);
   // Ideally we would filter the data server-side, but for the sake of this example, we'll filter the data client-side
   const filteredData = React.useMemo(() => {
-    return data.filter((user) => {
+    return users.filter((user) => {
       const matchUsername =
         username === "" ||
         user.username.toLowerCase().includes(username.toLowerCase());
@@ -88,7 +92,7 @@ const UsersTable = () => {
       const matchesRole = role.length === 0 || role.includes(user.role);
       return matchUsername && matchesStatus && matchesRole;
     });
-  }, [username, status, role]);
+  }, [users, username, status, role]);
 
   const columns = React.useMemo<ColumnDef<User>[]>(
     () => [
@@ -232,7 +236,7 @@ const UsersTable = () => {
   const { table } = useDataTable({
     data: filteredData,
     columns,
-    pageCount: 1,
+    pageCount: 2,
     initialState: {
       sorting: [{ id: "username", desc: false }],
       columnPinning: { right: ["actions"] },
@@ -242,9 +246,13 @@ const UsersTable = () => {
 
   return (
     <div className="data-table-container">
-      <DataTable table={table}>
-        <DataTableToolbar table={table} />
-      </DataTable>
+      {loading ? (
+        <div>Loading users...</div>
+      ) : (
+        <DataTable table={table}>
+          <DataTableToolbar table={table} />
+        </DataTable>
+      )}
     </div>
   );
 };

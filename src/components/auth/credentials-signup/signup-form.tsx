@@ -22,6 +22,7 @@ import type { SignupFormSchema } from "@/components/validation/validation";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+
 const  SignUpForm = () => {
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
