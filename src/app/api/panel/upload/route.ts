@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const formData = await req.formData();
     const file = formData.get("file");
 
- if (!file || !(file instanceof File)) {
+    if (!file || !(file instanceof File)) {
       return Response.json({ error: "Invalid file" }, { status: 400 });
     }
 
@@ -50,7 +50,6 @@ export async function POST(req: Request) {
     const publicUrl = process.env.CLOUDFLARE_R2_PUBLIC_ENDPOINT
       ? `${process.env.CLOUDFLARE_R2_PUBLIC_ENDPOINT}/${key}`
       : null;
-
     return Response.json(
       {
         key,
@@ -62,7 +61,7 @@ export async function POST(req: Request) {
       { status: 200 },
     );
   } catch (err: any) {
-    console.log(err)
+    console.log(err);
     return Response.json(
       { error: err.message || "Upload failed" },
       { status: 500 },

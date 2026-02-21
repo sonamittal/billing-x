@@ -181,31 +181,32 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
                 </FormItem>
               )}
             />
+            {/* Role */}
             <FormField
               control={form.control}
               name="role"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {USER_ROLES.map((role) => (
-                        <SelectItem key={role.value} value={role.value}>
-                          {role.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
+                      <SelectContent>
+                        {USER_ROLES.map((role) => (
+                          <SelectItem key={role.value} value={role.value}>
+                            {role.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            {/* Status */}
             <FormField
               control={form.control}
               name="status" // corrected from role
@@ -230,7 +231,7 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
                 </FormItem>
               )}
             />
-
+            {/* password */}
             <FormField
               control={form.control}
               name="password"
@@ -244,6 +245,7 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
                 </FormItem>
               )}
             />
+            {/* verifying */}
             <FormField
               control={form.control}
               name="isVerified"

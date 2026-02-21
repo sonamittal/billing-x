@@ -110,6 +110,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               width={64}
               height={64}
               className="object-cover w-full h-full"
+              unoptimized
             />
           ) : (
             <ImageIcon className="size-6 min-w-6" />
