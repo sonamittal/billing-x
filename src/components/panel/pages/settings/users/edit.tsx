@@ -51,7 +51,6 @@ import type { EditUserFormSchema } from "@/components/validation/validation";
 const EditUser = () => {
   // edit user form handling >>>>>>>>>>>>>>>>>
   const {
-    data: updateUserData,
     mutate,
     isPending: isUpdateUserPending,
     isSuccess: isUpdateUserSuccess,
@@ -65,7 +64,7 @@ const EditUser = () => {
           name: data.username,
           email: data.email,
           role: data.role,
-          status: data.status,
+          status: data.banned,
           password: data.password || undefined,
           isVerified: data.isVerified,
         },
@@ -88,7 +87,7 @@ const EditUser = () => {
       username: "",
       email: "",
       role: undefined,
-      status: undefined,
+      banned: undefined,
       password: "",
       isVerified: false,
     },
@@ -205,7 +204,7 @@ const EditUser = () => {
           {/* Status */}
           <FormField
             control={form.control}
-            name="status" // corrected from role
+            name="banned" // corrected from role
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>

@@ -121,8 +121,8 @@ export const addNewUserFormSchema = z.object({
   role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
     message: "Role is required",
   }),
-  status: z.enum(["active", "inactive", "suspended"], {
-    message: "status is required",
+  banned: z.enum(["true", "false"], {
+    message: "banned is required",
   }),
   password: z
     .string()
@@ -144,8 +144,8 @@ export const editUserFormSchema = z.object({
   role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
     message: "Role is required",
   }),
-  status: z.enum(["active", "inactive", "suspended"], {
-    message: "status is required",
+  banned: z.enum(["true", "false"], {
+    message: "banned is required",
   }),
   password: z
     .string()

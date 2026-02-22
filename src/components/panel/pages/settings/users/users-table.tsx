@@ -1,15 +1,12 @@
 "use client";
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import {
-  CheckCircle,
   CheckCircle2,
   MoreHorizontal,
   Text,
-  XCircle,
   Pencil,
   Trash2,
   AlertCircle,
-  Mail,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
@@ -29,20 +26,19 @@ import {
 import { useDataTable } from "@/hooks/use-data-table";
 import { USER_ROLES, USER_STATUS } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 
 interface User {
   id: string;
   username: string;
   email: string;
-  status: "active" | "inactive" | "suspended";
+  banned: boolean;
   role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
 }
 
 const UsersTable = () => {
   const [username] = useQueryState("username", parseAsString.withDefault(""));
-  const [status] = useQueryState(
-    "status",
+  const [banned] = useQueryState(
+    "banned",
     parseAsArrayOf(parseAsString).withDefault([]),
   );
   const [role] = useQueryState(
@@ -50,7 +46,7 @@ const UsersTable = () => {
     parseAsArrayOf(parseAsString).withDefault([]),
   );
 
-  //Fetch users
+  // Fetch users
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
@@ -64,10 +60,7 @@ const UsersTable = () => {
         id: u.id,
         username: u.username || u.name || "Unknown",
         email: u.email,
-        status:
-          u.data?.status ??
-          (Array.isArray(u.status) ? u.status[0] : u.status) ??
-          "active",
+        banned: u.banned,
         role: Array.isArray(u.role)
           ? (u.role[0] as User["role"])
           : (u.role as User["role"]),
@@ -80,11 +73,11 @@ const UsersTable = () => {
       const matchUsername =
         username === "" ||
         user.username.toLowerCase().includes(username.toLowerCase());
-      const matchesStatus = status.length === 0 || status.includes(user.status);
+      const matchesStatus = banned.length === 0 || banned.includes(user.banned);
       const matchesRole = role.length === 0 || role.includes(user.role);
       return matchUsername && matchesStatus && matchesRole;
     });
-  }, [users, username, status, role]);
+  }, [users, username, banned, role]);
 
   const columns = React.useMemo<ColumnDef<User>[]>(
     () => [
@@ -150,23 +143,23 @@ const UsersTable = () => {
         enableColumnFilter: true,
       },
       {
-        id: "status",
-        accessorKey: "status",
+        id: "banned",
+        accessorKey: "banned",
         header: ({ column }: { column: Column<User, unknown> }) => (
           <DataTableColumnHeader column={column} label="Status" />
         ),
         cell: ({ cell }) => {
-          const status = cell.getValue<User["status"]>();
+          const bannedStatus =
+            cell.getValue<User["banned"]>() === true ? "Banned" : "Active";
 
-          // Define status configurations
-          const statusConfig = {
-            active: { icon: CheckCircle2, className: "text-green-500" },
-            inactive: { icon: XCircle, className: "text-gray-500" },
-            suspended: { icon: AlertCircle, className: "text-red-500" },
+          // Define banned configurations
+          const bannedConfig = {
+            Active: { icon: CheckCircle2, className: "text-green-500" },
+            Banned: { icon: AlertCircle, className: "text-red-500" },
           } as const;
 
-          const { icon: Icon, className } = statusConfig[
-            status as keyof typeof statusConfig
+          const { icon: Icon, className } = bannedConfig[
+            bannedStatus as keyof typeof bannedConfig
           ] ?? {
             icon: AlertCircle,
             className: "text-gray-400",
@@ -178,14 +171,14 @@ const UsersTable = () => {
               className={`capitalize flex items-center gap-1 ${className}`}
             >
               <Icon className="h-4 w-4" />
-              {status ?? "unknown"}
+              {bannedStatus ?? "unknown"}
             </Badge>
           );
         },
         meta: {
           label: "Status",
           variant: "multiSelect",
-          options: USER_STATUS.map((status) => ({ ...status })), // Your multi-select options
+          options: USER_STATUS.map((banned) => ({ ...banned })), // Your multi-select options
         },
         enableColumnFilter: true,
       },
@@ -220,7 +213,7 @@ const UsersTable = () => {
     [],
   );
 
-  const { table } = useDataTable({
+  const { table } = useDataTable<User>({
     data: filteredData,
     columns,
     pageCount: 2,

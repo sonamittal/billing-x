@@ -54,7 +54,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
       username: "",
       email: "",
       role: undefined,
-      status: "active",
+      banned: undefined,
       password: "",
       isVerified: false,
     },
@@ -76,9 +76,10 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
         data: {
           image: data.image,
           isVerified: data.isVerified,
-          status: data.status || "active",
+          banned: data.banned,
         },
       });
+
       if (res.error) {
         throw new Error(res.error?.message || "Failed to create user");
       }
@@ -211,7 +212,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
             {/* Status */}
             <FormField
               control={form.control}
-              name="status"
+              name="banned"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
