@@ -27,7 +27,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDataTable } from "@/hooks/use-data-table";
-import { USER_ROLES } from "@/lib/constants";
+import { USER_ROLES, USER_STATUS } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface User {
   id: string;
@@ -38,8 +40,6 @@ interface User {
 }
 
 const UsersTable = () => {
-  const [users, setUsers] = React.useState<User[]>([]);
-  const [loading, setLoading] = React.useState(true);
   const [username] = useQueryState("username", parseAsString.withDefault(""));
   const [status] = useQueryState(
     "status",
@@ -51,38 +51,30 @@ const UsersTable = () => {
   );
 
   //Fetch users
-  React.useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      try {
-        const { data, error } = await authClient.admin.listUsers({
-          query: {
-            limit: 100,
-          },
-        });
-        if (error) {
-          console.error("users is not fetch", error);
-          setUsers([]);
-        } else {
-          const mappedUsers: User[] = (data?.users || []).map((u: any) => ({
-            id: u.id,
-            username: u.username || u.name || "Unknown",
-            email: u.email,
-            status: (u.status as User["status"]) || "active",
-            role: Array.isArray(u.role)
-              ? (u.role[0] as User["role"])
-              : (u.role as User["role"]),
-          }));
-          setUsers(mappedUsers);
-        }
-      } catch (error) {
-        console.error("something error:", error);
-      }
-      setLoading(false);
-    };
-    fetchUsers();
-  }, []);
-  // Ideally we would filter the data server-side, but for the sake of this example, we'll filter the data client-side
+  const { data: users = [], isLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const { data, error } = await authClient.admin.listUsers({
+        query: { limit: 100 },
+      });
+
+      if (error) throw new Error(error.message);
+
+      return (data?.users || []).map((u: any) => ({
+        id: u.id,
+        username: u.username || u.name || "Unknown",
+        email: u.email,
+        status:
+          u.data?.status ??
+          (Array.isArray(u.status) ? u.status[0] : u.status) ??
+          "active",
+        role: Array.isArray(u.role)
+          ? (u.role[0] as User["role"])
+          : (u.role as User["role"]),
+      }));
+    },
+  });
+
   const filteredData = React.useMemo(() => {
     return users.filter((user) => {
       const matchUsername =
@@ -166,40 +158,34 @@ const UsersTable = () => {
         cell: ({ cell }) => {
           const status = cell.getValue<User["status"]>();
 
+          // Define status configurations
           const statusConfig = {
-            active: {
-              icon: CheckCircle2,
-              className: "text-green-500",
-            },
-            inactive: {
-              icon: XCircle,
-              className: "text-gray-500",
-            },
-            suspended: {
-              icon: AlertCircle,
-              className: "text-red-500",
-            },
+            active: { icon: CheckCircle2, className: "text-green-500" },
+            inactive: { icon: XCircle, className: "text-gray-500" },
+            suspended: { icon: AlertCircle, className: "text-red-500" },
           } as const;
 
-          const { icon: Icon, className } = statusConfig[status];
+          const { icon: Icon, className } = statusConfig[
+            status as keyof typeof statusConfig
+          ] ?? {
+            icon: AlertCircle,
+            className: "text-gray-400",
+          };
+
           return (
             <Badge
               variant="outline"
               className={`capitalize flex items-center gap-1 ${className}`}
             >
               <Icon className="h-4 w-4" />
-              {status}
+              {status ?? "unknown"}
             </Badge>
           );
         },
         meta: {
           label: "Status",
           variant: "multiSelect",
-          options: [
-            { label: "Active", value: "active", icon: CheckCircle },
-            { label: "Inactive", value: "inactive", icon: XCircle },
-            { label: "Suspended", value: "suspended", icon: AlertCircle },
-          ],
+          options: USER_STATUS.map((status) => ({ ...status })), // Your multi-select options
         },
         enableColumnFilter: true,
       },
@@ -218,6 +204,7 @@ const UsersTable = () => {
                 <DropdownMenuItem>
                   <Pencil />
                   Edit
+                  {/* <Link href={"/panel/user/[userId]"}>Edit</Link> */}
                 </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive">
                   <Trash2 />
@@ -246,7 +233,7 @@ const UsersTable = () => {
 
   return (
     <div className="data-table-container">
-      {loading ? (
+      {isLoading ? (
         <div>Loading users...</div>
       ) : (
         <DataTable table={table}>

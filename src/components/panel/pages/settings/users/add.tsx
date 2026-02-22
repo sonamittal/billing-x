@@ -30,7 +30,7 @@ import { addNewUserFormSchema } from "@/components/validation/validation";
 import type { AddNewUserFormSchema } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth-client";
 // role
 import { USER_ROLES } from "@/lib/constants";
@@ -44,7 +44,21 @@ interface AddNewUserFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
+const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
+  const queryClient = useQueryClient();
+  // form handling >>>>>>>>>>>>>>>
+  const form = useForm({
+    resolver: zodResolver(addNewUserFormSchema),
+    defaultValues: {
+      image: "",
+      username: "",
+      email: "",
+      role: undefined,
+      status: "active",
+      password: "",
+      isVerified: false,
+    },
+  });
   // add new user form handling >>>>>>>>>>>>>>>>>
   const {
     data: addUserData,
@@ -60,10 +74,9 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
         role: data.role as any,
         password: data.password,
         data: {
-          customField: "customValue",
           image: data.image,
           isVerified: data.isVerified,
-          isStatus: data.status,
+          status: data.status || "active",
         },
       });
       if (res.error) {
@@ -72,23 +85,12 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
       return res.data;
     },
     onSuccess: async () => {
-      alert("new user create Successfully!! ");
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+      alert("user create Successfully!! ");
       form.reset();
       onOpenChange(false);
-    },
-  });
-
-  // form handling >>>>>>>>>>>>>>>
-  const form = useForm({
-    resolver: zodResolver(addNewUserFormSchema),
-    defaultValues: {
-      image: "",
-      username: "",
-      email: "",
-      role: undefined,
-      status: undefined,
-      password: "",
-      isVerified: false,
     },
   });
   // Submit
@@ -209,24 +211,24 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
             {/* Status */}
             <FormField
               control={form.control}
-              name="status" // corrected from role
+              name="status"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a Status" />
                       </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {USER_STATUS.map((status) => (
-                        <SelectItem key={status.value} value={status.value}>
-                          {status.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <SelectContent>
+                        {USER_STATUS.map((status) => (
+                          <SelectItem key={status.value} value={status.value}>
+                            {status.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -284,4 +286,4 @@ const AddNewUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
     </Dialog>
   );
 };
-export default AddNewUserForm;
+export default AddUserForm;

@@ -1,5 +1,6 @@
 // zod schema >>>>>>>>>>>>>\
 import * as z from "zod";
+import { TypeOf } from "zod/v3";
 export const supFormSchema = z
   .object({
     name: z.string().min(1, { message: "name is  required" }),
@@ -134,3 +135,25 @@ export const addNewUserFormSchema = z.object({
 });
 
 export type AddNewUserFormSchema = z.infer<typeof addNewUserFormSchema>;
+
+// edit user form schema >>>>>>>>>>
+export const editUserFormSchema = z.object({
+  image: z.string().min(1, { message: "Image is required" }),
+  username: z.string().min(1, { message: "username is required" }),
+  email: z.email({ message: "email is required" }),
+  role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
+    message: "Role is required",
+  }),
+  status: z.enum(["active", "inactive", "suspended"], {
+    message: "status is required",
+  }),
+  password: z
+    .string()
+    .min(8, { message: "password must be atleast 8 character" })
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must contain at least one letter and one number",
+    ),
+  isVerified: z.boolean().optional(),
+});
+export type EditUserFormSchema = z.infer<typeof editUserFormSchema>;

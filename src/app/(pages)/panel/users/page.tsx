@@ -6,7 +6,7 @@ import { ProfileDropdown } from "@/components/panel/layout/profile-dropdown";
 import { Search } from "@/components/panel/layout/search";
 import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
 import UsersTable from "@/components/panel/pages/settings/users/users-table";
-import AddNewUserForm from "@/components/panel/pages/settings/users/add-new-user";
+import AddUserForm from "@/components/panel/pages/settings/users/add";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
@@ -42,7 +42,7 @@ export default function Users() {
         {/* Users table */}
         <UsersTable />
         {/* invited User btn */}
-        <AddNewUserForm open={invitedOpen} onOpenChange={setInvitedOpen} />
+        <AddUserForm open={invitedOpen} onOpenChange={setInvitedOpen} />
       </Main>
     </div>
   );
