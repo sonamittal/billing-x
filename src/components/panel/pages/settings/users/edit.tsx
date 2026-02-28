@@ -31,14 +31,6 @@ import {
 import ImageUpload from "@/components/ui/image-upload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Message from "@/components/ui/message";
-import axios from "axios";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { UserPlus, Loader2 } from "lucide-react";
 // role
 import { USER_ROLES } from "@/lib/constants";
@@ -47,8 +39,11 @@ import { USER_STATUS } from "@/lib/constants";
 import { Switch } from "@/components/ui/switch";
 import { editUserFormSchema } from "@/components/validation/validation";
 import type { EditUserFormSchema } from "@/components/validation/validation";
+interface userIdProps {
+  user: any;
+}
 
-const EditUser = () => {
+const EditUser = ({ user }: userIdProps) => {
   // edit user form handling >>>>>>>>>>>>>>>>>
   const {
     mutate,
@@ -58,7 +53,7 @@ const EditUser = () => {
   } = useMutation({
     mutationFn: async (data: EditUserFormSchema) => {
       const response = await authClient.admin.updateUser({
-        userId: "user-id", // required
+        userId: user.id, // required
         data: {
           image: data.image,
           name: data.username,
@@ -83,13 +78,13 @@ const EditUser = () => {
   const form = useForm({
     resolver: zodResolver(editUserFormSchema),
     defaultValues: {
-      image: "",
-      username: "",
-      email: "",
-      role: undefined,
-      banned: undefined,
+      image: user.image || "",
+      username: user.username || "",
+      email: user.email || "",
+      role: user.role,
+      banned: user.banned,
       password: "",
-      isVerified: false,
+      isVerified: user.isVerified || false,
     },
   });
   const onSubmit = (data: EditUserFormSchema) => {

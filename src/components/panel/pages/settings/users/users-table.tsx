@@ -26,6 +26,7 @@ import {
 import { useDataTable } from "@/hooks/use-data-table";
 import { USER_ROLES, USER_STATUS } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface User {
   id: string;
@@ -184,7 +185,8 @@ const UsersTable = () => {
       },
       {
         id: "actions",
-        cell: function Cell() {
+        cell: ({ row }) => {
+          const userId = row.original.id;
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -195,9 +197,10 @@ const UsersTable = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                  <Pencil />
-                  Edit
-                  {/* <Link href={"/panel/user/[userId]"}>Edit</Link> */}
+                  <Link href={`/panel/users/${userId}`}>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Edit
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive">
                   <Trash2 />
