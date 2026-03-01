@@ -33,11 +33,12 @@ export const GET = async (
       .from(user)
       .where(eq(user.id, userId))
       .limit(1);
-    if (!userData) {
+    const userRow = userData[0];
+    if (!userRow) {
       return Response.json({ error: `User not found.` }, { status: 400 });
     }
     // Returning user data >>>>>>>>>>>>>>
-    return Response.json({ ...userData }, { status: 200 });
+    return Response.json({ ...userRow }, { status: 200 });
   } catch (error) {
     return Response.json(
       {

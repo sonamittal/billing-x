@@ -25,7 +25,6 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
 const SigninForm = () => {
-
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
   const searchParams = useSearchParams();
@@ -66,7 +65,7 @@ const SigninForm = () => {
     console.log("Form Data Submitted:", data);
     mutate(data);
   };
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

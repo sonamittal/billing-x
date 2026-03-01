@@ -197,8 +197,11 @@ const UsersTable = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                  <Link href={`/panel/users/${userId}`}>
-                    <Pencil className="mr-2 h-4 w-4" />
+                  <Link
+                    href={`/panel/users/${userId}`}
+                    className="flex items-center text-white-800"
+                  >
+                    <Pencil className="mr-2 h-4 w-4 text-white-800" />
                     Edit
                   </Link>
                 </DropdownMenuItem>
