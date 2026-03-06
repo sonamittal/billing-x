@@ -5,7 +5,7 @@ import axios from "axios";
 import Message from "@/components/ui/message";
 import EditUser from "@/components/panel/pages/settings/users/edit";
 import { notFound } from "next/navigation";
-import{ChevronRight} from "lucide-react"
+import { ChevronRight } from "lucide-react";
 
 interface props {
   userId: string;
@@ -37,13 +37,15 @@ const UsersClient = ({ userId }: props) => {
         className="mt-3"
       />
       {!error && data && (
-          <Breadcrumb className="mb-5 flex items-center gap-0.5">
+        <Breadcrumb className="mb-5 flex items-center gap-0.5">
           <BreadcrumbItem>
-            <a className = "text-[#e8dad0] "href="/panel/users">Users</a>
+            <a className="text-[#e8dad0] " href="/panel/users">
+              Users
+            </a>
           </BreadcrumbItem>
-            <ChevronRight className="h-4 w-4 mt-1 text-muted-foreground" />
+          <ChevronRight className="h-4 w-4 mt-1 text-muted-foreground" />
           <BreadcrumbItem>
-            {data?.name ??  data?.username ?? "Unknown"}
+            {data?.name ?? data?.username ?? "Unknown"}
           </BreadcrumbItem>
         </Breadcrumb>
       )}

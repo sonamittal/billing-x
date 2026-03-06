@@ -58,9 +58,9 @@ const EditUser = ({ user }: userIdProps) => {
           name: data.username,
           email: data.email,
           role: data.role,
-          status: data.banned,
+          banned: data.banned === "true",
           password: data.password || undefined,
-          isVerified: data.isVerified,
+          emailVerified: data.isVerified,
         },
       });
       if (response.error) {
@@ -83,7 +83,7 @@ const EditUser = ({ user }: userIdProps) => {
       role: user.role,
       banned: user.banned,
       password: "",
-      isVerified: user.isVerified || false,
+      isVerified: user.emailVerified || false,
     },
   });
   const onSubmit = (data: EditUserFormSchema) => {
@@ -96,9 +96,7 @@ const EditUser = ({ user }: userIdProps) => {
         <CardTitle>Edit user details</CardTitle>
         <CardDescription>
           Edit account details of{" "}
-          <span className="text-foreground font-medium">
-            {user.name }
-          </span>{" "}
+          <span className="text-foreground font-medium">{user.name}</span>{" "}
           account.
         </CardDescription>
       </CardHeader>
@@ -201,7 +199,7 @@ const EditUser = ({ user }: userIdProps) => {
             {/* Status */}
             <FormField
               control={form.control}
-              name="banned" // corrected from role
+              name="banned"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
