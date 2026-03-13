@@ -33,6 +33,7 @@ interface User {
   username: string;
   email: string;
   banned: boolean;
+  emailVerified: boolean;
   role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
 }
 
@@ -62,6 +63,7 @@ const UsersTable = () => {
         username: u.username || u.name || "Unknown",
         email: u.email,
         banned: u.banned,
+        emailVerified: u.emailVerified,
         role: Array.isArray(u.role)
           ? (u.role[0] as User["role"])
           : (u.role as User["role"]),
@@ -74,7 +76,8 @@ const UsersTable = () => {
       const matchUsername =
         username === "" ||
         user.username.toLowerCase().includes(username.toLowerCase());
-      const matchesStatus = banned.length === 0 || banned.includes(user.banned);
+      const matchesStatus =
+        banned.length === 0 || banned.includes(String(user.banned));
       const matchesRole = role.length === 0 || role.includes(user.role);
       return matchUsername && matchesStatus && matchesRole;
     });
@@ -149,38 +152,60 @@ const UsersTable = () => {
         header: ({ column }: { column: Column<User, unknown> }) => (
           <DataTableColumnHeader column={column} label="Status" />
         ),
-        cell: ({ cell }) => {
-          const bannedStatus =
-            cell.getValue<User["banned"]>() === true ? "Banned" : "Active";
 
-          // Define banned configurations
-          const bannedConfig = {
-            Active: { icon: CheckCircle2, className: "text-green-500" },
-            Banned: { icon: AlertCircle, className: "text-red-500" },
-          } as const;
-
-          const { icon: Icon, className } = bannedConfig[
-            bannedStatus as keyof typeof bannedConfig
-          ] ?? {
-            icon: AlertCircle,
-            className: "text-gray-400",
-          };
+        cell: ({ row }) => {
+          const banned = row.original.banned;
+          const verified = row.original.emailVerified;
 
           return (
-            <Badge
-              variant="outline"
-              className={`capitalize flex items-center gap-1 ${className}`}
-            >
-              <Icon className="h-4 w-4" />
-              {bannedStatus ?? "unknown"}
-            </Badge>
+            <div className="flex flex-col gap-1">
+              {/* Active / Banned */}
+              {banned ? (
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1 text-red-500"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  Banned
+                </Badge>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1 text-green-500"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  Active
+                </Badge>
+              )}
+
+              {/* Verified */}
+              {verified ? (
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1 text-green-500"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  Verified
+                </Badge>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1 text-yellow-500"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  Not Verified
+                </Badge>
+              )}
+            </div>
           );
         },
+
         meta: {
           label: "Status",
           variant: "multiSelect",
-          options: USER_STATUS.map((banned) => ({ ...banned })), // Your multi-select options
+          options: USER_STATUS.map((banned) => ({ ...banned })),
         },
+
         enableColumnFilter: true,
       },
       {

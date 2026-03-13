@@ -96,6 +96,6 @@ export const USER_ROLES = [
 ] as const;
 //Status
 export const USER_STATUS = [
-  { label: "Active", value: "true" },
-  { label: "Suspended", value: "false" },
+  { label: "Active", value: "false" },
+  { label: "Suspended", value: "true" },
 ] as const;

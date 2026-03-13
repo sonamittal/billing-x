@@ -47,7 +47,7 @@ interface AddNewUserFormProps {
 const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
   const queryClient = useQueryClient();
   // form handling >>>>>>>>>>>>>>>
-  const form = useForm({
+  const form = useForm<AddNewUserFormSchema>({
     resolver: zodResolver(addNewUserFormSchema),
     defaultValues: {
       image: "",

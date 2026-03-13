@@ -59,8 +59,8 @@ const EditUser = ({ user }: userIdProps) => {
           email: data.email,
           role: data.role,
           banned: data.banned === "true",
-          password: data.password || undefined,
           emailVerified: data.isVerified,
+          ...(data.password ? { password: data.password } : {}),
         },
       });
       if (response.error) {
@@ -74,14 +74,14 @@ const EditUser = ({ user }: userIdProps) => {
     },
   });
   // form handling >>>>>>>>>>>>>
-  const form = useForm({
+  const form = useForm<EditUserFormSchema>({
     resolver: zodResolver(editUserFormSchema),
     defaultValues: {
       image: user.image || "",
       username: user.name || "",
       email: user.email || "",
       role: user.role,
-      banned: user.banned,
+      banned: user.banned ? "true" : "false",
       password: "",
       isVerified: user.emailVerified || false,
     },
@@ -203,7 +203,10 @@ const EditUser = ({ user }: userIdProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={(value) => field.onChange(value)}
+                    value={field.value ?? ""}
+                  >
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a Status" />
