@@ -1,6 +1,5 @@
 // zod schema >>>>>>>>>>>>>\
 import * as z from "zod";
-import { TypeOf } from "zod/v3";
 export const supFormSchema = z
   .object({
     name: z.string().min(1, { message: "name is  required" }),
@@ -150,3 +149,30 @@ export const editUserFormSchema = z.object({
   isVerified: z.boolean().optional(),
 });
 export type EditUserFormSchema = z.infer<typeof editUserFormSchema>;
+
+// update user password schema >>>>>>>>>>>
+export const updateUserPasswordFormSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { message: "password must be atleast 8 character" })
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+        "Password must contain at least one letter and one number",
+      ),
+    confirmPassword: z
+      .string()
+      .min(6, { message: "password must be atleast 8 character." }),
+  })
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        code: "custom",
+        message: "password and confirm password should match",
+        path: ["confirmPassword"],
+      });
+    }
+  });
+export type UpdateUserPasswordFormSchema = z.infer<
+  typeof updateUserPasswordFormSchema
+>;

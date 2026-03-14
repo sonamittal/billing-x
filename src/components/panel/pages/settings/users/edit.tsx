@@ -48,8 +48,7 @@ const EditUser = ({ user }: userIdProps) => {
     mutate,
     isPending: isUpdateUserPending,
     isSuccess: isUpdateUserSuccess,
-    isError: updateUserError,
-    error,
+    error: updateUserError,
   } = useMutation({
     mutationFn: async (data: EditUserFormSchema) => {
       const response = await authClient.admin.updateUser({
@@ -102,7 +101,7 @@ const EditUser = ({ user }: userIdProps) => {
       <CardContent>
         <Message
           variant={updateUserError ? "destructive" : "default"}
-          message={updateUserError ? (error as Error)?.message : undefined}
+          message={updateUserError?.message}
         />
         <Form {...form}>
           <form
@@ -241,6 +240,7 @@ const EditUser = ({ user }: userIdProps) => {
             <Button
               type="submit"
               form="user-form"
+              className="w-full"
               disabled={isUpdateUserPending}
             >
               {isUpdateUserPending ? (
