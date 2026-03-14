@@ -147,13 +147,6 @@ export const editUserFormSchema = z.object({
   banned: z.enum(["true", "false"], {
     message: "banned is required",
   }),
-  password: z
-    .string()
-    .min(8, { message: "password must be atleast 8 character" })
-    .regex(
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least one letter and one number",
-    ),
   isVerified: z.boolean().optional(),
 });
 export type EditUserFormSchema = z.infer<typeof editUserFormSchema>;

@@ -30,7 +30,7 @@ import {
 import ImageUpload from "@/components/ui/image-upload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Message from "@/components/ui/message";
-import { UserPlus, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 // role
 import { USER_ROLES } from "@/lib/constants";
 //Status
@@ -49,6 +49,7 @@ const EditUser = ({ user }: userIdProps) => {
     isPending: isUpdateUserPending,
     isSuccess: isUpdateUserSuccess,
     isError: updateUserError,
+    error,
   } = useMutation({
     mutationFn: async (data: EditUserFormSchema) => {
       const response = await authClient.admin.updateUser({
@@ -60,7 +61,6 @@ const EditUser = ({ user }: userIdProps) => {
           role: data.role,
           banned: data.banned === "true",
           emailVerified: data.isVerified,
-          ...(data.password ? { password: data.password } : {}),
         },
       });
       if (response.error) {
@@ -82,7 +82,6 @@ const EditUser = ({ user }: userIdProps) => {
       email: user.email || "",
       role: user.role,
       banned: user.banned ? "true" : "false",
-      password: "",
       isVerified: user.emailVerified || false,
     },
   });
@@ -103,14 +102,7 @@ const EditUser = ({ user }: userIdProps) => {
       <CardContent>
         <Message
           variant={updateUserError ? "destructive" : "default"}
-          message={
-            updateUserError
-              ? (updateUserError as unknown as Error).message ||
-                "Failed to update user"
-              : isUpdateUserSuccess
-                ? "User updated successfully!"
-                : undefined
-          }
+          message={updateUserError ? (error as Error)?.message : undefined}
         />
         <Form {...form}>
           <form
@@ -220,20 +212,6 @@ const EditUser = ({ user }: userIdProps) => {
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* password */}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="·········" {...field} />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

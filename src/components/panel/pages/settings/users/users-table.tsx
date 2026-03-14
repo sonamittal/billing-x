@@ -77,7 +77,7 @@ const UsersTable = () => {
         username === "" ||
         user.username.toLowerCase().includes(username.toLowerCase());
       const matchesStatus =
-        banned.length === 0 || banned.includes(String(user.banned));
+        banned.length === 0 || banned.includes(user.banned ? "true" : "false");
       const matchesRole = role.length === 0 || role.includes(user.role);
       return matchUsername && matchesStatus && matchesRole;
     });
