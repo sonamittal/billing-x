@@ -38,6 +38,7 @@ import { USER_STATUS } from "@/lib/constants";
 import { Switch } from "@/components/ui/switch";
 import { editUserFormSchema } from "@/components/validation/validation";
 import type { EditUserFormSchema } from "@/components/validation/validation";
+
 interface userIdProps {
   user: any;
 }
@@ -63,7 +64,7 @@ const EditUser = ({ user }: userIdProps) => {
         },
       });
       if (response.error) {
-        throw new Error(response.error?.message || "failed edit user ");
+        throw new Error(response.error?.message || "failed to edit user ");
       }
       return response.data;
     },

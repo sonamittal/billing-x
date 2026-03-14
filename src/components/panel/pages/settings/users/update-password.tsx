@@ -48,7 +48,7 @@ const UpdateUserPassword = ({ user }: userIdProps) => {
         userId: user.id, // required
       });
       if (res.error) {
-        throw new Error(res.error?.message || "failed user password ");
+        throw new Error(res.error?.message || "failed to user password ");
       }
       return res.data;
     },

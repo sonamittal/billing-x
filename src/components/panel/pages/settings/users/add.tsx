@@ -75,7 +75,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
         password: data.password,
         data: {
           image: data.image,
-          isVerified: data.isVerified,
+          emailVerified: data.isVerified,
           banned: data.banned,
         },
       });

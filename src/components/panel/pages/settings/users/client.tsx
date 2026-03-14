@@ -7,6 +7,7 @@ import EditUser from "@/components/panel/pages/settings/users/edit";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import UpdateUserPassword from "@/components/panel/pages/settings/users/update-password";
+import DeleteUser from "@/components/panel/pages/settings/users/delete";
 
 interface props {
   userId: string;
@@ -57,7 +58,7 @@ const UsersClient = ({ userId }: props) => {
           <EditUser user={data} />
           <div className="grid grid-cols-1 gap-5 h-fit">
             <UpdateUserPassword user={data} />
-            {/* <DeleteUser user={data} /> */}
+            <DeleteUser user={data} />
           </div>
         </div>
       )}
