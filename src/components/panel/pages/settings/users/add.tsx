@@ -39,6 +39,7 @@ import { USER_STATUS } from "@/lib/constants";
 import { Switch } from "@/components/ui/switch";
 import Message from "@/components/ui/message";
 import ImageUpload from "@/components/ui/image-upload";
+import { toast } from "sonner";
 
 interface AddNewUserFormProps {
   open: boolean;
@@ -89,7 +90,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
-      alert("user create Successfully!! ");
+      toast.success("user create Successfully!! ");
       form.reset();
       onOpenChange(false);
     },

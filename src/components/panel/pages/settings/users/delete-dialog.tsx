@@ -17,7 +17,7 @@ interface userIdProps {
   user: any;
   open: boolean;
   setOpen: (open: boolean) => void;
- callback?: string;
+  callback?: string;
 }
 
 const DeleteUserDialog = ({ user, open, setOpen, callback }: userIdProps) => {
@@ -38,8 +38,11 @@ const DeleteUserDialog = ({ user, open, setOpen, callback }: userIdProps) => {
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
+      toast.success("user delete Successfully!!");
       if (callback) {
-        router.push(callback);
+        setTimeout(() => {
+          router.push(callback);
+        }, 1200);
       }
       setOpen(false);
     },
@@ -63,7 +66,7 @@ const DeleteUserDialog = ({ user, open, setOpen, callback }: userIdProps) => {
         <AlertDialogFooter>
           <Button
             variant="destructive"
-            onClick={() => deleteUser(user)}
+            onClick={() => deleteUser()}
             disabled={isDeleteUserPending}
           >
             {isDeleteUserPending ? (

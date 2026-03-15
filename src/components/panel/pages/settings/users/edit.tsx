@@ -38,12 +38,18 @@ import { USER_STATUS } from "@/lib/constants";
 import { Switch } from "@/components/ui/switch";
 import { editUserFormSchema } from "@/components/validation/validation";
 import type { EditUserFormSchema } from "@/components/validation/validation";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface userIdProps {
   user: any;
+  callback?: string;
 }
 
-const EditUser = ({ user }: userIdProps) => {
+const EditUser = ({ user, callback }: userIdProps) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   // edit user form handling >>>>>>>>>>>>>>>>>
   const {
     mutate,
@@ -69,8 +75,14 @@ const EditUser = ({ user }: userIdProps) => {
       return response.data;
     },
     onSuccess: () => {
-      alert("user edit Successfully!!");
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("user edit Successfully!!");
       form.reset();
+      if (callback) {
+        setTimeout(() => {
+          router.push(callback);
+        }, 1200);
+      }
     },
   });
   // form handling >>>>>>>>>>>>>

@@ -6,6 +6,7 @@ import ThemeProvider from "@/providers/theme-provider";
 import ReactQueryProvider from "@/providers/react-query";
 import BprogressProvider from "@/providers/bprogress";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Toaster } from "@/components/ui/sonner";
 export const fontSans = FontSans({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
   display: "swap",
@@ -36,15 +37,18 @@ export default function RootLayout({
         className={cn(
           "min-h-screen font-sans antialiased",
           fontSans.variable,
-          fontSyncopate.variable
+          fontSyncopate.variable,
         )}
       >
-          <NuqsAdapter>
-        <BprogressProvider>
-          <ReactQueryProvider>
-            <ThemeProvider>{children}</ThemeProvider>
-          </ReactQueryProvider>
-        </BprogressProvider>
+        <NuqsAdapter>
+          <BprogressProvider>
+            <ReactQueryProvider>
+              <ThemeProvider>
+                {children}
+                <Toaster />
+              </ThemeProvider>
+            </ReactQueryProvider>
+          </BprogressProvider>
         </NuqsAdapter>
       </body>
     </html>

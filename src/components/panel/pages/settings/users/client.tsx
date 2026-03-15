@@ -55,7 +55,7 @@ const UsersClient = ({ userId }: props) => {
       {isPending && "Loading..."}
       {isSuccess && data && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <EditUser user={data} />
+          <EditUser user={data} callback="/panel/users" />
           <div className="grid grid-cols-1 gap-5 h-fit">
             <UpdateUserPassword user={data} />
             <DeleteUser user={data} />

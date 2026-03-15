@@ -226,13 +226,18 @@ const UsersTable = () => {
                     href={`/panel/users/${userId}`}
                     className="flex items-center text-white-800"
                   >
-                    <Pencil className="mr-2 h-4 w-4 text-white-800" />
+                    <Pencil className="mr-2 h-3 w-2  text-white-800" />
                     Edit
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive">
-                  <Trash2 />
-                  Delete
+                  <Link
+                    href={`/panel/users/${userId}`}
+                    className="flex items-center"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4  text-red-400" />
+                    Delete
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
