@@ -28,6 +28,7 @@ import ResendVerificationCode from "@/components/auth/resend-verification-code";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 
 import {
   Card,
@@ -90,7 +91,7 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
       return resetRes?.data;
     },
     onSuccess: async () => {
-      alert("set password Successful");
+      toast.success("set password Successful");
       reset();
       router.push(
         `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
@@ -152,7 +153,7 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between gap-3 flex-wrap">
-                      <FormLabel className="mt-5">Verification Code</FormLabel>
+                      <FormLabel className="mt-5">Verification Code <span className="text-red-500">*</span></FormLabel>
                       <ResendVerificationCode email={email} />
                     </div>
                     <FormControl>
@@ -181,7 +182,7 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>New password</FormLabel>
+                      <FormLabel>New password <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
                         <Input
                           type="password"
@@ -198,7 +199,7 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Confirm password</FormLabel>
+                      <FormLabel>Confirm password <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
                         <Input
                           type="password"

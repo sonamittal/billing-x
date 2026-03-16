@@ -111,7 +111,9 @@ const VerifyAccount = () => {
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between gap-3 flex-wrap">
-                <FormLabel className="mt-5">Verification Code</FormLabel>
+                <FormLabel className="mt-5">
+                  Verification Code <span className="text-red-500">*</span>
+                </FormLabel>
                 <ResendVerificationCode email={email} />
               </div>
               <FormControl>

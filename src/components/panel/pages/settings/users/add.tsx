@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserPlus, UserCheck, Users, CreditCard, Loader2 } from "lucide-react";
+import { UserPlus, Loader2 } from "lucide-react";
 import { addNewUserFormSchema } from "@/components/validation/validation";
 import type { AddNewUserFormSchema } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
@@ -138,7 +138,9 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               name="image"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base">User image</FormLabel>
+                  <FormLabel className="text-base">
+                    User image <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormDescription>
                     This image will be used for user avatar across the website.
                   </FormDescription>
@@ -160,7 +162,9 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>
+                    Username <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="eg:sonam" {...field} />
                   </FormControl>
@@ -173,7 +177,9 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>
+                    Email <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="email"
@@ -191,7 +197,9 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>
+                    Role <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
@@ -216,7 +224,9 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               name="banned"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>
+                    Status <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
@@ -241,7 +251,9 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>
+                    Password <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="·········" {...field} />
                   </FormControl>
@@ -256,7 +268,9 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               render={({ field }) => (
                 <FormItem className="rounded-md bg-background flex flex-row items-center justify-between border p-4 space-y-0 gap-3">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Verify</FormLabel>
+                    <FormLabel className="text-base">
+                      Verify <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormDescription>
                       Verifying a user will allow the user to sign in.
                     </FormDescription>

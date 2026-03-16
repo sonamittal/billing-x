@@ -101,7 +101,9 @@ const UpdateUserPassword = ({ user }: userIdProps) => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>
+                    Password <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="·········" {...field} />
                   </FormControl>
@@ -114,7 +116,10 @@ const UpdateUserPassword = ({ user }: userIdProps) => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel> Confirm Password</FormLabel>
+                  <FormLabel>
+                    {" "}
+                    Confirm Password <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="·········" {...field} />
                   </FormControl>

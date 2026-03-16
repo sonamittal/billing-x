@@ -23,6 +23,7 @@ import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 const SigninForm = () => {
   const router = useRouter();
@@ -47,7 +48,7 @@ const SigninForm = () => {
       return response.data;
     },
     onSuccess: async () => {
-      alert("Signin Successful!");
+      toast.success("Signin Successful!");
       reset();
       router.push(callbackUrl || "/auth/callback");
     },
@@ -79,7 +80,9 @@ const SigninForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>
+                Email <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input type="email" placeholder="ex@example.com" {...field} />
               </FormControl>
@@ -92,7 +95,9 @@ const SigninForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>
+                Password <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input type="password" placeholder="·········" {...field} />
               </FormControl>

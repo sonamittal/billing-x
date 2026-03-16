@@ -22,6 +22,7 @@ import type { SignupFormSchema } from "@/components/validation/validation";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 const  SignUpForm = () => {
   const router = useRouter();
@@ -65,7 +66,7 @@ const  SignUpForm = () => {
       });
 
       localStorage.setItem("email", email);
-      alert("Signup successful!");
+       toast.success("Signup successful!");
       reset();
       router.push(
         `/auth/verify${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
@@ -90,7 +91,7 @@ const  SignUpForm = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full name</FormLabel>
+              <FormLabel>Full name <span className="text-red-500">*</span></FormLabel>
               <FormControl>
                 <Input placeholder="Riya dubey" {...field} />
               </FormControl>
@@ -103,7 +104,7 @@ const  SignUpForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
               <FormControl>
                 <Input type="email" placeholder="ex@example.com" {...field} />
               </FormControl>
@@ -117,7 +118,7 @@ const  SignUpForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Password <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="·········" {...field} />
                 </FormControl>
@@ -130,7 +131,7 @@ const  SignUpForm = () => {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Confirm Password</FormLabel>
+                <FormLabel> Confirm Password <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="·········" {...field} />
                 </FormControl>

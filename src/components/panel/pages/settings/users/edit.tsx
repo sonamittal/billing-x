@@ -158,7 +158,9 @@ const EditUser = ({ user, callback }: userIdProps) => {
               name="image"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base">User image</FormLabel>
+                  <FormLabel className="text-base">
+                    User image <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormDescription>
                     This image will be used for user avatar across the website.
                   </FormDescription>
@@ -180,7 +182,9 @@ const EditUser = ({ user, callback }: userIdProps) => {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>
+                    Username <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="eg:sonam" {...field} />
                   </FormControl>
@@ -193,7 +197,9 @@ const EditUser = ({ user, callback }: userIdProps) => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>
+                    Email <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="email"
@@ -211,7 +217,9 @@ const EditUser = ({ user, callback }: userIdProps) => {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>
+                    Role <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
@@ -236,7 +244,9 @@ const EditUser = ({ user, callback }: userIdProps) => {
               name="banned"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>
+                    Status <span className="text-red-500">*</span>
+                  </FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(value)}
                     value={field.value ?? ""}
@@ -294,7 +304,6 @@ const EditUser = ({ user, callback }: userIdProps) => {
                             .slice(0, 16)}
                         />
                       </FormControl>
-
                       <FormMessage />
                     </FormItem>
                   )}
@@ -308,7 +317,9 @@ const EditUser = ({ user, callback }: userIdProps) => {
               render={({ field }) => (
                 <FormItem className="rounded-md  flex flex-row items-center justify-between border p-4 space-y-0 gap-3">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Verify</FormLabel>
+                    <FormLabel className="text-base">
+                      Verify <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormDescription>
                       Verifying a user will allow the user to sign in.
                     </FormDescription>
