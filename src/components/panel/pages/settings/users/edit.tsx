@@ -50,6 +50,7 @@ interface userIdProps {
 const EditUser = ({ user, callback }: userIdProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { data: session } = authClient.useSession();
   // edit user form handling >>>>>>>>>>>>>>>>>
   const {
     mutate,
@@ -71,30 +72,34 @@ const EditUser = ({ user, callback }: userIdProps) => {
       if (response.error) {
         throw new Error(response.error?.message || "failed to edit user ");
       }
-      // ban and unban user
-      if (data.banned === "true") {
-        const banExpiresIn = data.banExpires
-          ? Math.max(
-              60,
-              Math.floor(
-                (new Date(data.banExpires).getTime() - Date.now()) / 1000,
-              ),
-            )
-          : undefined;
-        const banRes = await authClient.admin.banUser({
-          userId: user.id,
-          banReason: data.banReason,
-          banExpiresIn,
-        });
-        if (banRes.error) {
-          throw new Error(banRes.error?.message || "");
-        }
-      } else {
-        const unbanRes = await authClient.admin.unbanUser({
-          userId: user.id, // required
-        });
-        if (unbanRes.error) {
-          throw new Error(unbanRes.error?.message);
+      // status
+      const previousStatus = user.banned ? "true" : "false";
+      if (data.banned !== previousStatus) {
+        // ban and unban user
+        if (data.banned === "true") {
+          const banExpiresIn = data.banExpires
+            ? Math.max(
+                60,
+                Math.floor(
+                  (new Date(data.banExpires).getTime() - Date.now()) / 1000,
+                ),
+              )
+            : undefined;
+          const banRes = await authClient.admin.banUser({
+            userId: user.id,
+            banReason: data.banReason,
+            banExpiresIn,
+          });
+          if (banRes.error) {
+            throw new Error(banRes.error?.message || "");
+          }
+        } else {
+          const unbanRes = await authClient.admin.unbanUser({
+            userId: user.id, // required
+          });
+          if (unbanRes.error) {
+            throw new Error(unbanRes.error?.message);
+          }
         }
       }
       return response.data;
@@ -226,11 +231,17 @@ const EditUser = ({ user, callback }: userIdProps) => {
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
                       <SelectContent>
-                        {USER_ROLES.map((role) => (
-                          <SelectItem key={role.value} value={role.value}>
-                            {role.label}
-                          </SelectItem>
-                        ))}
+                        {USER_ROLES.map(
+                          (role) =>
+                            !(
+                              role.value === "admin" &&
+                              session?.user.role !== "admin"
+                            ) && (
+                              <SelectItem key={role.value} value={role.value}>
+                                {role.label}
+                              </SelectItem>
+                            ),
+                        )}
                       </SelectContent>
                     </Select>
                   </FormControl>

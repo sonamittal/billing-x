@@ -22,6 +22,7 @@ import { Loader2, MoveLeft } from "lucide-react";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -58,7 +59,7 @@ const ForgotPasswordForm = () => {
       return res.data;
     },
     onSuccess: (_data, variables) => {
-      alert("Verification code sent on your email.");
+      toast.success("Verification code sent on your email.");
       reset();
       setEmailReceived(variables.email);
     },
@@ -113,7 +114,9 @@ const ForgotPasswordForm = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>
+                      Email <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="email"
