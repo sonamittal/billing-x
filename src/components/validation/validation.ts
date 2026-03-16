@@ -146,6 +146,8 @@ export const editUserFormSchema = z.object({
   banned: z.enum(["true", "false"], {
     message: "banned is required",
   }),
+  banReason: z.string().optional(),
+  banExpires: z.string().optional(),
   isVerified: z.boolean().optional(),
 });
 export type EditUserFormSchema = z.infer<typeof editUserFormSchema>;

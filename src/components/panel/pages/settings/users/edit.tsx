@@ -65,12 +65,37 @@ const EditUser = ({ user, callback }: userIdProps) => {
           name: data.username,
           email: data.email,
           role: data.role,
-          banned: data.banned === "true",
           emailVerified: data.isVerified,
         },
       });
       if (response.error) {
         throw new Error(response.error?.message || "failed to edit user ");
+      }
+      // ban and unban user
+      if (data.banned === "true") {
+        const banExpiresIn = data.banExpires
+          ? Math.max(
+              60,
+              Math.floor(
+                (new Date(data.banExpires).getTime() - Date.now()) / 1000,
+              ),
+            )
+          : undefined;
+        const banRes = await authClient.admin.banUser({
+          userId: user.id,
+          banReason: data.banReason,
+          banExpiresIn,
+        });
+        if (banRes.error) {
+          throw new Error(banRes.error?.message || "");
+        }
+      } else {
+        const unbanRes = await authClient.admin.unbanUser({
+          userId: user.id, // required
+        });
+        if (unbanRes.error) {
+          throw new Error(unbanRes.error?.message);
+        }
       }
       return response.data;
     },
@@ -94,9 +119,14 @@ const EditUser = ({ user, callback }: userIdProps) => {
       email: user.email || "",
       role: user.role,
       banned: user.banned ? "true" : "false",
+      banReason: user.banReason || "Spamming",
+      banExpires: user.banExpires
+        ? new Date(user.banExpires).toISOString().slice(0, 16)
+        : "",
       isVerified: user.emailVerified || false,
     },
   });
+  const banned = form.watch("banned");
   const onSubmit = (data: EditUserFormSchema) => {
     console.log("Form Data Submitted:", data);
     mutate(data);
@@ -228,6 +258,49 @@ const EditUser = ({ user, callback }: userIdProps) => {
                 </FormItem>
               )}
             />
+            {/* ban Reasons */}
+
+            {banned === "true" && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="banReason"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ban Reason</FormLabel>
+
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* Ban Expire */}
+                <FormField
+                  control={form.control}
+                  name="banExpires"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ban Expire</FormLabel>
+
+                      <FormControl>
+                        <Input
+                          type="datetime-local"
+                          {...field}
+                          min={new Date(Date.now() + 60000)
+                            .toISOString()
+                            .slice(0, 16)}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
             {/* verifying */}
             <FormField
               control={form.control}
