@@ -12,12 +12,12 @@ export const admin = ac.newRole({
 });
 
 export const staff = ac.newRole({
-  user: ["create", "list", "get", "update"],
+  user: ["get"],
   session: ["list"],
 });
 
 export const staffAssigned = ac.newRole({
-  user: ["get", "update"],
+  user: ["get"],
   session: [],
 });
 

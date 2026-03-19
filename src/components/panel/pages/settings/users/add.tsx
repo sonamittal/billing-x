@@ -269,7 +269,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
                 <FormItem className="rounded-md bg-background flex flex-row items-center justify-between border p-4 space-y-0 gap-3">
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">
-                      Verify <span className="text-red-500">*</span>
+                      Verify 
                     </FormLabel>
                     <FormDescription>
                       Verifying a user will allow the user to sign in.
