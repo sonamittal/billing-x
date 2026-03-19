@@ -15,6 +15,7 @@ import { useSearchParams } from "next/navigation";
 const CredentialsSignup = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
+  
   return (
     <div className="container flex items-center justify-center  w-full h-screen">
       <Card className="w-full md:w-[50%] mx-auto max-h-[90vh] overflow-auto">

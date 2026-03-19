@@ -23,8 +23,9 @@ import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import axios from "axios";
 
-const  SignUpForm = () => {
+const SignUpForm = () => {
   const router = useRouter();
   // Getting callback url from query params >>>>>>>>>>>>>>>
   const searchParams = useSearchParams();
@@ -59,17 +60,23 @@ const  SignUpForm = () => {
     },
     onSuccess: async (data) => {
       const email = data.user.email;
-      if (!email) return;
+      const userId = data.user.id;
+      if (!email || !userId) return;
+      // make an first admin api
+      await axios.post("/api/auth/setup-first-admin", {
+        userId,
+      });
+      // sent otp
       await authClient.emailOtp.sendVerificationOtp({
         email,
-         type: "sign-in", // required
+        type: "sign-in", // required
       });
 
       localStorage.setItem("email", email);
-       toast.success("Signup successful!");
+      toast.success("Signup successful!");
       reset();
       router.push(
-        `/auth/verify${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
+        `/auth/verify${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`,
       );
     },
   });
@@ -78,6 +85,7 @@ const  SignUpForm = () => {
     console.log("Form Data Submitted:", data);
     mutate(data);
   };
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -91,7 +99,9 @@ const  SignUpForm = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full name <span className="text-red-500">*</span></FormLabel>
+              <FormLabel>
+                Full name <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input placeholder="Riya dubey" {...field} />
               </FormControl>
@@ -104,7 +114,9 @@ const  SignUpForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
+              <FormLabel>
+                Email <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input type="email" placeholder="ex@example.com" {...field} />
               </FormControl>
@@ -118,7 +130,9 @@ const  SignUpForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password <span className="text-red-500">*</span></FormLabel>
+                <FormLabel>
+                  Password <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="·········" {...field} />
                 </FormControl>
@@ -131,7 +145,10 @@ const  SignUpForm = () => {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Confirm Password <span className="text-red-500">*</span></FormLabel>
+                <FormLabel>
+                  {" "}
+                  Confirm Password <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="·········" {...field} />
                 </FormControl>

@@ -21,6 +21,7 @@ const ResendVerificationCode = ({ email }: { email: string }) => {
       console.log(error.message);
     },
   });
+  
   return (
     <p
       onClick={() => sendVerificationCode()}

@@ -105,6 +105,7 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
     console.log("form data submitted:", data);
     setPassword(data);
   };
+  
   return (
     <div className="container flex items-center justify-center  w-full h-screen">
       <Card className="w-full md:w-[50%] mx-auto max-h-[90vh] overflow-auto">
