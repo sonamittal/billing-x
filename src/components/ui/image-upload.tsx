@@ -65,6 +65,22 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       toast.error(message);
     },
   });
+  // delete image >>>>>>>>>>
+  const deleteImage = async (key: string) => {
+    try {
+      const res = await axios.post("/api/panel/delete", { key });
+      console.log("delete image:", res.data);
+      return res.data;
+    } catch (err) {
+      console.error("delete error", err);
+      toast.error("failed to delete image");
+    }
+  };
+  // get from key url
+  const getKeyFromUrl = (url: string) => {
+    const parts = url.split("/");
+    return parts.slice(3).join("/");
+  };
   // Drop handler >>>>>>>>
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -91,7 +107,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     maxFiles: 1,
   });
   // Reset handler >>>>>>>>
-  const handleReset = () => {
+  const handleReset = async () => {
+    if (value) {
+      const key = getKeyFromUrl(value);
+      await deleteImage(key);
+    }
     onChange("");
   };
   return (
@@ -102,7 +122,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           className,
         )}
       >
-        <div className="size-16 min-w-16 relative bg-muted flex items-center justify-center rounded-md overflow-hidden flex-shrink-0">
+        <div className="size-16 min-w-16 relative bg-muted flex items-center justify-center rounded-md overflow-hidden shrink-0">
           {value ? (
             <Image
               src={value}
