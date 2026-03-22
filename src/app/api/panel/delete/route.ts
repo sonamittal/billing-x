@@ -4,7 +4,7 @@ export const POST = async (req: Request) => {
   try {
     const { key } = await req.json();
     if (!key) {
-      return Response.json({ message: "file is req" }, { status: 400 });
+      return Response.json({ message: "file key is req" }, { status: 400 });
     }
     const client = s3Client();
     await client.send(
