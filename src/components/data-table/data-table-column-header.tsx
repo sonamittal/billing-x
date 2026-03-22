@@ -11,15 +11,16 @@ import {
 
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/utils";
 
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.ComponentProps<typeof DropdownMenuTrigger> {
+interface DataTableColumnHeaderProps<
+  TData,
+  TValue,
+> extends React.ComponentProps<typeof DropdownMenuTrigger> {
   column: Column<TData, TValue>;
   label: string;
 }
@@ -34,6 +35,9 @@ export function DataTableColumnHeader<TData, TValue>({
     return <div className={cn(className)}>{label}</div>;
   }
 
+  const isSortedAsc = column.getIsSorted() === "asc";
+  const isSortedDesc = column.getIsSorted() === "desc";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -44,38 +48,42 @@ export function DataTableColumnHeader<TData, TValue>({
         {...props}
       >
         {label}
-        {column.getCanSort() &&
-          (column.getIsSorted() === "desc" ? (
-            <ChevronDown />
-          ) : column.getIsSorted() === "asc" ? (
-            <ChevronUp />
-          ) : (
-            <ChevronsUpDown />
-          ))}
+        {column.getCanSort() && (
+          <>
+            {isSortedDesc ? (
+              <ChevronDown />
+            ) : isSortedAsc ? (
+              <ChevronUp />
+            ) : (
+              <ChevronsUpDown />
+            )}
+          </>
+        )}
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="start" className="w-28">
         {column.getCanSort() && (
           <>
-            <DropdownMenuCheckboxItem
-              className="relative pr-8 pl-2 [&>span:first-child]:right-2 [&>span:first-child]:left-auto [&_svg]:text-muted-foreground"
-              checked={column.getIsSorted() === "asc"}
+            <DropdownMenuItem
               onClick={() => column.toggleSorting(false)}
+              className="flex items-center gap-1"
             >
               <ChevronUp />
               Asc
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              className="relative pr-8 pl-2 [&>span:first-child]:right-2 [&>span:first-child]:left-auto [&_svg]:text-muted-foreground"
-              checked={column.getIsSorted() === "desc"}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
               onClick={() => column.toggleSorting(true)}
+              className="flex items-center gap-1"
             >
               <ChevronDown />
               Desc
-            </DropdownMenuCheckboxItem>
+            </DropdownMenuItem>
+
             {column.getIsSorted() && (
               <DropdownMenuItem
-                className="pl-2 [&_svg]:text-muted-foreground"
                 onClick={() => column.clearSorting()}
+                className="flex items-center gap-1"
               >
                 <X />
                 Reset
@@ -83,15 +91,15 @@ export function DataTableColumnHeader<TData, TValue>({
             )}
           </>
         )}
+
         {column.getCanHide() && (
-          <DropdownMenuCheckboxItem
-            className="relative pr-8 pl-2 [&>span:first-child]:right-2 [&>span:first-child]:left-auto [&_svg]:text-muted-foreground"
-            checked={!column.getIsVisible()}
-            onClick={() => column.toggleVisibility(false)}
+          <DropdownMenuItem
+            onClick={() => column.toggleVisibility(!column.getIsVisible())}
+            className="flex items-center gap-1"
           >
             <EyeOff />
             Hide
-          </DropdownMenuCheckboxItem>
+          </DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

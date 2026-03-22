@@ -14,6 +14,7 @@ import * as React from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTableSortList } from "@/components/data-table/data-table-sort-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -292,7 +293,7 @@ const UsersTable = () => {
     columns,
     pageCount: 2,
     initialState: {
-      sorting: [{ id: "username", desc: false }],
+      sorting: [{ id: "username", desc: true }],
       columnPinning: { right: ["actions"] },
     },
     getRowId: (row) => row.id,
@@ -305,7 +306,9 @@ const UsersTable = () => {
       ) : (
         <>
           <DataTable table={table}>
-            <DataTableToolbar table={table} />
+            <DataTableToolbar table={table}>
+              <DataTableSortList table={table} />
+            </DataTableToolbar>
           </DataTable>
           {selectedUser && (
             <DeleteUserDialog
