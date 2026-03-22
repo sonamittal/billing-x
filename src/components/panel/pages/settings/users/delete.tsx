@@ -28,7 +28,7 @@ const DeleteUser = ({ user }: userIdProps) => {
           <CardDescription>
             This will permanently delete{" "}
             <span className="text-foreground font-medium">
-              {user.name + "'s"}
+              {(user.username ?? user.name ?? "Unknown") + "'s"}
             </span>{" "}
             account and it{"'"}s data from the server.
           </CardDescription>

@@ -7,6 +7,7 @@ import {
   Pencil,
   Trash2,
   AlertCircle,
+  Mail,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
@@ -27,17 +28,31 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { USER_ROLES, USER_STATUS } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import DeleteUserDialog from "@/components/panel/pages/settings/users/delete-dialog";
 
 interface User {
   id: string;
   username: string;
   email: string;
+  image?: string;
   banned: boolean;
   emailVerified: boolean;
   role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
 }
 
 const UsersTable = () => {
+  const [selectedRow, setSelectedRow] = React.useState<any | null>(null);
+  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
+  const handleOpenDeleteDialog = (user: User, row: any) => {
+    row.toggleSelected(true);
+    setSelectedUser({
+      ...user,
+      username: user.username ?? "Unknown",
+    });
+    setSelectedRow(row);
+    setIsDeleteOpen(true);
+  };
   const [username] = useQueryState("username", parseAsString.withDefault(""));
   const [banned] = useQueryState(
     "banned",
@@ -62,6 +77,7 @@ const UsersTable = () => {
         id: u.id,
         username: u.username || u.name || "Unknown",
         email: u.email,
+        image: u.image || u.avatar_url || "",
         banned: u.banned,
         emailVerified: u.emailVerified,
         role: Array.isArray(u.role)
@@ -116,7 +132,25 @@ const UsersTable = () => {
         header: ({ column }: { column: Column<User, unknown> }) => (
           <DataTableColumnHeader column={column} label="Username" />
         ),
-        cell: ({ cell }) => <div>{cell.getValue<User["username"]>()}</div>,
+        cell: ({ row }) => {
+          const user = row.original;
+          return (
+            <div className="flex items-center gap-2">
+              {user.image ? (
+                <img
+                  src={user.image}
+                  alt={user.username}
+                  className="h-8 w-8 rounded-full object-cover border"
+                />
+              ) : (
+                <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-semibold">
+                  {user.username.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <span>{user.username}</span>
+            </div>
+          );
+        },
         meta: {
           label: "Username",
           placeholder: "Search username...",
@@ -130,6 +164,12 @@ const UsersTable = () => {
         accessorKey: "email",
         header: ({ column }: { column: Column<User, unknown> }) => (
           <DataTableColumnHeader column={column} label="Email" />
+        ),
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2 ">
+            <Mail className="h-4 w-4 mt-1 " />
+            <span>{row.original.email}</span>
+          </div>
         ),
         enableColumnFilter: false,
       },
@@ -230,14 +270,12 @@ const UsersTable = () => {
                     Edit
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem variant="destructive">
-                  <Link
-                    href={`/panel/users/${userId}`}
-                    className="flex items-center"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4  text-red-400" />
-                    Delete
-                  </Link>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => handleOpenDeleteDialog(row.original, row)}
+                >
+                  <Trash2 className="mr-1h-4 w-4 " />
+                  Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -265,9 +303,24 @@ const UsersTable = () => {
       {isLoading ? (
         <div>Loading users...</div>
       ) : (
-        <DataTable table={table}>
-          <DataTableToolbar table={table} />
-        </DataTable>
+        <>
+          <DataTable table={table}>
+            <DataTableToolbar table={table} />
+          </DataTable>
+          {selectedUser && (
+            <DeleteUserDialog
+              user={selectedUser}
+              open={isDeleteOpen}
+              setOpen={(open) => {
+                setIsDeleteOpen(open);
+                if (!open && selectedRow) {
+                  selectedRow.toggleSelected(false);
+                  setSelectedRow(null);
+                }
+              }}
+            />
+          )}
+        </>
       )}
     </div>
   );

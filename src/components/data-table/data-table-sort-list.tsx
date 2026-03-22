@@ -63,7 +63,7 @@ export function DataTableSortList<TData>({
   const addButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const sorting = table.getState().sorting;
-  const onSortingChange = table.setSorting;
+  const onSortingChange =  table.options.onSortingChange!;
 
   const { columnLabels, columns } = React.useMemo(() => {
     const labels = new Map<string, string>();

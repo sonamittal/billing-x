@@ -131,33 +131,26 @@ const CustomersTable = () => {
         enableColumnFilter: true,
       },
       {
-        id: "email",
+        id: "conatct details",
         accessorKey: "email",
         header: ({ column }: { column: Column<Customer, unknown> }) => (
-          <DataTableColumnHeader column={column} label="Email" />
+          <DataTableColumnHeader column={column} label="Conatct details" />
         ),
         cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            <Mail className="h-4 w-4 text-muted-foreground mt-1" />
-            {row.original.email}
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4 text-muted-foreground mt-1" />
+              {row.original.email}
+            </div>
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4 text-muted-foreground mt-1" />
+              {row.original.phone}
+            </div>
           </div>
         ),
         enableColumnFilter: false,
       },
-      {
-        id: "phone",
-        accessorKey: "phone",
-        header: ({ column }: { column: Column<Customer, unknown> }) => (
-          <DataTableColumnHeader column={column} label="phone" />
-        ),
-        cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            <Phone className="h-4 w-4 text-muted-foreground mt-1" />
-            {row.original.phone}
-          </div>
-        ),
-        enableColumnFilter: false,
-      },
+
       {
         id: "companyName",
         accessorKey: "companyName",
