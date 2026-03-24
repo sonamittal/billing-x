@@ -18,11 +18,10 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { sinFormSchema } from "@/components/validation/validation";
 import type { SigninFormSchema } from "@/components/validation/validation";
-// import { signIn } from "@/lib/auth-client";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 
 const SigninForm = () => {

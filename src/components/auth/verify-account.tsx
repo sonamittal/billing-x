@@ -23,7 +23,7 @@ import { otpFormSchema } from "@/components/validation/validation";
 import type { OtpFormSchema } from "@/components/validation/validation";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import ResendVerificationCode from "@/components/auth/resend-verification-code";
 
 const VerifyAccount = () => {

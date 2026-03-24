@@ -23,7 +23,7 @@ import { useSearchParams } from "next/navigation";
 import { Loader2, MoveLeft } from "lucide-react";
 import { setPasswordFormSchema } from "@/components/validation/validation";
 import type { SetPasswordFormSchema } from "@/components/validation/validation";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import ResendVerificationCode from "@/components/auth/resend-verification-code";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -94,7 +94,7 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
       toast.success("set password Successful");
       reset();
       router.push(
-        `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`
+        `/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`,
       );
     },
   });
@@ -105,7 +105,7 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
     console.log("form data submitted:", data);
     setPassword(data);
   };
-  
+
   return (
     <div className="container flex items-center justify-center  w-full h-screen">
       <Card className="w-full md:w-[50%] mx-auto max-h-[90vh] overflow-auto">
@@ -144,8 +144,8 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
                   isSetPasswordError
                     ? isSetPasswordError.message
                     : isSetPasswordSuccess
-                    ? "Your password has been successfully changed. Redirecting to sign in page."
-                    : ""
+                      ? "Your password has been successfully changed. Redirecting to sign in page."
+                      : ""
                 }
               />
               <FormField
@@ -154,7 +154,10 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between gap-3 flex-wrap">
-                      <FormLabel className="mt-5">Verification Code <span className="text-red-500">*</span></FormLabel>
+                      <FormLabel className="mt-5">
+                        Verification Code{" "}
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
                       <ResendVerificationCode email={email} />
                     </div>
                     <FormControl>
@@ -183,7 +186,9 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>New password <span className="text-red-500">*</span></FormLabel>
+                      <FormLabel>
+                        New password <span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="password"
@@ -200,7 +205,9 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Confirm password <span className="text-red-500">*</span></FormLabel>
+                      <FormLabel>
+                        Confirm password <span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="password"

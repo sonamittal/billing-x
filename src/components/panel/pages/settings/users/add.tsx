@@ -31,10 +31,8 @@ import type { AddNewUserFormSchema } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authClient } from "@/lib/auth-client";
-// role
+import { authClient } from "@/lib/auth/auth-client";
 import { USER_ROLES } from "@/lib/constants";
-//Status
 import { USER_STATUS } from "@/lib/constants";
 import { Switch } from "@/components/ui/switch";
 import Message from "@/components/ui/message";
@@ -45,8 +43,10 @@ interface AddNewUserFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
 const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
   const queryClient = useQueryClient();
+
   // form handling >>>>>>>>>>>>>>>
   const form = useForm<AddNewUserFormSchema>({
     resolver: zodResolver(addNewUserFormSchema),
@@ -60,6 +60,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
       isVerified: false,
     },
   });
+
   // add new user form handling >>>>>>>>>>>>>>>>>
   const {
     data: addUserData,
@@ -95,11 +96,13 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
       onOpenChange(false);
     },
   });
+
   // Submit
   const onSubmit = (data: AddNewUserFormSchema) => {
     console.log("Form Data Submitted:", data);
     mutate(data);
   };
+
   return (
     <Dialog
       open={open}
@@ -150,7 +153,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
                       value={field.value}
                       onChange={field.onChange}
                       maxUploadSize={5}
-                      uploadApi={"/api/panel/upload"}
+                      uploadApi={"/api/panel/images/upload"}
                       uploadAction={"uploadImage"}
                     />
                   </FormControl>
@@ -268,9 +271,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
               render={({ field }) => (
                 <FormItem className="rounded-md bg-background flex flex-row items-center justify-between border p-4 space-y-0 gap-3">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Verify 
-                    </FormLabel>
+                    <FormLabel className="text-base">Verify</FormLabel>
                     <FormDescription>
                       Verifying a user will allow the user to sign in.
                     </FormDescription>

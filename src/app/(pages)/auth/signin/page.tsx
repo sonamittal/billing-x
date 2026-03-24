@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import CredentialsSignin from "@/components/auth/credentials-signin/credentials-signin";
@@ -9,7 +9,7 @@ export default async function SignInPage() {
   });
   console.log("SESSION:", session);
   if (session?.user) {
-   redirect("/auth/callback");
+    redirect("/auth/callback");
   }
   return <CredentialsSignin />;
 }

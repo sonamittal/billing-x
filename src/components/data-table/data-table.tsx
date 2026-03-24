@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getColumnPinningStyle } from "@/lib/data-table";
+import { getColumnPinningStyle } from "@/lib/data-table/data-table";
 import { cn } from "@/utils";
 
 interface DataTableProps<TData> extends React.ComponentProps<"div"> {

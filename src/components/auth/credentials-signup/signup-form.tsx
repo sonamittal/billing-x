@@ -21,7 +21,7 @@ import type { SignupFormSchema } from "@/components/validation/validation";
 // import { signUp } from "@/lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import axios from "axios";
 
@@ -85,7 +85,7 @@ const SignUpForm = () => {
     console.log("Form Data Submitted:", data);
     mutate(data);
   };
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

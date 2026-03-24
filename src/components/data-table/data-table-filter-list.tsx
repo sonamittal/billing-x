@@ -56,10 +56,13 @@ import {
 } from "@/components/ui/sortable";
 import { dataTableConfig } from "@/config/data-table";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
-import { getDefaultFilterOperator, getFilterOperators } from "@/lib/data-table";
-import { formatDate } from "@/lib/format";
-import { generateId } from "@/lib/id";
-import { getFiltersStateParser } from "@/lib/parsers";
+import {
+  getDefaultFilterOperator,
+  getFilterOperators,
+} from "@/lib/data-table/data-table";
+import { formatDate } from "@/lib/data-table/format";
+import { generateId } from "@/lib/data-table/id";
+import { getFiltersStateParser } from "@/lib/data-table/parsers";
 import { cn } from "@/utils";
 import type {
   ExtendedColumnFilter,
@@ -72,8 +75,9 @@ const THROTTLE_MS = 50;
 const FILTER_SHORTCUT_KEY = "f";
 const REMOVE_FILTER_SHORTCUTS = ["backspace", "delete"];
 
-interface DataTableFilterListProps<TData>
-  extends React.ComponentProps<typeof PopoverContent> {
+interface DataTableFilterListProps<TData> extends React.ComponentProps<
+  typeof PopoverContent
+> {
   table: Table<TData>;
   debounceMs?: number;
   throttleMs?: number;
@@ -218,8 +222,7 @@ export function DataTableFilterList<TData>({
     <Sortable
       value={filters}
       onValueChange={setFilters}
-    getItemValue={(item: ExtendedColumnFilter<TData>) => item.filterId}
-
+      getItemValue={(item: ExtendedColumnFilter<TData>) => item.filterId}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

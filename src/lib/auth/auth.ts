@@ -9,7 +9,7 @@ import {
   staff,
   staffAssigned,
   timesheetStaff,
-} from "@/lib/permissions";
+} from "@/lib/auth/permissions";
 
 interface SendVerificationOtpParams {
   email: string;
@@ -66,6 +66,5 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
-  trustedOrigins: [process.env.NEXT_PUBLIC_BETTER_AUTH_URL || ''],
+  trustedOrigins: [process.env.NEXT_PUBLIC_BETTER_AUTH_URL || ""],
 });
-

@@ -68,7 +68,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   // delete image >>>>>>>>>>
   const deleteImage = async (key: string) => {
     try {
-      const res = await axios.post("/api/panel/delete", { key });
+      const res = await axios.post("/api/panel/images/delete", { key });
       console.log("delete image:", res.data);
       return res.data;
     } catch (err) {

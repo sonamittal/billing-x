@@ -1,20 +1,20 @@
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import GetFirstOrg from "@/app/_server_actions/organization";
 
-const CallbackPage =async() => {
+const CallbackPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
   if (!session?.user) {
     redirect("/auth/signin");
   }
- const existingOrg = await GetFirstOrg();
+  const existingOrg = await GetFirstOrg();
   if (existingOrg) {
-    redirect("/panel/dashboard"); 
+    redirect("/panel/dashboard");
   }
 
   redirect("/organization-setup");
-}
+};
 export default CallbackPage;

@@ -31,18 +31,14 @@ interface Customer {
   username: string;
   companyName?: string;
   email: string;
+  image?: string;
   phone: string;
-  // type: "individual" | "business";
   receivable: number;
   usedCredit: number;
 }
 
 const CustomersTable = () => {
   const [username] = useQueryState("username", parseAsString.withDefault(""));
-  const [type] = useQueryState(
-    "type",
-    parseAsArrayOf(parseAsString).withDefault([]),
-  );
 
   // Fetch users
   const { data: customers = [], isLoading } = useQuery({
@@ -51,7 +47,7 @@ const CustomersTable = () => {
       return [
         {
           id: "1",
-          username: "Sona Mittal",
+          username: "sona Mittal",
           phone: "9876543210",
           email: "sonamitaal285@gmail.com",
           companyName: "byte",
@@ -60,7 +56,7 @@ const CustomersTable = () => {
         },
         {
           id: "2",
-          username: "Rahul Sharma",
+          username: "rahul Sharma",
           phone: "9999999999",
           email: "rahul56@gmail.com",
           companyName: "ABC Pvt Ltd",
@@ -72,14 +68,10 @@ const CustomersTable = () => {
   });
   const filteredData = React.useMemo(() => {
     return customers.filter((customer) => {
-      const search = username.toLowerCase();
-      const matchSearch =
-        search === "" ||
-        customer.username.toLowerCase().includes(search) ||
-        customer.phone.includes(search) ||
-        customer.companyName?.toLowerCase().includes(search);
-
-      return matchSearch;
+      const matchUsername =
+        username === "" ||
+        customer.username.toLowerCase().includes(username.toLowerCase());
+      return matchUsername;
     });
   }, [customers, username]);
   const columns = React.useMemo<ColumnDef<Customer>[]>(
@@ -109,6 +101,7 @@ const CustomersTable = () => {
         enableSorting: false,
         enableHiding: false,
       },
+      // username
       {
         id: "username",
         accessorKey: "username",
@@ -116,12 +109,26 @@ const CustomersTable = () => {
           <DataTableColumnHeader column={column} label="username" />
         ),
 
-        cell: ({ cell }) => (
-          <div className="flex gap-2 items-center">
-            <User className="h-7 w-7.5 border-2 p-0.5 rounded-sm text-muted-foreground mt-1" />
-            {cell.getValue<Customer["username"]>()}
-          </div>
-        ),
+        cell: ({ row }) => {
+          const user = row.original;
+          return (
+            <div className="flex items-center gap-2">
+              {user.image ? (
+                <img
+                  src={user.image}
+                  alt={user.username}
+                  className="h-8 w-8 rounded-full object-cover border"
+                />
+              ) : (
+                <div className="h-7 w-7 rounded-full bg-[#F5F5F5] text-black flex items-center justify-center text-sm font-medium">
+                  {user.username.charAt(0).toUpperCase()}
+                </div>
+              )}
+
+              <span>{user.username}</span>
+            </div>
+          );
+        },
         meta: {
           label: "username",
           placeholder: "Search username...",
@@ -130,6 +137,7 @@ const CustomersTable = () => {
         },
         enableColumnFilter: true,
       },
+      // contact details
       {
         id: "conatct details",
         accessorKey: "email",
@@ -148,9 +156,8 @@ const CustomersTable = () => {
             </div>
           </div>
         ),
-        enableColumnFilter: false,
       },
-
+      // company name
       {
         id: "companyName",
         accessorKey: "companyName",
@@ -159,6 +166,15 @@ const CustomersTable = () => {
         ),
         cell: ({ row }) => row.original.companyName || "—",
       },
+            {
+        id: "companyName",
+        accessorKey: "companyName",
+        header: ({ column }: { column: Column<Customer, unknown> }) => (
+          <DataTableColumnHeader column={column} label="Company Name" />
+        ),
+        cell: ({ row }) => row.original.companyName || "—",
+      },
+      // receivable
       {
         id: "receivable",
         accessorKey: "receivable",
@@ -172,12 +188,13 @@ const CustomersTable = () => {
           </span>
         ),
       },
+      // unusedCredit
       {
-        id: "usedCredit",
-        accessorKey: "usedCredit",
+        id: "unusedCredit",
+        accessorKey: "unusedCredit",
         size: 32,
         header: ({ column }: { column: Column<Customer, unknown> }) => (
-          <DataTableColumnHeader column={column} label="Used Credit" />
+          <DataTableColumnHeader column={column} label="UnUsed Credit" />
         ),
         cell: ({ row }) => (
           <span className="text-yellow-600 font-medium">

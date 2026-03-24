@@ -13,7 +13,7 @@ type SearchProviderProps = {
   children: React.ReactNode;
 };
 
-export function SearchProvider({ children }: SearchProviderProps) {
+export const SearchProvider = ({ children }: SearchProviderProps) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
       <Command />
     </SearchContext>
   );
-}
+};
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useSearch = () => {

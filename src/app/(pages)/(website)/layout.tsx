@@ -1,4 +1,4 @@
-import { getCookie } from "@/lib/cookies";
+import { getCookie } from "@/lib/data-table/cookies";
 import { cn } from "@/utils";
 import { SearchProvider } from "@/providers/search-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";

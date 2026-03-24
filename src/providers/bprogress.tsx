@@ -1,5 +1,6 @@
 "use client";
 import { ProgressProvider } from "@bprogress/next/app";
+
 const BprogressProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ProgressProvider
@@ -12,4 +13,5 @@ const BprogressProvider = ({ children }: { children: React.ReactNode }) => {
     </ProgressProvider>
   );
 };
+
 export default BprogressProvider;

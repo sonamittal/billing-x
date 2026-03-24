@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 interface userIdProps {
@@ -58,7 +58,7 @@ const DeleteUserDialog = ({ user, open, setOpen, callback }: userIdProps) => {
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete{" "}
             <span className="font-medium text-foreground">
-             {(user.username ?? user.name ?? "Unknown") + "'s"}
+              {(user.username ?? user.name ?? "Unknown") + "'s"}
             </span>{" "}
             account and it{"'"}s data from the server.
           </AlertDialogDescription>

@@ -1,7 +1,7 @@
 import { db } from "@/lib/database/db-connect";
 import { user } from "@/drizzle/schema/index";
 import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { eq } from "drizzle-orm";
 
 export const GET = async (

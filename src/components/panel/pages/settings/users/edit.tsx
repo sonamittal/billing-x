@@ -16,7 +16,7 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -175,7 +175,7 @@ const EditUser = ({ user, callback }: userIdProps) => {
                       value={field.value}
                       onChange={field.onChange}
                       maxUploadSize={5}
-                      uploadApi={"/api/panel/upload"}
+                      uploadApi={"/api/panel/images/upload"}
                       uploadAction={"uploadImage"}
                     />
                   </FormControl>
@@ -328,9 +328,7 @@ const EditUser = ({ user, callback }: userIdProps) => {
               render={({ field }) => (
                 <FormItem className="rounded-md  flex flex-row items-center justify-between border p-4 space-y-0 gap-3">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Verify
-                    </FormLabel>
+                    <FormLabel className="text-base">Verify</FormLabel>
                     <FormDescription>
                       Verifying a user will allow the user to sign in.
                     </FormDescription>

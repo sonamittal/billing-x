@@ -18,7 +18,7 @@ import { DataTableSortList } from "@/components/data-table/data-table-sort-list"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -127,6 +127,7 @@ const UsersTable = () => {
         enableSorting: false,
         enableHiding: false,
       },
+
       {
         id: "username",
         accessorKey: "username",
@@ -160,6 +161,7 @@ const UsersTable = () => {
         },
         enableColumnFilter: true,
       },
+
       {
         id: "email",
         accessorKey: "email",
@@ -174,6 +176,7 @@ const UsersTable = () => {
         ),
         enableColumnFilter: false,
       },
+
       {
         id: "role",
         accessorKey: "role",
@@ -187,6 +190,7 @@ const UsersTable = () => {
         },
         enableColumnFilter: true,
       },
+
       {
         id: "banned",
         accessorKey: "banned",
@@ -249,6 +253,7 @@ const UsersTable = () => {
 
         enableColumnFilter: true,
       },
+
       {
         id: "actions",
         cell: ({ row }) => {
@@ -293,7 +298,7 @@ const UsersTable = () => {
     columns,
     pageCount: 2,
     initialState: {
-      sorting: [{ id: "username", desc: true }],
+      sorting: [{ id: "username", desc: false }],
       columnPinning: { right: ["actions"] },
     },
     getRowId: (row) => row.id,

@@ -17,7 +17,7 @@ import { useSearchParams } from "next/navigation";
 import { forgotPasswordFormSchema } from "@/components/validation/validation";
 import type { ForgotPasswordFormSchema } from "@/components/validation/validation";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { Loader2, MoveLeft } from "lucide-react";
 import React, { useState } from "react";
 import Image from "next/image";

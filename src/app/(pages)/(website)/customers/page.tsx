@@ -32,7 +32,7 @@ export default function Users() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Customers List</h2>
             <p className="text-muted-foreground">
-              Manage your users and their roles here.
+              Access and manage all your customer records, including contact and financial details.
             </p>
           </div>
           <Button onClick={() => setInvitedOpen(true)}>
