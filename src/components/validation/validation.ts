@@ -178,3 +178,22 @@ export const updateUserPasswordFormSchema = z
 export type UpdateUserPasswordFormSchema = z.infer<
   typeof updateUserPasswordFormSchema
 >;
+
+// customer (user-form) schema
+export const userFormSchema = z.object({
+  image: z.string().min(1, { message: "Image is required" }),
+  username: z.string().min(1, { message: "username is required" }),
+  email: z.email({ message: "email is required" }),
+  phoneno: z
+    .string()
+    .min(10, { message: "phone no must be atleast 8 character" })
+    .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
+  password: z
+    .string()
+    .min(8, { message: "password must be atleast 8 character" })
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must contain at least one letter and one number",
+    ),
+});
+export type UserFormSchema = z.infer<typeof userFormSchema>;
