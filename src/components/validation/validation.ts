@@ -88,12 +88,12 @@ export const organizationSchema = z
     name: z.string().min(1, { message: " organization name is  required" }),
     industry: z.string().min(1, { message: "Industry is required" }),
     country: z.string().min(1, { message: "country is required" }),
-    state: z.string().min(1, "State is required"),
+    state: z.string().min(1, "state is required"),
     city: z.string().min(1, { message: "city is required" }),
-    address: z.string().min(1, { message: "Location is required" }),
+    address: z.string().min(1, { message: "location is required" }),
     currency: z.string().min(1, { message: "currency is required" }),
-    language: z.string().trim().min(1, { message: "Language is required" }),
-    timezone: z.string().trim().min(1, { message: "Timezone is required" }),
+    language: z.string().trim().min(1, { message: "language is required" }),
+    timezone: z.string().trim().min(1, { message: "timezone is required" }),
     gstRegistered: z.boolean(),
     gstNumber: z.string().trim().optional(),
     invoicingMethod: z
@@ -179,7 +179,7 @@ export type UpdateUserPasswordFormSchema = z.infer<
   typeof updateUserPasswordFormSchema
 >;
 
-// customer (user-form) schema
+// customer (user-form) schema >>>>>>>>>>>>>>>
 export const userFormSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
   username: z.string().min(1, { message: "username is required" }),
@@ -197,3 +197,33 @@ export const userFormSchema = z.object({
     ),
 });
 export type UserFormSchema = z.infer<typeof userFormSchema>;
+
+// add customer from schema >>>>>>>>>>>>>>
+export const addCustomerFormSchema = z
+  .object({
+    partnerType: z.enum(["individual", "business"]),
+    displayName: z.string().min(1, { message: " display name is required " }),
+    companyName: z.string().optional(),
+    currency: z.string().min(1, { message: "currency is required" }),
+    language: z.string().trim().min(1, { message: "Language is required" }),
+    country: z.string().min(1, { message: "country is required" }),
+    state: z.string().min(1, "state is required"),
+    city: z.string().min(1, { message: "city is required" }),
+    pinCode: z
+      .string()
+      .trim()
+      .regex(/^[1-9][0-9]{5}$/, "invalid pin code"),
+    address: z.string().min(1, { message: "address is required" }),
+  })
+  .superRefine((data, ctx) => {
+    // business case condition
+    if (data.partnerType === "business" && !data.companyName) {
+      ctx.addIssue({
+        code: "custom",
+        message: "company name is required",
+        path: ["companyName"],
+      });
+    }
+  });
+
+export type AddCustomerFormSchema = z.infer<typeof addCustomerFormSchema>;

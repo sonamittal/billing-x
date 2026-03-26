@@ -13,13 +13,14 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Users, MapPin } from "lucide-react";
+import { Users, MapPin, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MultiSelect from "@/components/ui/multiselect";
+import { addCustomerFormSchema } from "@/components/validation/validation";
+import type { AddCustomerFormSchema } from "@/components/validation/validation";
 import {
   GetCountries,
   GetState,
@@ -36,26 +37,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import axios from "axios";
+import Message from "@/components/ui/message";
 
 interface CustomerFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-type CustomerFormValues = {
-  partnerType: "individual" | "business";
-  displayName: string;
-  companyName: string;
-  currency: string;
-  language: string;
-  country: string;
-  state: string;
-  city: string;
-  pinCode: string;
-  address: string;
-};
-
 const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
+  const queryClient = useQueryClient();
+
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
   const [citiesList, setCitiesList] = useState<any[]>([]);
@@ -63,18 +58,43 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
 
-  const form = useForm<CustomerFormValues>({
+  // form handling >>>>>>>>>>>
+  const form = useForm<AddCustomerFormSchema>({
+    resolver: zodResolver(addCustomerFormSchema),
     defaultValues: {
-      partnerType: "individual",
+      partnerType: undefined,
       displayName: "",
       companyName: "",
-      currency: "INR",
-      language: "English",
+      currency: "",
+      language: "",
       country: "",
       state: "",
       city: "",
       pinCode: "",
       address: "",
+    },
+  });
+
+  // add customer form handling >>>>>>>>>>
+  const {
+    data: addCustomerData,
+    mutate: addCustomer,
+    isPending: isAddCustomerPending,
+    isSuccess: isAddCustomerSuccess,
+    error: addCustomerError,
+  } = useMutation({
+    mutationFn: async (data: AddCustomerFormSchema) => {
+      const res = await axios.post("api/", data);
+      if (res.data.error) {
+        throw new Error(res.data.error?.message || "failed to create customer");
+      }
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+      toast.success("Customer created successfully!");
+      form.reset();
+      onOpenChange(false);
     },
   });
 
@@ -104,9 +124,9 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
     }
   }, [selectedState, selectedCountry]);
 
-  const onSubmit = (data: CustomerFormValues) => {
-    console.log("Form Data:", data);
-    onOpenChange(false);
+  const onSubmit = (data: AddCustomerFormSchema) => {
+    console.log("Form Data Submitted:", data);
+    addCustomer(data);
   };
 
   return (
@@ -123,6 +143,13 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
             </div>
           </DialogTitle>
         </DialogHeader>
+        <Message
+          variant={addCustomerError ? "destructive" : "default"}
+          message={
+            addCustomerError?.message ||
+            (isAddCustomerSuccess && addCustomerData.message)
+          }
+        />
 
         <Form {...form}>
           <form
@@ -361,8 +388,18 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
               )}
             />
             <DialogFooter>
-              <Button type="submit" className="w-full">
-                Create Customer
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isAddCustomerPending}
+              >
+                {isAddCustomerPending ? (
+                  <>
+                    <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                  </>
+                ) : (
+                  "Create Customer"
+                )}
               </Button>
             </DialogFooter>
           </form>

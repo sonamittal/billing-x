@@ -164,16 +164,9 @@ const CustomersTable = () => {
         header: ({ column }: { column: Column<Customer, unknown> }) => (
           <DataTableColumnHeader column={column} label="Company Name" />
         ),
-        cell: ({ row }) => row.original.companyName || "—",
+        cell: ({ row }) => row.original.companyName || "ByteWyte",
       },
-            {
-        id: "companyName",
-        accessorKey: "companyName",
-        header: ({ column }: { column: Column<Customer, unknown> }) => (
-          <DataTableColumnHeader column={column} label="Company Name" />
-        ),
-        cell: ({ row }) => row.original.companyName || "—",
-      },
+
       // receivable
       {
         id: "receivable",

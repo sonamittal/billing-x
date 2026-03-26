@@ -61,7 +61,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             : "cursor-pointer bg-white dark:bg-[#161514]"
         }
         text-black dark:text-white
-        border-gray-300 dark:border-[#0c0a09]`}
+        border-gray-300 dark:border-[#34302e]`}
       >
         <span className="truncate text-gray-700 dark:text-gray-300">
           {selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder}
@@ -79,7 +79,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         <div
           className="border mt-1 rounded absolute w-full z-10 shadow-md
           bg-white dark:bg-[#161514]
-          border-gray-300 dark:border-[#0c0a09]"
+          border-gray-300 dark:border-[#34302e]"
         >
           {/* Search */}
           <input
@@ -89,7 +89,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             bg-white dark:bg-[#161514]
             text-black dark:text-white
             placeholder:text-gray-500 dark:placeholder:text-gray-400
-            border-gray-300 dark:border-[#0c0a09]"
+            border-gray-300 dark:border-[#34302e]"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -107,7 +107,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 >
                   {item.label}
                   {selected.includes(item.value) && (
-                    <Check className="text-green-600 dark:text-green-400" />
+                    <Check className=" w-5 h-5 text-[#898989] dark:text-[#9b9797]" />
                   )}
                 </div>
               ))
