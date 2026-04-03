@@ -28,7 +28,6 @@ import {
   GetCity,
   GetLanguages,
 } from "react-country-state-city";
-import "react-country-state-city/dist/react-country-state-city.css";
 import { CURRENCY_TYPE } from "@/lib/constants";
 import {
   Select,

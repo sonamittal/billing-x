@@ -33,7 +33,6 @@ import {
   GetCity,
   GetLanguages,
 } from "react-country-state-city";
-import "react-country-state-city/dist/react-country-state-city.css";
 import { INDUSTRY_TYPES, CURRENCY_TYPE } from "@/lib/constants";
 import UseTimezone from "@/hooks/use-Timezone";
 import { Switch } from "@/components/ui/switch";
