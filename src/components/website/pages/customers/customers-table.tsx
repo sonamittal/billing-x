@@ -171,7 +171,6 @@ const CustomersTable = () => {
       {
         id: "receivable",
         accessorKey: "receivable",
-        size: 32,
         header: ({ column }: { column: Column<Customer, unknown> }) => (
           <DataTableColumnHeader column={column} label="Receivable" />
         ),

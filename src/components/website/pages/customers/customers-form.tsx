@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Users, MapPin, Loader2 } from "lucide-react";
+import { Users, MapPin, Loader2, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MultiSelect from "@/components/ui/multiselect";
 import { addCustomerFormSchema } from "@/components/validation/validation";
@@ -43,12 +44,12 @@ import { toast } from "sonner";
 import axios from "axios";
 import Message from "@/components/ui/message";
 
-interface CustomerFormProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
+type Props = {
+  open?: boolean;
+  onOpenChange?: (val: boolean) => void;
+  onBack?: () => void;
+};
+const AddCustomerForm = ({ open, onOpenChange, onBack }: Props) => {
   const queryClient = useQueryClient();
 
   const [countriesList, setCountriesList] = useState<any[]>([]);
@@ -94,7 +95,7 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
       queryClient.invalidateQueries();
       toast.success("Customer created successfully!");
       form.reset();
-      onOpenChange(false);
+      onOpenChange?.(false);
     },
   });
 
@@ -134,14 +135,12 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
       <DialogContent className="overflow-auto w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
-            <Users className="h-8 w-9 text-blue-600 bg-blue-100 rounded-md p-1.5" />
-            <div>
-              <div className="font-medium text-md ">Basic Information</div>
-              <div className="text-sm mt-0.5 text-gray-500">
-                Partner type selection
-              </div>
-            </div>
+            Customer Details
           </DialogTitle>
+          <DialogDescription>
+            {" "}
+            Enter the new customer’s information in the form below.
+          </DialogDescription>
         </DialogHeader>
         <Message
           variant={addCustomerError ? "destructive" : "default"}
@@ -156,7 +155,16 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6 px-4 pb-6"
           >
-            {/* Partner Type */}
+            {/* Partner type */}
+            <div className="flex items-center gap-3 mb-4">
+              <Users className="h-8 w-9 text-blue-600 bg-blue-100 rounded-md p-1.5" />
+              <div>
+                <div className="font-medium text-md ">Basic Information</div>
+                <div className="text-sm mt-0.5 text-gray-500">
+                  Partner type selection
+                </div>
+              </div>
+            </div>
             <FormField
               control={form.control}
               name="partnerType"
@@ -179,7 +187,7 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Display Name */}
+              {/* Display name */}
               <FormField
                 control={form.control}
                 name="displayName"
@@ -359,7 +367,7 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
                 )}
               />
 
-              {/* PIN */}
+              {/* Pin*/}
               <FormField
                 name="pinCode"
                 render={({ field }) => (
@@ -388,19 +396,24 @@ const AddCustomerForm = ({ open, onOpenChange }: CustomerFormProps) => {
               )}
             />
             <DialogFooter>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isAddCustomerPending}
-              >
-                {isAddCustomerPending ? (
-                  <>
-                    <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                  </>
-                ) : (
-                  "Create Customer"
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 w-full">
+                {onBack && (
+                  <Button className="" variant="outline" onClick={onBack}>
+                    <ChevronLeft className="mt-0.5" />
+                    Back
+                  </Button>
                 )}
-              </Button>
+
+                <Button type="submit" disabled={isAddCustomerPending}>
+                  {isAddCustomerPending ? (
+                    <>
+                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                    </>
+                  ) : (
+                    "Create Customer"
+                  )}
+                </Button>
+              </div>
             </DialogFooter>
           </form>
         </Form>

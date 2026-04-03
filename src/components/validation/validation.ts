@@ -186,8 +186,8 @@ export const userFormSchema = z.object({
   email: z.email({ message: "email is required" }),
   phoneno: z
     .string()
-    .min(10, { message: "phone no must be atleast 8 character" })
-    .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
+    .length(10, { message: "Phone number must be exactly 10 digits" })
+    .regex(/^\d+$/, "Phone number must contain only digits"),
   password: z
     .string()
     .min(8, { message: "password must be atleast 8 character" })

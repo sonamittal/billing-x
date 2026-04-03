@@ -298,7 +298,7 @@ const EditUser = ({ user, callback }: userIdProps) => {
                     </FormItem>
                   )}
                 />
-                {/* Ban Expire */}
+                {/* ban expires */}
                 <FormField
                   control={form.control}
                   name="banExpires"

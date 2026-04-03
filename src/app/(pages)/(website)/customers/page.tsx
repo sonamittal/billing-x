@@ -6,7 +6,7 @@ import { ProfileDropdown } from "@/components/panel/layout/profile-dropdown";
 import { Search } from "@/components/panel/layout/search";
 import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
 import CustomersTable from "@/components/website/pages/customers/customers-table";
-import AddCustomerForm from "@/components/website/pages/customers/customers-form";
+import AddCustomerDailog from "@/components/website/pages/customers/customers-dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
@@ -46,7 +46,7 @@ export default function Users() {
         {/* customers table */}
         <CustomersTable />
         {/* invited User btn */}
-        <AddCustomerForm open={invitedOpen} onOpenChange={setInvitedOpen} />
+        <AddCustomerDailog open={invitedOpen} onOpenChange={setInvitedOpen} />
       </Main>
     </div>
   );

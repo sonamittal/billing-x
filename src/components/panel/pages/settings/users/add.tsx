@@ -64,7 +64,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
   // add new user form handling >>>>>>>>>>>>>>>>>
   const {
     data: addUserData,
-    mutate,
+    mutate: addUser,
     isPending: isAddUserPending,
     isSuccess: isAddUserSuccess,
     error: addUserError,
@@ -100,17 +100,11 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
   // Submit
   const onSubmit = (data: AddNewUserFormSchema) => {
     console.log("Form Data Submitted:", data);
-    mutate(data);
+    addUser(data);
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(state) => {
-        form.reset();
-        onOpenChange(state);
-      }}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-auto w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
         <DialogHeader className="text-start">
           <DialogTitle className="flex items-center gap-2">
@@ -122,12 +116,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
         </DialogHeader>
         <Message
           variant={addUserError ? "destructive" : "default"}
-          message={
-            addUserError?.message ||
-            (isAddUserSuccess && addUserData
-              ? "user create Successfully!!"
-              : "")
-          }
+          message={addUserError?.message}
         />
         <Form {...form}>
           <form

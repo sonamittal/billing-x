@@ -18,7 +18,7 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UserPlus, Loader2 } from "lucide-react";
+import { UserPlus, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { userFormSchema } from "@/components/validation/validation";
 import type { UserFormSchema } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
@@ -29,7 +29,12 @@ import ImageUpload from "@/components/ui/image-upload";
 import { toast } from "sonner";
 import axios from "axios";
 
-const AddUserForm = () => {
+type Props = {
+  onBack?: () => void;
+  onNext?: () => void;
+};
+
+const CAddUserForm = ({ onBack, onNext }: Props) => {
   const queryClient = useQueryClient();
 
   // form handling >>>>>>>>>>>>>>>
@@ -68,6 +73,7 @@ const AddUserForm = () => {
   const onSubmit = (data: UserFormSchema) => {
     console.log("Form Data Submitted:", data);
     addUser(data);
+    onNext?.();
   };
 
   return (
@@ -187,17 +193,32 @@ const AddUserForm = () => {
         </form>
       </Form>
       <DialogFooter className="gap-y-2">
-        <Button type="submit" form="user-form" disabled={isAddUserPending}>
-          {isAddUserPending ? (
-            <>
-              <Loader2 className="animate-spin h-5 w-5 mr-2" />
-            </>
-          ) : (
-            "Save Changes"
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 w-full">
+          {onBack && (
+            <Button className="gap-1" variant="outline" onClick={onBack}>
+              <ChevronLeft className="mt-0.5" /> Back
+            </Button>
           )}
-        </Button>
+          <div className="flex justify-between gap-3 mt-3">   
+            <Button type="submit" form="user-form" disabled={isAddUserPending}>
+              {isAddUserPending ? (
+                <>
+                  <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                </>
+              ) : (
+                "Add user "
+              )}
+            </Button>
+            {onNext && (
+              <Button className="gap-1" variant="outline" onClick={onNext}>
+                Next
+                <ChevronRight className="mt-0.5" />
+              </Button>
+            )}
+          </div>
+        </div>
       </DialogFooter>
     </DialogContent>
   );
 };
-export default AddUserForm;
+export default CAddUserForm;
