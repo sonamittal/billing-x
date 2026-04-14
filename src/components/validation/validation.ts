@@ -201,6 +201,7 @@ export type UserFormSchema = z.infer<typeof userFormSchema>;
 // add customer from schema >>>>>>>>>>>>>>
 export const addCustomerFormSchema = z
   .object({
+    userId: z.string().optional(),
     partnerType: z.enum(["individual", "business"]),
     displayName: z.string().min(1, { message: " display name is required " }),
     companyName: z.string().optional(),

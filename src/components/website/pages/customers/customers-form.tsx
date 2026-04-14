@@ -42,13 +42,20 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "axios";
 import Message from "@/components/ui/message";
-
+import type { User } from "@/components/website/pages/customers/customers-dialog";
 type Props = {
   open?: boolean;
   onOpenChange?: (val: boolean) => void;
   onBack?: () => void;
+  selectedUser?: User | null;
 };
-const AddCustomerForm = ({ open, onOpenChange, onBack }: Props) => {
+
+const AddCustomerForm = ({
+  open,
+  onOpenChange,
+  onBack,
+  selectedUser,
+}: Props) => {
   const queryClient = useQueryClient();
 
   const [countriesList, setCountriesList] = useState<any[]>([]);
@@ -84,14 +91,18 @@ const AddCustomerForm = ({ open, onOpenChange, onBack }: Props) => {
     error: addCustomerError,
   } = useMutation({
     mutationFn: async (data: AddCustomerFormSchema) => {
-      const res = await axios.post("api/", data);
+      const res = await axios.post("/api/panel/customers", {
+        type: "customer",
+        userId: selectedUser?.id,
+        ...data,
+      });
       if (res.data.error) {
         throw new Error(res.data.error?.message || "failed to create customer");
       }
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("Customer created successfully!");
       form.reset();
       onOpenChange?.(false);
@@ -125,8 +136,15 @@ const AddCustomerForm = ({ open, onOpenChange, onBack }: Props) => {
   }, [selectedState, selectedCountry]);
 
   const onSubmit = (data: AddCustomerFormSchema) => {
+    if (!selectedUser?.id) {
+      toast.error("Please select a user first");
+      return;
+    }
     console.log("Form Data Submitted:", data);
-    addCustomer(data);
+    addCustomer({
+      userId: selectedUser.id,
+      ...data,
+    });
   };
 
   return (
@@ -397,7 +415,7 @@ const AddCustomerForm = ({ open, onOpenChange, onBack }: Props) => {
             <DialogFooter>
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 w-full">
                 {onBack && (
-                  <Button className="" variant="outline" onClick={onBack}>
+                  <Button type="button" variant="outline" onClick={onBack}>
                     <ChevronLeft className="mt-0.5" />
                     Back
                   </Button>

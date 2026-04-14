@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   Dialog,
@@ -18,39 +17,55 @@ import {
 } from "lucide-react";
 import CAddUserForm from "@/components/website/pages/customers/users-form";
 import AddCustomerForm from "@/components/website/pages/customers/customers-form";
+import { useQuery } from "@tanstack/react-query";
+import { authClient } from "@/lib/auth/auth-client";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-// dummy data
-const dummyUsers = [
-  { name: "Rahul Sharma", email: "rahul@gmail.com", phone: "9876543210" },
-  {
-    name: "Vaishvik Mohatkar",
-    email: "vaishvik@example.com",
-    phone: "9123456780",
-  },
-];
-
+export type User = {
+  id: string;
+  image?: string;
+  username: string;
+  email: string;
+  banned?: boolean;
+}
 const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
   const [selectType, setSelectType] = useState<"exists" | "new" | null>(null);
-  const [selectedUser, setSelectedUser] = useState<
-    (typeof dummyUsers)[0] | null
-  >(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [step, setStep] = useState<"selectUser" | "userForm" | "customerForm">(
     "selectUser",
   );
+  // fetch data
+  const { data: users = [] } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const { data, error } = await authClient.admin.listUsers({
+        query: { limit: 100 },
+      });
+      if (error) throw new Error(error.message);
+      return (data?.users || []).map((u: any) => ({
+        id: u.id,
+        image: u.image || u.avatar_url || "",
+        username: u.username || u.name || "Unknown",
+        email: u.email,
+        banned: u.banned,
+      }));
+    },
+  });
+  // filter users
+  const filteredUsers =
+    searchQuery.length < 2
+      ? users
+      : users.filter(
+          (user: User) =>
+            user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
 
-  // Filter users
-  const filteredUsers = dummyUsers.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
-  //
+  // handle step
   const handleBack = () => {
     if (step === "customerForm") {
       if (selectType === "new") {
@@ -157,10 +172,10 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
               </div>
             )}
 
-            {searchQuery.length > 0 && (
+            {searchQuery.length >= 2 && (
               <div className="space-y-2 max-h-72 overflow-y-auto mt-2">
                 {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user, idx) => (
+                  filteredUsers.map((user: User, idx) => (
                     <button
                       key={idx}
                       onClick={() => {
@@ -169,15 +184,34 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
                       }}
                       className="w-full text-left rounded-lg border p-3 hover:bg-muted/50"
                     >
-                      <div className="flex gap-3">
-                        <div className="rounded-full bg-primary/10 p-2">
-                          <User className="h-5 w-5 text-primary" />
+                      <div className="flex gap-3 item-center justify-between">
+                        <div className="flex gap-3 item-center">
+                          <div className="h-10 w-10 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+                            {user.image ? (
+                              <img alt={user.username} src={user.image} />
+                            ) : (
+                              <User className="h-5 w-5 text-primary" />
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm">
+                              {user.username}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {user.email}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium text-sm">{user.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {user.email}
-                          </p>
+                        <div className="">
+                          {user.banned ? (
+                            <span className="text-xs px-2 py-1 rounded bg-red-100 font-medium text-red-600">
+                              Banned
+                            </span>
+                          ) : (
+                            <span className="text-xs px-2 py-1  rounded bg-green-100 font-medium text-green-600 ">
+                              Active
+                            </span>
+                          )}
                         </div>
                       </div>
                     </button>
@@ -205,6 +239,7 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
             open={open}
             onOpenChange={onOpenChange}
             onBack={handleBack}
+            selectedUser={selectedUser}
           />
         )}
       </DialogContent>

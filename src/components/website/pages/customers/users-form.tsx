@@ -58,22 +58,26 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
     error: addUserError,
   } = useMutation({
     mutationFn: async (data: UserFormSchema) => {
-      const res = await axios.post(`/api/`, data);
+      const res = await axios.post("/api/panel/customers", {
+        type: "user",
+        ...data,
+      });
+
       if (res.data.error) {
         throw new Error(res.data.error?.message || "Failed to create user");
       }
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("User created successfully!");
       form.reset();
+      onNext?.();
     },
   });
   const onSubmit = (data: UserFormSchema) => {
     console.log("Form Data Submitted:", data);
     addUser(data);
-    onNext?.();
   };
 
   return (
@@ -199,7 +203,7 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
               <ChevronLeft className="mt-0.5" /> Back
             </Button>
           )}
-          <div className="flex justify-between gap-3 mt-3">   
+          <div className="flex justify-between gap-3 mt-3">
             <Button type="submit" form="user-form" disabled={isAddUserPending}>
               {isAddUserPending ? (
                 <>
@@ -210,7 +214,12 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
               )}
             </Button>
             {onNext && (
-              <Button className="gap-1" variant="outline" onClick={onNext}>
+              <Button
+                type="button"
+                className="gap-1"
+                variant="outline"
+                onClick={onNext}
+              >
                 Next
                 <ChevronRight className="mt-0.5" />
               </Button>

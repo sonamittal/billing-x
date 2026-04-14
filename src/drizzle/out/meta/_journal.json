@@ -36,6 +36,27 @@
       "when": 1771801256428,
       "tag": "0004_overjoyed_killer_shrike",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1776031383970,
+      "tag": "0005_elite_azazel",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776031543162,
+      "tag": "0006_jittery_tarot",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1776031596939,
+      "tag": "0007_careful_exodus",
+      "breakpoints": true
     }
   ]
 }
