@@ -58,15 +58,15 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
     error: addUserError,
   } = useMutation({
     mutationFn: async (data: UserFormSchema) => {
-      const res = await axios.post("/api/panel/customers", {
-        type: "user",
-        ...data,
-      });
-
-      if (res.data.error) {
-        throw new Error(res.data.error?.message || "Failed to create user");
+      try {
+        const res = await axios.post("/api/panel/customers", {
+          type: "user",
+          ...data,
+        });
+        return res.data;
+      } catch (err: any) {
+        throw new Error(err.response?.data?.message || "Failed to create user");
       }
-      return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });

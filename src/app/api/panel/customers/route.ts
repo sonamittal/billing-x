@@ -22,7 +22,7 @@ export const POST = async (req: Request) => {
 
     if (!body) {
       return Response.json(
-        { success: false, message: "Invalid JSON body" },
+        { success: false, message: "Invalid data" },
         { status: 400 },
       );
     }
