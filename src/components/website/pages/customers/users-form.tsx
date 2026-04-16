@@ -31,7 +31,7 @@ import axios from "axios";
 
 type Props = {
   onBack?: () => void;
-  onNext?: () => void;
+  onNext?: (user: any) => void;
 };
 
 const CAddUserForm = ({ onBack, onNext }: Props) => {
@@ -68,11 +68,11 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
         throw new Error(err.response?.data?.message || "Failed to create user");
       }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("User created successfully!");
       form.reset();
-      onNext?.();
+      onNext?.(data.data);
     },
   });
   const onSubmit = (data: UserFormSchema) => {
@@ -213,17 +213,6 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
                 "Add user "
               )}
             </Button>
-            {onNext && (
-              <Button
-                type="button"
-                className="gap-1"
-                variant="outline"
-                onClick={onNext}
-              >
-                Next
-                <ChevronRight className="mt-0.5" />
-              </Button>
-            )}
           </div>
         </div>
       </DialogFooter>

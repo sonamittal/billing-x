@@ -46,7 +46,7 @@ export const postUser = async (body: any) => {
   };
 };
 
-// cstomer
+// customer
 export const postCustomer = async (body: any) => {
   const {
     userId,

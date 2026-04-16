@@ -230,7 +230,10 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
         {step === "userForm" && (
           <CAddUserForm
             onBack={handleBack}
-            onNext={() => setStep("customerForm")}
+           onNext={(user) => {
+  setSelectedUser(user);   
+  setStep("customerForm");
+}}
           />
         )}
 
