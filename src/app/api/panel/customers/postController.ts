@@ -1,7 +1,7 @@
 import { db } from "@/lib/database/db-connect";
 import { user, customer } from "@/drizzle/schema/index";
 import { nanoid } from "nanoid";
-import { eq } from "drizzle-orm";
+
 
 // user
 export const postUser = async (body: any) => {

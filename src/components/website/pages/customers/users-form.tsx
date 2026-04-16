@@ -171,7 +171,11 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
                   Phone Number <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input type="tel" placeholder="eg: +1234567890" {...field} />
+                  <Input
+                    type="tel"
+                    placeholder="eg: +911234567890"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -25,6 +25,7 @@ import {
 import { useDataTable } from "@/hooks/use-data-table";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import axios from "axios";
 
 interface Customer {
   id: string;
@@ -34,36 +35,26 @@ interface Customer {
   image?: string;
   phone: string;
   receivable: number;
-  usedCredit: number;
+  unusedCredit: number;
 }
 
 const CustomersTable = () => {
   const [username] = useQueryState("username", parseAsString.withDefault(""));
 
   // Fetch users
-  const { data: customers = [], isLoading } = useQuery({
-    queryKey: ["customers"],
+  const { data: customers = [], isLoading } = useQuery<Customer[]>({
+    queryKey: ["customers", username],
     queryFn: async () => {
-      return [
-        {
-          id: "1",
-          username: "sona Mittal",
-          phone: "9876543210",
-          email: "sonamitaal285@gmail.com",
-          companyName: "byte",
-          receivable: 1200,
-          usedCredit: 500,
-        },
-        {
-          id: "2",
-          username: "rahul Sharma",
-          phone: "9999999999",
-          email: "rahul56@gmail.com",
-          companyName: "ABC Pvt Ltd",
-          receivable: 5000,
-          usedCredit: 2000,
-        },
-      ];
+      try {
+        const res = await axios.get("/api/panel/customers", {
+          params: { username },
+        });
+        return res.data;
+      } catch (err: any) {
+        throw new Error(
+          err?.response?.data?.message || "Failed to fetch customers",
+        );
+      }
     },
   });
   const filteredData = React.useMemo(() => {
@@ -152,7 +143,7 @@ const CustomersTable = () => {
             </div>
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-muted-foreground mt-1" />
-              {row.original.phone}
+              <span className="text-sm">{row.original.phone}</span>
             </div>
           </div>
         ),
@@ -175,8 +166,8 @@ const CustomersTable = () => {
           <DataTableColumnHeader column={column} label="Receivable" />
         ),
         cell: ({ row }) => (
-          <span className="text-red-500 font-medium">
-            ₹{row.original.receivable}
+          <span className="text-red-500  font-medium">
+            ₹{row.original.receivable ?? 2000}
           </span>
         ),
       },
@@ -190,7 +181,7 @@ const CustomersTable = () => {
         ),
         cell: ({ row }) => (
           <span className="text-yellow-600 font-medium">
-            ₹{row.original.usedCredit}
+            ₹{row.original.unusedCredit ?? 400}
           </span>
         ),
       },

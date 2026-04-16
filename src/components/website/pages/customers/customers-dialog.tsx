@@ -30,7 +30,7 @@ export type User = {
   username: string;
   email: string;
   banned?: boolean;
-}
+};
 const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
   const [selectType, setSelectType] = useState<"exists" | "new" | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -226,17 +226,17 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
             )}
           </div>
         )}
-
+        {/* userForm*/}
         {step === "userForm" && (
           <CAddUserForm
             onBack={handleBack}
-           onNext={(user) => {
-  setSelectedUser(user);   
-  setStep("customerForm");
-}}
+            onNext={(user) => {
+              setSelectedUser(user);
+              setStep("customerForm");
+            }}
           />
         )}
-
+        {/* customerForm*/}
         {step === "customerForm" && (
           <AddCustomerForm
             open={open}

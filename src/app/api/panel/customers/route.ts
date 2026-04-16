@@ -4,6 +4,7 @@ import {
   postUser,
   postCustomer,
 } from "@/app/api/panel/customers/postController";
+import { getCustomers } from "@/app/api/panel/customers/getController";
 
 export const POST = async (req: Request) => {
   try {
@@ -48,3 +49,17 @@ export const POST = async (req: Request) => {
   }
 };
 
+// get request
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const username = searchParams.get("username") || undefined;
+    const data = await getCustomers(username);
+    return Response.json(data);
+  } catch (error: any) {
+    return Response.json(
+      { message: error.message || "Failed to fetch customers" },
+      { status: 500 },
+    );
+  }
+}
