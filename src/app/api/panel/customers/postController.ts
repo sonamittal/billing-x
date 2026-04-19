@@ -48,7 +48,7 @@ export const postUser = async (body: any) => {
 export const postCustomer = async (body: any) => {
   const {
     userId,
-    partnerType,
+    customerType,
     displayName,
     companyName,
     currency,
@@ -97,7 +97,7 @@ export const postCustomer = async (body: any) => {
     .values({
       id: nanoid(),
       userId,
-      partnerType,
+     customerType,
       displayName,
       companyName,
       currency,

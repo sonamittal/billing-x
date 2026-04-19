@@ -202,7 +202,7 @@ export type UserFormSchema = z.infer<typeof userFormSchema>;
 export const addCustomerFormSchema = z
   .object({
     userId: z.string().optional(),
-    partnerType: z.enum(["individual", "business"]),
+    customerType: z.enum(["individual", "business"]),
     displayName: z.string().min(1, { message: " display name is required " }),
     companyName: z.string().optional(),
     currency: z.string().min(1, { message: "currency is required" }),
@@ -218,7 +218,7 @@ export const addCustomerFormSchema = z
   })
   .superRefine((data, ctx) => {
     // business case condition
-    if (data.partnerType === "business" && !data.companyName) {
+    if (data.customerType === "business" && !data.companyName) {
       ctx.addIssue({
         code: "custom",
         message: "company name is required",

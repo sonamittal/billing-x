@@ -8,7 +8,7 @@ export const customer = pgTable("customer", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" })
     .unique(),
-  partnerType: text("partner_type").notNull(),
+  customerType: text("customer_type").notNull(),
   displayName: text("display_name").notNull(),
   companyName: text("company_name"),
   currency: text("currency").notNull(),
@@ -18,6 +18,7 @@ export const customer = pgTable("customer", {
   city: text("city").notNull(),
   pinCode: text("pin_code").notNull(),
   address: text("address").notNull(),
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

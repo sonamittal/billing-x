@@ -143,7 +143,9 @@ const CustomersTable = () => {
             </div>
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-muted-foreground mt-1" />
-              <span className="text-sm">{row.original.phone}</span>
+              <span className="text-sm">
+                {row.original.phone ?? "not provided"}
+              </span>
             </div>
           </div>
         ),

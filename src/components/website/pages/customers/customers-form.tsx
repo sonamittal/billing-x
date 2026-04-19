@@ -69,7 +69,7 @@ const AddCustomerForm = ({
   const form = useForm<AddCustomerFormSchema>({
     resolver: zodResolver(addCustomerFormSchema),
     defaultValues: {
-      partnerType: undefined,
+      customerType: undefined,
       displayName: "",
       companyName: "",
       currency: "",
@@ -175,23 +175,23 @@ const AddCustomerForm = ({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6 px-4 pb-6"
           >
-            {/* Partner type */}
+            {/* Customer  type */}
             <div className="flex items-center gap-3 mb-4">
               <Users className="h-8 w-9 text-blue-600 bg-blue-100 rounded-md p-1.5" />
               <div>
                 <div className="font-medium text-md ">Basic Information</div>
                 <div className="text-sm mt-0.5 text-gray-500">
-                  Partner type selection
+                  Customer Type selection
                 </div>
               </div>
             </div>
             <FormField
               control={form.control}
-              name="partnerType"
+              name="customerType"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Partner Type <span className="text-red-500">*</span>
+                    Customer Type <span className="text-red-500">*</span>
                   </FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="w-full">
@@ -224,7 +224,7 @@ const AddCustomerForm = ({
               />
 
               {/* Company Name */}
-              {form.watch("partnerType") === "business" && (
+              {form.watch("customerType") === "business" && (
                 <FormField
                   control={form.control}
                   name="companyName"
@@ -272,7 +272,7 @@ const AddCustomerForm = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Language <span className="text-red-500">*</span>
+                      Customer Language <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
                       <MultiSelect
