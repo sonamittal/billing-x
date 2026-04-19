@@ -2,12 +2,11 @@ import { db } from "@/lib/database/db-connect";
 import { user, customer } from "@/drizzle/schema/index";
 import { nanoid } from "nanoid";
 
-
 // user
 export const postUser = async (body: any) => {
-  const { image, username, email, phoneno } = body;
+  const { image, username, email } = body;
 
-  if (!image || !username || !email || !phoneno) {
+  if (!image || !username || !email) {
     return {
       status: 400,
       json: { success: false, message: "All fields are required" },
@@ -31,7 +30,6 @@ export const postUser = async (body: any) => {
       id: nanoid(),
       name: username,
       email,
-      phone_no: phoneno,
       image,
     })
     .returning();

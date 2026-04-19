@@ -184,10 +184,10 @@ export const userFormSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
   username: z.string().min(1, { message: "username is required" }),
   email: z.email({ message: "email is required" }),
-  phoneno: z
-    .string()
-    .length(10, { message: "Phone number must be exactly 10 digits" })
-    .regex(/^\d+$/, "Phone number must contain only digits"),
+  // phoneno: z
+  //   .string()
+  //   .length(10, { message: "Phone number must be exactly 10 digits" })
+  //   .regex(/^\d+$/, "Phone number must contain only digits"),
   password: z
     .string()
     .min(8, { message: "password must be atleast 8 character" })

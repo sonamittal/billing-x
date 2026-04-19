@@ -44,7 +44,6 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
       image: "",
       username: "",
       email: "",
-      phoneno: "",
       password: "",
     },
   });
@@ -154,26 +153,6 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
                   <Input
                     type="email"
                     placeholder="eg: john.doe@gmail.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* phone no */}
-          <FormField
-            control={form.control}
-            name="phoneno"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Phone Number <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="tel"
-                    placeholder="eg: +911234567890"
                     {...field}
                   />
                 </FormControl>

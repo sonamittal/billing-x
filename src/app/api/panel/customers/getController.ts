@@ -11,7 +11,6 @@ export const getCustomers = async (username?: string) => {
       username: user.name,
       email: user.email,
       image: user.image,
-      phone: user.phone_no,
       // from customer table
       companyName: customer.companyName,
     })
