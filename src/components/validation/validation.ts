@@ -228,3 +228,22 @@ export const addCustomerFormSchema = z
   });
 
 export type AddCustomerFormSchema = z.infer<typeof addCustomerFormSchema>;
+
+// edit customer from schema >>>>>>>>>>>>>>
+export const editCustomerFormSchema = z.object({
+  customerType: z.enum(["individual", "business"]),
+  primaryContact: z.object({
+    salutation: z.string().min(1, "Salutation is required"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+  }),
+  displayName: z.string().min(1, "Display name is required"),
+  companyName: z.string().min(1, "Company name is required"),
+  currency: z.string().min(1, "Currency is required"),
+  language: z.string().min(1, "Language is required"),
+  email: z.string().email("Invalid email address"),
+  mobile: z.string().min(10, "Mobile number is required"),
+  workPhone: z.string().min(10, "Work phone is required"),
+});
+
+export type EditCustomerFormSchema = z.infer<typeof editCustomerFormSchema>;

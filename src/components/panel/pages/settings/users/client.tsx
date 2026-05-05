@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Message from "@/components/ui/message";
 import EditUser from "@/components/panel/pages/settings/users/edit";
+import EditCustomer from "@/components/website/pages/customers/edit-customers/edit";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import UpdateUserPassword from "@/components/panel/pages/settings/users/update-password";
@@ -55,7 +56,9 @@ const UsersClient = ({ userId }: props) => {
       {isPending && "Loading..."}
       {isSuccess && data && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <EditUser user={data} callback="/panel/users" />
+          {/* <EditUser user={data} callback="/panel/users" /> */}
+          <EditCustomer user={data} callback="/panel/users" />
+
           <div className="grid grid-cols-1 gap-5 h-fit">
             <UpdateUserPassword user={data} />
             <DeleteUser user={data} />

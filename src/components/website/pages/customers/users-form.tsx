@@ -141,6 +141,7 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="email"
@@ -179,6 +180,7 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
           />
         </form>
       </Form>
+      
       <DialogFooter className="gap-y-2">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 w-full">
           {onBack && (

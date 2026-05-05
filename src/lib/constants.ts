@@ -99,3 +99,12 @@ export const USER_STATUS = [
   { label: "Active", value: "false" },
   { label: "Banned", value: "true" },
 ] as const;
+
+// salutation
+export const Sal_titles = [
+  { label: "Mr.", value: "mr." },
+  { label: "Mrs.", value: "mrs." },
+  { label: "Ms.", value: "ms." },
+  { label: "Miss.", value: "miss." },
+  { label: "Dr.", value: "Dr." },
+];

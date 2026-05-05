@@ -8,6 +8,7 @@ interface MultiSelectProps {
   onChange?: (vals: string[]) => void;
   placeholder?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
