@@ -203,7 +203,6 @@ export const addCustomerFormSchema = z
   .object({
     userId: z.string().optional(),
     customerType: z.enum(["individual", "business"]),
-    displayName: z.string().min(1, { message: " display name is required " }),
     companyName: z.string().optional(),
     currency: z.string().min(1, { message: "currency is required" }),
     language: z.string().trim().min(1, { message: "Language is required" }),
@@ -237,7 +236,6 @@ export const editCustomerFormSchema = z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
   }),
-  displayName: z.string().min(1, "Display name is required"),
   companyName: z.string().min(1, "Company name is required"),
   currency: z.string().min(1, "Currency is required"),
   language: z.string().min(1, "Language is required"),

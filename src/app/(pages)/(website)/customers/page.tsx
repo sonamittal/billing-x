@@ -40,7 +40,7 @@ export default function Users() {
           </div>
           <Button onClick={() => setInvitedOpen(true)}>
             <UserPlus className="mt-0.6 h-4 w-4" />
-            Add User
+            Add Customer
           </Button>
         </div>
         {/* customers table */}

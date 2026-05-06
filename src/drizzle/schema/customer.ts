@@ -9,7 +9,6 @@ export const customer = pgTable("customer", {
     .references(() => user.id, { onDelete: "cascade" })
     .unique(),
   customerType: text("customer_type").notNull(),
-  displayName: text("display_name").notNull(),
   companyName: text("company_name"),
   currency: text("currency").notNull(),
   language: text("language").notNull(),

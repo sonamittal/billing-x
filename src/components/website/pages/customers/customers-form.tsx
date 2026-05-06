@@ -70,7 +70,6 @@ const AddCustomerForm = ({
     resolver: zodResolver(addCustomerFormSchema),
     defaultValues: {
       customerType: undefined,
-      displayName: "",
       companyName: "",
       currency: "",
       language: "",
@@ -206,41 +205,24 @@ const AddCustomerForm = ({
               )}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Display name */}
+            {/* Company Name */}
+            {form.watch("customerType") === "business" && (
               <FormField
                 control={form.control}
-                name="displayName"
+                name="companyName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Display Name <span className="text-red-500">*</span>
+                      Company Name <span className="text-red-500">*</span>
                     </FormLabel>
-                    <FormControl>
-                      <Input type="text" placeholder="Riya" {...field} />
+                    <FormControl className="w-full">
+                      <Input type="text" placeholder="ByteWyte" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
-
-              {/* Company Name */}
-              {form.watch("customerType") === "business" && (
-                <FormField
-                  control={form.control}
-                  name="companyName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Company Name <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input type="text" placeholder="ByteWyte" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              )}
-
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Currency */}
               <FormField
                 name="currency"

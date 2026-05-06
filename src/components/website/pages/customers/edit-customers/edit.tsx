@@ -54,7 +54,6 @@ const EditCustomer = ({ user }: userIdProps) => {
         firstName: "",
         lastName: "",
       },
-      displayName: "",
       companyName: "",
       currency: "",
       language: "",
@@ -171,36 +170,21 @@ const EditCustomer = ({ user }: userIdProps) => {
                 />
               </div>
             </div>
-
+            {/* Company */}
+            <FormField
+              control={form.control}
+              name="companyName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company Name *</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="ByteWyte" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             {/* Other Fields */}
             <div className="grid md:grid-cols-2 gap-4">
-              {/* Display Name */}
-              <FormField
-                control={form.control}
-                name="displayName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Display Name *</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Riya" />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              {/* Company */}
-              <FormField
-                control={form.control}
-                name="companyName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Name *</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="ByteWyte" />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
               {/* Currency */}
               <FormField
                 control={form.control}
