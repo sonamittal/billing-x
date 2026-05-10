@@ -207,7 +207,7 @@ export const addCustomerFormSchema = z
     currency: z.string().min(1, { message: "currency is required" }),
     language: z.string().trim().min(1, { message: "Language is required" }),
     country: z.string().min(1, { message: "country is required" }),
-    state: z.string().min(1, "state is required"),
+    state: z.string().min(1, { message: "state is required" }),
     city: z.string().min(1, { message: "city is required" }),
     pinCode: z
       .string()
@@ -232,16 +232,43 @@ export type AddCustomerFormSchema = z.infer<typeof addCustomerFormSchema>;
 export const editCustomerFormSchema = z.object({
   customerType: z.enum(["individual", "business"]),
   primaryContact: z.object({
-    salutation: z.string().min(1, "Salutation is required"),
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
+    salutation: z.string().min(1, { message: "salutation is required" }),
+    firstName: z.string().min(1, { message: "first name is required" }),
+    lastName: z.string().min(1, { message: "last name is required" }),
   }),
-  companyName: z.string().min(1, "Company name is required"),
-  currency: z.string().min(1, "Currency is required"),
-  language: z.string().min(1, "Language is required"),
-  email: z.string().email("Invalid email address"),
-  mobile: z.string().min(10, "Mobile number is required"),
-  workPhone: z.string().min(10, "Work phone is required"),
+  companyName: z.string().min(1, { message: "company name is required" }),
+  currency: z.string().min(1, { message: "currency is required" }),
+  language: z.string().min(1, { message: "language is required" }),
+  email: z.email({ message: "email is required" }),
+  mobile: z.string().min(10, { message: "mobile number is required" }),
+  workPhone: z.string().min(10, { message: "work phone is required" }),
 });
 
 export type EditCustomerFormSchema = z.infer<typeof editCustomerFormSchema>;
+
+// edit address customer from schema >>>>>>>>>>>>>>
+export const editAddressCustomerFormSchema = z.object({
+  type: z.enum(["billing", "shipping"], {
+    message: "address type isrequired",
+  }),
+  country: z.string().min(1, { message: "country is required" }),
+  state: z.string().min(1, { message: "state is required" }),
+  city: z.string().min(1, { message: "city is required" }),
+  pinCode: z
+    .string()
+    .trim()
+    .regex(/^[1-9][0-9]{5}$/, "invalid pin code"),
+  address: z.object({
+    street1: z.string().min(1, {
+      message: "street1 is required",
+    }),
+
+    street2: z.string().min(1, {
+      message: "street2 is required",
+    }),
+  }),
+  phone: z.string().min(10, { message: "phone no is required" }),
+});
+export type EditAddressCustomerFormSchema = z.infer<
+  typeof editAddressCustomerFormSchema
+>;

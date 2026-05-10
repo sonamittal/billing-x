@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import UpdateUserPassword from "@/components/panel/pages/settings/users/update-password";
 import DeleteUser from "@/components/panel/pages/settings/users/delete";
+import EditDetails from "@/components/website/pages/customers/edit-customers/edit-details";
 
 interface props {
   userId: string;
@@ -55,13 +56,17 @@ const UsersClient = ({ userId }: props) => {
 
       {isPending && "Loading..."}
       {isSuccess && data && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* <EditUser user={data} callback="/panel/users" /> */}
-          <EditCustomer user={data} callback="/panel/users" />
-
-          <div className="grid grid-cols-1 gap-5 h-fit">
-            <UpdateUserPassword user={data} />
-            <DeleteUser user={data} />
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* <EditUser user={data} callback="/panel/users" /> */}
+            <EditCustomer user={data} callback="/panel/users" />
+            <div className="grid grid-cols-1 gap-5 h-fit">
+              <UpdateUserPassword user={data} />
+              <DeleteUser user={data} />
+            </div>
+          </div>
+          <div className="mt-10">
+            <EditDetails />
           </div>
         </div>
       )}

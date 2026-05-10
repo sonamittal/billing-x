@@ -31,7 +31,6 @@ import { CURRENCY_TYPE } from "@/lib/constants";
 import { Sal_titles } from "@/lib/constants";
 import { GetLanguages } from "react-country-state-city";
 import { useState, useEffect } from "react";
-
 interface userIdProps {
   user: any;
   callback?: string;
@@ -66,22 +65,18 @@ const EditCustomer = ({ user }: userIdProps) => {
     console.log(" form data sbmitted:", data);
   };
   return (
-    <Card className="lg:col-span-2 h-fit">
+    <Card className="pace-y-6 lg:col-span-2 h-fit">
       <CardHeader>
-        <CardTitle>Edit user details</CardTitle>
+        <CardTitle>Edit customer details</CardTitle>
         <CardDescription>
           Edit account details of{" "}
           <span className="text-foreground font-medium">{user.name}</span>{" "}
           account.
         </CardDescription>
       </CardHeader>
-
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6 px-4 pb-6"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Customer Type */}
             <FormField
               control={form.control}
@@ -106,9 +101,7 @@ const EditCustomer = ({ user }: userIdProps) => {
 
             {/* Primary Contact */}
             <div className="space-y-3">
-              <h3 className="text-md text-white font-medium">
-                Primary Contact
-              </h3>
+              <h3 className="text-md  font-medium">Primary Contact</h3>
 
               <div className="grid md:grid-cols-3 gap-4">
                 {/* Salutation */}
@@ -248,7 +241,7 @@ const EditCustomer = ({ user }: userIdProps) => {
             />
             {/* Phone */}
             <div className="space-y-3">
-              <h3 className="text-md text-white font-medium">Phone No</h3>
+              <h3 className="text-md font-medium">Phone No</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
