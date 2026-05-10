@@ -57,13 +57,15 @@ const EditCustomer = ({ user }: userIdProps) => {
       currency: "",
       language: "",
       email: "",
-      mobile: "",
       workPhone: "",
+      mobile: "",
     },
   });
+
   const onSubmit = (data: EditCustomerFormSchema) => {
     console.log(" form data sbmitted:", data);
   };
+  
   return (
     <Card className="pace-y-6 lg:col-span-2 h-fit">
       <CardHeader>

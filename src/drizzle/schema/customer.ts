@@ -56,7 +56,9 @@ export const contactPerson = pgTable("contact_person", {
   lastName: text("last_name"),
   email: text("email"),
   workPhone: text("work_phone"),
-  phone: text("phone"),
+  mobile: text("mobile"),
+  designation: text("designation"),
+  department: text("department"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

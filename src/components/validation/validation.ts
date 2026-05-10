@@ -240,8 +240,8 @@ export const editCustomerFormSchema = z.object({
   currency: z.string().min(1, { message: "currency is required" }),
   language: z.string().min(1, { message: "language is required" }),
   email: z.email({ message: "email is required" }),
-  mobile: z.string().min(10, { message: "mobile number is required" }),
   workPhone: z.string().min(10, { message: "work phone is required" }),
+  mobile: z.string().min(10, { message: "mobile number is required" }),
 });
 
 export type EditCustomerFormSchema = z.infer<typeof editCustomerFormSchema>;
@@ -272,3 +272,16 @@ export const editAddressCustomerFormSchema = z.object({
 export type EditAddressCustomerFormSchema = z.infer<
   typeof editAddressCustomerFormSchema
 >;
+
+// edit contact person schema >>>>>>>>>>>>>>>>>>>>>>>>>>
+export const editContactPersonSchema = z.object({
+  salutation: z.string().min(1, { message: "salutation is required" }),
+  firstName: z.string().min(1, { message: "first name is required" }),
+  lastName: z.string().min(1, { message: "last name is required" }),
+  email: z.email({ message: "email is required" }),
+  workPhone: z.string().min(10, { message: "work phone is required" }),
+  mobile: z.string().min(10, { message: "mobile number is required" }),
+  designation: z.string().min(1, { message: "Designation is required" }),
+  department: z.string().min(1, { message: "Department is required" }),
+});
+export type EditContactPersonSchema = z.infer<typeof editContactPersonSchema>;

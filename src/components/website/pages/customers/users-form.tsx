@@ -74,6 +74,7 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
       onNext?.(data.data);
     },
   });
+  
   const onSubmit = (data: UserFormSchema) => {
     console.log("Form Data Submitted:", data);
     addUser(data);

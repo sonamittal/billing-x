@@ -72,6 +72,7 @@ const EditBillingAddressForm = () => {
       form.setValue("city", "");
     }
   }, [selectedState, selectedCountry]);
+  
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
     console.log("data form submitted:", data);
   };

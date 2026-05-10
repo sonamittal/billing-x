@@ -4,6 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
 import EditBillingAddressForm from "@/components/website/pages/customers/edit-customers/edit-billing-address-form";
 import EditShippingAddressForm from "@/components/website/pages/customers/edit-customers/edit-shipping-address-form";
+import EditContactPersonForm from "@/components/website/pages/customers/edit-customers/contact-person";
 
 const EditDetails = () => {
   return (
@@ -13,7 +14,7 @@ const EditDetails = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="other">
-          <TabsList className="grid grid-cols-4 w-full">
+          <TabsList className="grid grid-cols-4 w-fit">
             <TabsTrigger value="other">Other Details</TabsTrigger>
             <TabsTrigger value="address">Address</TabsTrigger>
             <TabsTrigger value="contact">Contact Persons</TabsTrigger>
@@ -61,9 +62,7 @@ const EditDetails = () => {
           {/* Contact */}
           <TabsContent value="contact" className="mt-4">
             <div className="space-y-4">
-              <Input placeholder="Name" />
-              <Input placeholder="Email" />
-              <Input placeholder="Phone" />
+              <EditContactPersonForm />
             </div>
           </TabsContent>
 
