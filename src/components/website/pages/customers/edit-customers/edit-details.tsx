@@ -4,13 +4,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
 import EditBillingAddressForm from "@/components/website/pages/customers/edit-customers/edit-billing-address-form";
 import EditShippingAddressForm from "@/components/website/pages/customers/edit-customers/edit-shipping-address-form";
-import EditContactPersonForm from "@/components/website/pages/customers/edit-customers/contact-person";
+import ContactPersonTable from "@/components/website/pages/customers/edit-customers/contact-person";
 
 const EditDetails = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Edit Details</CardTitle>
+        <CardTitle>Edit customers details</CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="other">
@@ -62,7 +62,7 @@ const EditDetails = () => {
           {/* Contact */}
           <TabsContent value="contact" className="mt-4">
             <div className="space-y-4">
-              <EditContactPersonForm />
+              <ContactPersonTable />
             </div>
           </TabsContent>
 

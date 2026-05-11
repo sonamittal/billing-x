@@ -273,8 +273,8 @@ export type EditAddressCustomerFormSchema = z.infer<
   typeof editAddressCustomerFormSchema
 >;
 
-// edit contact person schema >>>>>>>>>>>>>>>>>>>>>>>>>>
-export const editContactPersonSchema = z.object({
+// contact person schema >>>>>>>>>>>>>>>>>>>>>>>>>>
+export const contactPersonSchema = z.object({
   salutation: z.string().min(1, { message: "salutation is required" }),
   firstName: z.string().min(1, { message: "first name is required" }),
   lastName: z.string().min(1, { message: "last name is required" }),
@@ -284,4 +284,9 @@ export const editContactPersonSchema = z.object({
   designation: z.string().min(1, { message: "Designation is required" }),
   department: z.string().min(1, { message: "Department is required" }),
 });
-export type EditContactPersonSchema = z.infer<typeof editContactPersonSchema>;
+
+export const contactPersonsSchema = z.object({
+  contacts: z.array(contactPersonSchema),
+});
+
+export type ContactPersonsSchema = z.infer<typeof contactPersonsSchema>;
