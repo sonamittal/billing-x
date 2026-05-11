@@ -55,7 +55,7 @@ const ContactPersonTable = () => {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* TABLE */}
           <div className="overflow-x-auto rounded-md border">
             <table className="w-full border-collapse text-sm">
@@ -85,7 +85,7 @@ const ContactPersonTable = () => {
                 {fields.map((item, index) => (
                   <tr key={item.id} className="align-top">
                     {/* SALUTATION */}
-                    <td className="border p-2">
+                    <td className="border p-3">
                       <FormField
                         control={control}
                         name={`contacts.${index}.salutation`}
@@ -116,14 +116,14 @@ const ContactPersonTable = () => {
                     </td>
 
                     {/* FIRST NAME */}
-                    <td className="border p-2">
+                    <td className="border p-3">
                       <FormField
                         control={control}
                         name={`contacts.${index}.firstName`}
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Input {...field} placeholder="First Name" />
+                              <Input {...field} placeholder="Neha" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -132,14 +132,14 @@ const ContactPersonTable = () => {
                     </td>
 
                     {/* LAST NAME */}
-                    <td className="border p-2">
+                    <td className="border p-3">
                       <FormField
                         control={control}
                         name={`contacts.${index}.lastName`}
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Input {...field} placeholder="Last Name" />
+                              <Input {...field} placeholder="Jain" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -148,7 +148,7 @@ const ContactPersonTable = () => {
                     </td>
 
                     {/* EMAIL */}
-                    <td className="border p-2">
+                    <td className="border p-3">
                       <FormField
                         control={control}
                         name={`contacts.${index}.email`}
@@ -168,7 +168,7 @@ const ContactPersonTable = () => {
                     </td>
 
                     {/* WORK PHONE */}
-                    <td className="border p-2">
+                    <td className="border p-3">
                       <FormField
                         control={control}
                         name={`contacts.${index}.workPhone`}
@@ -185,7 +185,7 @@ const ContactPersonTable = () => {
                     </td>
 
                     {/* MOBILE */}
-                    <td className="border p-2">
+                    <td className="border p-3">
                       <FormField
                         control={control}
                         name={`contacts.${index}.mobile`}
@@ -201,7 +201,7 @@ const ContactPersonTable = () => {
                     </td>
 
                     {/* DESIGNATION */}
-                    <td className="border p-2">
+                    <td className="border p-3">
                       <FormField
                         control={control}
                         name={`contacts.${index}.designation`}
@@ -217,7 +217,7 @@ const ContactPersonTable = () => {
                     </td>
 
                     {/* DEPARTMENT */}
-                    <td className="border p-2">
+                    <td className="border p-3">
                       <FormField
                         control={control}
                         name={`contacts.${index}.department`}
@@ -233,7 +233,7 @@ const ContactPersonTable = () => {
                     </td>
 
                     {/* DELETE BUTTON */}
-                    <td className="border p-2 text-center">
+                    <td className="border p-3 text-center">
                       <Button
                         type="button"
                         variant="destructive"

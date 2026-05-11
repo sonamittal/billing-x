@@ -30,6 +30,22 @@ export const customer = pgTable("customer", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+// other details
+export const customerOtherDeatils = pgTable("customer_OtherDeatils", {
+  id: text("id").primaryKey(),
+  customerId: text("customer_id")
+    .notNull()
+    .references(() => customer.id, { onDelete: "cascade" }),
+  pan: text("pan"),
+  paymentTerms: text("payment_terms"),
+  documents: text("documents"),
+  // meta info
+  WebsiteURL: text("Website_url"),
+  department: text("department"),
+  designation: text("designation"),
+  x: text("x"),
+  facebook: text("facebook"),
+});
 // address
 export const customerAddress = pgTable("customer_address", {
   id: text("id").primaryKey(),

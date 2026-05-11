@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
 import EditBillingAddressForm from "@/components/website/pages/customers/edit-customers/edit-billing-address-form";
 import EditShippingAddressForm from "@/components/website/pages/customers/edit-customers/edit-shipping-address-form";
 import ContactPersonTable from "@/components/website/pages/customers/edit-customers/contact-person";
+import OtherDetailsForm from "@/components/website/pages/customers/edit-customers/other-details";
 
 const EditDetails = () => {
   return (
@@ -24,8 +24,7 @@ const EditDetails = () => {
           {/* Other Details */}
           <TabsContent value="other" className="mt-4">
             <div className="space-y-4">
-              <Input placeholder="GST Number" />
-              <Input placeholder="PAN Number" />
+              <OtherDetailsForm />
             </div>
           </TabsContent>
 
@@ -69,7 +68,7 @@ const EditDetails = () => {
           {/* Remarks */}
           <TabsContent value="remarks" className="mt-4">
             <textarea
-              className="w-full min-h-25 p-2 rounded-md border bg-background"
+              className="w-full min-h-25 p-3 rounded-md border bg-background"
               placeholder="Write remarks..."
             />
           </TabsContent>

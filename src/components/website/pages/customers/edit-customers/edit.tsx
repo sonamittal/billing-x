@@ -65,7 +65,7 @@ const EditCustomer = ({ user }: userIdProps) => {
   const onSubmit = (data: EditCustomerFormSchema) => {
     console.log(" form data sbmitted:", data);
   };
-  
+
   return (
     <Card className="pace-y-6 lg:col-span-2 h-fit">
       <CardHeader>
@@ -182,19 +182,22 @@ const EditCustomer = ({ user }: userIdProps) => {
             <div className="grid md:grid-cols-2 gap-4">
               {/* Currency */}
               <FormField
-                control={form.control}
                 name="currency"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Currency *</FormLabel>
+                    <FormLabel>
+                      Currency <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <MultiSelect
                         options={CURRENCY_TYPE.map((c) => ({
                           label: c.label,
                           value: c.value,
                         }))}
-                        value={[field.value]}
-                        onChange={(vals) => field.onChange(vals[0] || "INR")}
+                        mode="single"
+                        value={field.value}
+                        onChange={(val) => field.onChange(val)}
+                        placeholder="Select Currency"
                       />
                     </FormControl>
                   </FormItem>
@@ -203,19 +206,22 @@ const EditCustomer = ({ user }: userIdProps) => {
 
               {/* Language */}
               <FormField
-                control={form.control}
                 name="language"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Language *</FormLabel>
+                    <FormLabel>
+                      Customer Language <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={languageList.map((l) => ({
-                          label: l.name,
-                          value: l.name,
+                        options={languageList.map((lang) => ({
+                          label: lang.name,
+                          value: lang.name,
                         }))}
-                        value={field.value ? [field.value] : []}
-                        onChange={(vals) => field.onChange(vals[0] || "")}
+                        mode="single"
+                        value={field.value}
+                        onChange={(val) => field.onChange(val)}
+                        placeholder="Select Language"
                       />
                     </FormControl>
                   </FormItem>

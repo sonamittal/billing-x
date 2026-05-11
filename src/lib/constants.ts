@@ -108,3 +108,14 @@ export const Sal_titles = [
   { label: "Miss.", value: "miss." },
   { label: "Dr.", value: "Dr." },
 ];
+
+// payment terms
+export const Payment_Terms = [
+  { label: "End of Next Month", value: "End of Next Month" },
+  { label: "End of the Month", value: "End of the Month" },
+  { label: "Due on Receipt", value: "Due on Receipt" },
+  { label: "Net 15", value: "Net 15" },
+  { label: "Net 30", value: "Net 30" },
+  { label: "Net 45", value: "Net 45" },
+  { label: "Net 60", value: "Net 60" },
+];

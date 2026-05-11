@@ -237,10 +237,9 @@ const AddCustomerForm = ({
                           label: c.label,
                           value: c.value,
                         }))}
-                        value={[field.value]}
-                        onChange={(vals: string[]) =>
-                          field.onChange(vals[0] || "INR")
-                        }
+                        mode="single"
+                        value={field.value}
+                        onChange={(val) => field.onChange(val)}
                         placeholder="Select Currency"
                       />
                     </FormControl>
@@ -262,10 +261,9 @@ const AddCustomerForm = ({
                           label: lang.name,
                           value: lang.name,
                         }))}
-                        value={field.value ? [field.value] : []}
-                        onChange={(vals: string[]) =>
-                          field.onChange(vals[0] || "")
-                        }
+                        mode="single"
+                        value={field.value}
+                        onChange={(val) => field.onChange(val)}
                         placeholder="Select Language"
                       />
                     </FormControl>
@@ -300,11 +298,13 @@ const AddCustomerForm = ({
                           label: c.name,
                           value: c.id.toString(),
                         }))}
-                        value={field.value ? [field.value] : []}
-                        onChange={(vals: string[]) => {
-                          const val = vals[0] || "";
+                        mode="single"
+                        value={field.value}
+                        onChange={(val) => {
                           field.onChange(val);
-                          setSelectedCountry(val);
+                          if (typeof val === "string") {
+                            setSelectedCountry(val);
+                          }
                         }}
                         placeholder="Select Country"
                       />
@@ -327,11 +327,11 @@ const AddCustomerForm = ({
                           label: s.name,
                           value: s.id.toString(),
                         }))}
-                        value={field.value ? [field.value] : []}
-                        onChange={(vals: string[]) => {
-                          const val = vals[0] || "";
+                        mode="single"
+                        value={field.value}
+                        onChange={(val) => {
                           field.onChange(val);
-                          setSelectedState(val);
+                          if (typeof val === "string") setSelectedState(val);
                         }}
                         placeholder="Select State"
                         disabled={!selectedCountry}
@@ -357,10 +357,9 @@ const AddCustomerForm = ({
                           label: c.name,
                           value: c.id.toString(),
                         }))}
-                        value={field.value ? [field.value] : []}
-                        onChange={(vals: string[]) =>
-                          field.onChange(vals[0] || "")
-                        }
+                        mode="single"
+                        value={field.value}
+                        onChange={(val) => field.onChange(val)}
                         placeholder="Select City"
                         disabled={!selectedState}
                       />

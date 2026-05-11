@@ -72,7 +72,7 @@ const EditBillingAddressForm = () => {
       form.setValue("city", "");
     }
   }, [selectedState, selectedCountry]);
-  
+
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
     console.log("data form submitted:", data);
   };
@@ -99,11 +99,13 @@ const EditBillingAddressForm = () => {
                         label: c.name,
                         value: c.id.toString(),
                       }))}
-                      value={field.value ? [field.value] : []}
-                      onChange={(vals: string[]) => {
-                        const val = vals[0] || "";
+                      mode="single"
+                      value={field.value}
+                      onChange={(val) => {
                         field.onChange(val);
-                        setSelectedCountry(val);
+                        if (typeof val === "string") {
+                          setSelectedCountry(val);
+                        }
                       }}
                       placeholder="Select Country"
                     />
@@ -111,7 +113,6 @@ const EditBillingAddressForm = () => {
                 </FormItem>
               )}
             />
-
             {/* State */}
             <FormField
               name="state"
@@ -126,11 +127,11 @@ const EditBillingAddressForm = () => {
                         label: s.name,
                         value: s.id.toString(),
                       }))}
-                      value={field.value ? [field.value] : []}
-                      onChange={(vals: string[]) => {
-                        const val = vals[0] || "";
+                      mode="single"
+                      value={field.value}
+                      onChange={(val) => {
                         field.onChange(val);
-                        setSelectedState(val);
+                        if (typeof val === "string") setSelectedState(val);
                       }}
                       placeholder="Select State"
                       disabled={!selectedCountry}
@@ -153,10 +154,9 @@ const EditBillingAddressForm = () => {
                         label: c.name,
                         value: c.id.toString(),
                       }))}
-                      value={field.value ? [field.value] : []}
-                      onChange={(vals: string[]) =>
-                        field.onChange(vals[0] || "")
-                      }
+                      mode="single"
+                      value={field.value}
+                      onChange={(val) => field.onChange(val)}
                       placeholder="Select City"
                       disabled={!selectedState}
                     />

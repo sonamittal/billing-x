@@ -290,3 +290,17 @@ export const contactPersonsSchema = z.object({
 });
 
 export type ContactPersonsSchema = z.infer<typeof contactPersonsSchema>;
+
+// other details schema
+export const otherDetailsSchema = z.object({
+  pan: z.string().min(1, { message: "pan is required" }),
+  paymentTerms: z.string().min(1, { message: "Payment terms are required" }),
+  documents: z.string().min(1, { message: "documents are required " }),
+  // meta info
+  websiteURL: z.url({ message: "Enter a valid website URL" }),
+  department: z.string().min(1, { message: " department is required " }),
+  designation: z.string().min(1, { message: "designation is required " }),
+  x: z.string().min(1, { message: "X is required" }),
+  facebook: z.string().min(1, { message: "facebook is required" }),
+});
+export type OtherDetailsSchema = z.infer<typeof otherDetailsSchema>;
