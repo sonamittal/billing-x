@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,7 @@ import {
   type PaymentTermSchema,
 } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 interface Props {
   open: boolean;
@@ -38,6 +38,7 @@ const AddNewPayTForm = ({ open, onOpenChange }: Props) => {
   });
   const onSubmit = (data: PaymentTermSchema) => {
     console.log(data);
+    form.reset();
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -78,26 +79,21 @@ const AddNewPayTForm = ({ open, onOpenChange }: Props) => {
               )}
             />
 
+            {/* Due After */}
             <FormField
               control={form.control}
               name="dueAfter"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Due After (Days)</FormLabel>
-
                   <FormControl>
                     <Input
                       type="number"
                       placeholder="Enter days"
-                      value={field.value ?? ""}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value === "" ? 0 : Number(e.target.value),
-                        )
-                      }
+                      value={field.value}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}

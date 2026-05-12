@@ -1,6 +1,6 @@
 import { user } from "@/drizzle/schema/schema";
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer } from "drizzle-orm/pg-core";
 
 export const customer = pgTable("customer", {
   id: text("id").primaryKey(),
@@ -37,7 +37,9 @@ export const customerOtherDeatils = pgTable("customer_OtherDeatils", {
     .notNull()
     .references(() => customer.id, { onDelete: "cascade" }),
   pan: text("pan"),
-  paymentTerms: text("payment_terms"),
+  paymentTermId: text("payment_term_id").references(() => paymentTerms.id, {
+    onDelete: "set null",
+  }),
   documents: text("documents"),
   // meta info
   WebsiteURL: text("Website_url"),
@@ -46,6 +48,19 @@ export const customerOtherDeatils = pgTable("customer_OtherDeatils", {
   x: text("x"),
   facebook: text("facebook"),
 });
+// payment terms
+export const paymentTerms = pgTable("payment_terms", {
+  id: text("id").primaryKey(),
+  termName: text("term_name").notNull(),
+  // number of days after invoice date
+  dueAfter: integer("due_after").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
 // address
 export const customerAddress = pgTable("customer_address", {
   id: text("id").primaryKey(),
@@ -81,6 +96,7 @@ export const contactPerson = pgTable("contact_person", {
 export const userCustomerRelations = relations(user, ({ one }) => ({
   customer: one(customer),
 }));
+
 export const customerRelations = relations(customer, ({ many, one }) => ({
   user: one(user, {
     fields: [customer.userId],
@@ -89,3 +105,31 @@ export const customerRelations = relations(customer, ({ many, one }) => ({
   contacts: many(contactPerson),
   addresses: many(customerAddress),
 }));
+// payment terms relations
+export const paymentTermsRelations = relations(
+  paymentTerms,
+  ({ many }) => ({
+    customerOtherDetails: many(
+      customerOtherDeatils
+    ),
+  })
+);
+
+export const customerOtherDetailsRelations =
+  relations(
+    customerOtherDeatils,
+    ({ one }) => ({
+      customer: one(customer, {
+        fields: [customerOtherDeatils.customerId],
+        references: [customer.id],
+      }),
+
+      paymentTerm: one(paymentTerms, {
+        fields: [
+          customerOtherDeatils.paymentTermId,
+        ],
+        references: [paymentTerms.id],
+      }),
+    })
+  );
+

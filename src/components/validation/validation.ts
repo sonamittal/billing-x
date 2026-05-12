@@ -310,10 +310,11 @@ export const paymentTermSchema = z.object({
   termName: z.string().min(1, {
     message: "Term name is required",
   }),
-  dueAfter:  z.coerce.number({message: "Day must be a number" })
-  .int({ message: "Day must be a whole number" })
-  .min(1, { message: "Day cannot be less than 1" })
-  .max(31, { message: "Day cannot be more than 31" }),
+  dueAfter: z
+    .number({ message: "Day must be a number" })
+    .int({ message: "Day must be a whole number" })
+    .min(1, { message: "Day cannot be less than 1" })
+    .max(31, { message: "Day cannot be more than 31" }),
 });
 
 export type PaymentTermSchema = z.infer<typeof paymentTermSchema>;
