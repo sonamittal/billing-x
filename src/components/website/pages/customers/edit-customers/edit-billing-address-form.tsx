@@ -100,6 +100,7 @@ const EditBillingAddressForm = () => {
                         value: c.id.toString(),
                       }))}
                       mode="single"
+                      darkBg="secondary"
                       value={field.value}
                       onChange={(val) => {
                         field.onChange(val);
@@ -127,6 +128,7 @@ const EditBillingAddressForm = () => {
                         label: s.name,
                         value: s.id.toString(),
                       }))}
+                      darkBg="secondary"
                       mode="single"
                       value={field.value}
                       onChange={(val) => {
@@ -154,6 +156,7 @@ const EditBillingAddressForm = () => {
                         label: c.name,
                         value: c.id.toString(),
                       }))}
+                      darkBg="secondary"
                       mode="single"
                       value={field.value}
                       onChange={(val) => field.onChange(val)}

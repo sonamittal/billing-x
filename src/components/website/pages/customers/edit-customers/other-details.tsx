@@ -15,26 +15,13 @@ import {
   otherDetailsSchema,
   type OtherDetailsSchema,
 } from "@/components/validation/validation";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { Payment_Terms } from "@/lib/constants";
-import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Plus } from "lucide-react";
+import { useState } from "react";
 import MultiSelect from "@/components/ui/multiselect";
 
 const OtherDetailsForm = () => {
+  const [open, setOpen] = useState(false);
   const form = useForm<OtherDetailsSchema>({
     resolver: zodResolver(otherDetailsSchema),
     defaultValues: {
@@ -84,16 +71,26 @@ const OtherDetailsForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Payment Terms *</FormLabel>
-
-              <FormControl>
-                <MultiSelect
-                  mode="single"
-                  options={Payment_Terms}
-                  value={field.value}
-                  onChange={(val) => field.onChange(val)}
-                  placeholder="Select payment terms"
-                />
-              </FormControl>
+              <div className="flex gap-2">
+                <FormControl>
+                  <MultiSelect
+                    darkBg="secondary"
+                    mode="single"
+                    options={Payment_Terms}
+                    value={field.value}
+                    onChange={(val) => field.onChange(val)}
+                    placeholder="Select payment terms"
+                  />
+                </FormControl>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setOpen(true)}
+                >
+                  <Plus className=" text-red-500 w-4 h-4" />
+                  Add New payment term
+                </Button>
+              </div>
               <FormMessage />
             </FormItem>
           )}

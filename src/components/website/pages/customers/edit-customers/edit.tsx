@@ -194,6 +194,7 @@ const EditCustomer = ({ user }: userIdProps) => {
                           label: c.label,
                           value: c.value,
                         }))}
+                        darkBg="secondary"
                         mode="single"
                         value={field.value}
                         onChange={(val) => field.onChange(val)}
@@ -218,6 +219,7 @@ const EditCustomer = ({ user }: userIdProps) => {
                           label: lang.name,
                           value: lang.name,
                         }))}
+                        darkBg="secondary"
                         mode="single"
                         value={field.value}
                         onChange={(val) => field.onChange(val)}

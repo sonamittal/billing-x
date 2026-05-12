@@ -237,6 +237,7 @@ const AddCustomerForm = ({
                           label: c.label,
                           value: c.value,
                         }))}
+                        darkBg="primary"
                         mode="single"
                         value={field.value}
                         onChange={(val) => field.onChange(val)}
@@ -298,6 +299,7 @@ const AddCustomerForm = ({
                           label: c.name,
                           value: c.id.toString(),
                         }))}
+                        darkBg="primary"
                         mode="single"
                         value={field.value}
                         onChange={(val) => {
@@ -327,6 +329,7 @@ const AddCustomerForm = ({
                           label: s.name,
                           value: s.id.toString(),
                         }))}
+                        darkBg="primary"
                         mode="single"
                         value={field.value}
                         onChange={(val) => {
@@ -357,6 +360,7 @@ const AddCustomerForm = ({
                           label: c.name,
                           value: c.id.toString(),
                         }))}
+                        darkBg="primary"
                         mode="single"
                         value={field.value}
                         onChange={(val) => field.onChange(val)}
