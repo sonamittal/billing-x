@@ -57,6 +57,13 @@
       "when": 1776031596939,
       "tag": "0007_careful_exodus",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1778666690725,
+      "tag": "0008_worried_the_executioner",
+      "breakpoints": true
     }
   ]
 }

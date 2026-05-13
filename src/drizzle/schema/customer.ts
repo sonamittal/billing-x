@@ -30,8 +30,21 @@ export const customer = pgTable("customer", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+// payment terms
+export const paymentTerms = pgTable("payment_terms", {
+  id: text("id").primaryKey(),
+  termName: text("term_name").notNull(),
+  // number of days after invoice date
+  dueAfter: integer("due_after").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
 // other details
-export const customerOtherDeatils = pgTable("customer_OtherDeatils", {
+export const customerOtherDetails = pgTable("customer_other_details", {
   id: text("id").primaryKey(),
   customerId: text("customer_id")
     .notNull()
@@ -41,19 +54,11 @@ export const customerOtherDeatils = pgTable("customer_OtherDeatils", {
     onDelete: "set null",
   }),
   documents: text("documents"),
-  // meta info
-  WebsiteURL: text("Website_url"),
+  websiteUrl: text("website_url"),
   department: text("department"),
   designation: text("designation"),
   x: text("x"),
   facebook: text("facebook"),
-});
-// payment terms
-export const paymentTerms = pgTable("payment_terms", {
-  id: text("id").primaryKey(),
-  termName: text("term_name").notNull(),
-  // number of days after invoice date
-  dueAfter: integer("due_after").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -91,6 +96,10 @@ export const contactPerson = pgTable("contact_person", {
   designation: text("designation"),
   department: text("department"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
 });
 
 export const userCustomerRelations = relations(user, ({ one }) => ({
@@ -104,32 +113,24 @@ export const customerRelations = relations(customer, ({ many, one }) => ({
   }),
   contacts: many(contactPerson),
   addresses: many(customerAddress),
+  otherDetails: many(customerOtherDetails),
 }));
 // payment terms relations
-export const paymentTermsRelations = relations(
-  paymentTerms,
-  ({ many }) => ({
-    customerOtherDetails: many(
-      customerOtherDeatils
-    ),
-  })
+export const paymentTermsRelations = relations(paymentTerms, ({ many }) => ({
+  customerOtherDetails: many(customerOtherDetails),
+}));
+
+export const customerOtherDetailsRelations = relations(
+  customerOtherDetails,
+  ({ one }) => ({
+    customer: one(customer, {
+      fields: [customerOtherDetails.customerId],
+      references: [customer.id],
+    }),
+
+    paymentTerm: one(paymentTerms, {
+      fields: [customerOtherDetails.paymentTermId],
+      references: [paymentTerms.id],
+    }),
+  }),
 );
-
-export const customerOtherDetailsRelations =
-  relations(
-    customerOtherDeatils,
-    ({ one }) => ({
-      customer: one(customer, {
-        fields: [customerOtherDeatils.customerId],
-        references: [customer.id],
-      }),
-
-      paymentTerm: one(paymentTerms, {
-        fields: [
-          customerOtherDeatils.paymentTermId,
-        ],
-        references: [paymentTerms.id],
-      }),
-    })
-  );
-

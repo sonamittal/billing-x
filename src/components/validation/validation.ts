@@ -316,5 +316,5 @@ export const paymentTermSchema = z.object({
     .min(1, { message: "Day cannot be less than 1" })
     .max(31, { message: "Day cannot be more than 31" }),
 });
-
+  
 export type PaymentTermSchema = z.infer<typeof paymentTermSchema>;
