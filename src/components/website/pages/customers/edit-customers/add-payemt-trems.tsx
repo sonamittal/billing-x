@@ -22,13 +22,13 @@ import {
   type PaymentTermSchema,
 } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onAddPaymentTerm: (data: PaymentTermSchema) => void;
 }
-const AddNewPayTForm = ({ open, onOpenChange }: Props) => {
+const AddNewPayTForm = ({ open, onOpenChange, onAddPaymentTerm }: Props) => {
   // form handling >>>>>>>>>>>>>>>
   const form = useForm<PaymentTermSchema>({
     resolver: zodResolver(paymentTermSchema),
@@ -39,7 +39,9 @@ const AddNewPayTForm = ({ open, onOpenChange }: Props) => {
   });
   const onSubmit = (data: PaymentTermSchema) => {
     console.log(data);
+    onAddPaymentTerm(data);
     form.reset();
+    onOpenChange(false);
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -49,14 +51,12 @@ const AddNewPayTForm = ({ open, onOpenChange }: Props) => {
             New Payment Term
           </DialogTitle>
           <DialogDescription>
-            Create new user here. Click save when you're done.
+            Create and manage custom payment terms for customer billing and
+            invoices.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6 px-4 pb-6"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Term Name */}
             <FormField
               control={form.control}
@@ -74,19 +74,19 @@ const AddNewPayTForm = ({ open, onOpenChange }: Props) => {
                       {...field}
                     />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             {/* Due After */}
             <FormField
               control={form.control}
               name="dueAfter"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Due After (Days)</FormLabel>
+                  <FormLabel>
+                    Due After (Days)<span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -100,9 +100,18 @@ const AddNewPayTForm = ({ open, onOpenChange }: Props) => {
               )}
             />
             {/* Submit */}
-            <Button type="submit" className="w-full">
-              Submit
-            </Button>
+            <div className="flex justify-start gap-3">
+              <Button type="submit" className="px-5 py-2">
+                Save
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancel
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

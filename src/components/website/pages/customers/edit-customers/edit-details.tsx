@@ -14,12 +14,14 @@ const EditDetails = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="other">
-          <TabsList className="grid grid-cols-4 w-fit">
-            <TabsTrigger value="other">Other Details</TabsTrigger>
-            <TabsTrigger value="address">Address</TabsTrigger>
-            <TabsTrigger value="contact">Contact Persons</TabsTrigger>
-            <TabsTrigger value="remarks">Remarks</TabsTrigger>
-          </TabsList>
+          <div className="w-full overflow-x-auto">
+            <TabsList className="flex  items-center gap-5">
+              <TabsTrigger value="other">Other Details</TabsTrigger>
+              <TabsTrigger value="address">Address</TabsTrigger>
+              <TabsTrigger value="contact">Contact Persons</TabsTrigger>
+              <TabsTrigger value="remarks">Remarks</TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* Other Details */}
           <TabsContent value="other" className="mt-4">

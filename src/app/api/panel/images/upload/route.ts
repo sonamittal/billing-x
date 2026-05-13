@@ -2,7 +2,7 @@ import { Upload } from "@aws-sdk/lib-storage";
 import s3Client from "@/config/aws-s3-client/s3-clients";
 import { validateFile } from "@/config/aws-s3-client/utils";
 
-export const POST = async(req: Request) => {
+export const POST = async (req: Request) => {
   try {
     const formData = await req.formData();
     const file = formData.get("file");
@@ -67,4 +67,4 @@ export const POST = async(req: Request) => {
       { status: 500 },
     );
   }
-}
+};
