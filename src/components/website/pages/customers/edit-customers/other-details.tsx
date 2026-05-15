@@ -21,7 +21,7 @@ import { useState } from "react";
 import MultiSelect from "@/components/ui/multiselect";
 import AddNewPayTForm from "@/components/website/pages/customers/edit-customers/add-payemt-trems";
 import ImageUpload from "@/components/ui/image-upload";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 const OtherDetailsForm = () => {
   const [open, setOpen] = useState(false);

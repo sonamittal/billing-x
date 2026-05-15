@@ -14,7 +14,7 @@ const EditDetails = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="other">
-          <div className="w-full overflow-x-auto">
+          <div className="w-full overflow-x-auto pb-2">
             <TabsList className="flex  items-center gap-5">
               <TabsTrigger value="other">Other Details</TabsTrigger>
               <TabsTrigger value="address">Address</TabsTrigger>
