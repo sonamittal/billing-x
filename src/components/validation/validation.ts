@@ -295,7 +295,10 @@ export type ContactPersonsSchema = z.infer<typeof contactPersonsSchema>;
 export const otherDetailsSchema = z.object({
   pan: z.string().min(1, { message: "pan is required" }),
   paymentTerms: z.string().min(1, { message: "Payment terms are required" }),
-  documents: z.string().min(1, { message: "documents are required " }),
+  documents: z
+    .array(z.instanceof(File))
+    .min(1, { message: "At least one document is required" }),
+
   // meta info
   websiteURL: z.url({ message: "Enter a valid website URL" }),
   department: z.string().min(1, { message: " department is required " }),
@@ -316,5 +319,5 @@ export const paymentTermSchema = z.object({
     .min(1, { message: "Day cannot be less than 1" })
     .max(31, { message: "Day cannot be more than 31" }),
 });
-  
+
 export type PaymentTermSchema = z.infer<typeof paymentTermSchema>;

@@ -16,12 +16,23 @@ import {
   type OtherDetailsSchema,
 } from "@/components/validation/validation";
 import { Payment_Terms } from "@/lib/constants";
-import { Plus } from "lucide-react";
+import { Plus, Upload, Trash2 } from "lucide-react";
 import { useState } from "react";
 import MultiSelect from "@/components/ui/multiselect";
 import AddNewPayTForm from "@/components/website/pages/customers/edit-customers/add-payemt-trems";
-import ImageUpload from "@/components/ui/image-upload";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadTrigger,
+  FileUploadList,
+  FileUploadItem,
+  FileUploadItemPreview,
+  FileUploadItemMetadata,
+  FileUploadItemProgress,
+  FileUploadItemDelete,
+  FileUploadClear,
+} from "@/components/ui/file-upload";
 
 const OtherDetailsForm = () => {
   const [open, setOpen] = useState(false);
@@ -31,7 +42,7 @@ const OtherDetailsForm = () => {
     defaultValues: {
       pan: "",
       paymentTerms: "",
-      documents: "",
+      documents: [],
       websiteURL: "",
       department: "",
       designation: "",
@@ -97,6 +108,46 @@ const OtherDetailsForm = () => {
               />
 
               {/* Documents */}
+              {/* <FormField
+                control={form.control}
+                name="documents"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Documents <span className="text-red-500">*</span>
+                    </FormLabel>
+
+                    <FormControl>
+                      <FileUpload
+                        value={field.value || []}
+                        onValueChange={field.onChange}
+                        accept="image/*,.pdf"
+                        multiple
+                      >
+                        <FileUploadDropzone />
+                        <FileUploadTrigger />
+
+                        <FileUploadList>
+                          {(field.value || []).map((file: File) => (
+                            <FileUploadItem key={file.name} value={file}>
+                              <FileUploadItemPreview />
+                              <FileUploadItemMetadata />
+                              <FileUploadItemProgress />
+                              <FileUploadItemDelete />
+                            </FileUploadItem>
+                          ))}
+                        </FileUploadList>
+
+                        <FileUploadClear />
+                      </FileUpload>
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+
+              {/* Documents */}
               <FormField
                 control={form.control}
                 name="documents"
@@ -105,15 +156,52 @@ const OtherDetailsForm = () => {
                     <FormLabel>
                       Documents <span className="text-red-500">*</span>
                     </FormLabel>
+
                     <FormControl>
-                      <ImageUpload
-                        value={field.value}
-                        onChange={field.onChange}
-                        maxUploadSize={5}
-                        uploadApi={"/api/panel/images/upload"}
-                        uploadAction={"uploadImage"}
-                      />
+                      <FileUpload
+                        value={field.value || []}
+                        onValueChange={field.onChange}
+                        accept="image/*,.pdf"
+                        multiple
+                        className="w-full"
+                      >
+                        {/* Dropzone */}
+                        <FileUploadDropzone className="border-2 border-dashed rounded-lg p-5 text-center bg-muted/30">
+                          <div className="flex flex-col items-center gap-3">
+                            <Upload className="w-10 h-10 text-muted-foreground" />
+                            <div>
+                              <p className="font-medium">
+                                Drag & Drop files here
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Upload images or PDF files
+                              </p>
+                            </div>
+                          </div>
+                        </FileUploadDropzone>
+
+                        {/* Uploaded Files */}
+                        <FileUploadList className="mt-4">
+                          {(field.value || []).map((file: File) => (
+                            <FileUploadItem
+                              key={file.name}
+                              value={file}
+                              className="flex items-center gap-3 border rounded-md p-3"
+                            >
+                              <FileUploadItemPreview />
+                              <div className="flex-1">
+                                <FileUploadItemMetadata />
+                                <FileUploadItemProgress className="mt-2" />
+                              </div>
+                              <FileUploadItemDelete className="text-red-500 hover:text-red-700">
+                                <Trash2 className="w-4 h-4" />
+                              </FileUploadItemDelete>
+                            </FileUploadItem>
+                          ))}
+                        </FileUploadList>
+                      </FileUpload>
                     </FormControl>
+
                     <FormMessage />
                   </FormItem>
                 )}
