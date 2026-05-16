@@ -281,7 +281,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
           <Button type="submit" form="user-form" disabled={isAddUserPending}>
             {isAddUserPending ? (
               <>
-                <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                <Loader2 className="animate-spin h-5 w-5 mr-2" /> please wait
               </>
             ) : (
               "Save Changes"

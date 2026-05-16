@@ -59,6 +59,8 @@ export const customerOtherDetails = pgTable("customer_other_details", {
   designation: text("designation"),
   x: text("x"),
   facebook: text("facebook"),
+  // remarks
+  remarks: text("remarks"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

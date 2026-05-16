@@ -5,6 +5,7 @@ import EditBillingAddressForm from "@/components/website/pages/customers/edit-cu
 import EditShippingAddressForm from "@/components/website/pages/customers/edit-customers/edit-shipping-address-form";
 import ContactPersonTable from "@/components/website/pages/customers/edit-customers/contact-person";
 import OtherDetailsForm from "@/components/website/pages/customers/edit-customers/other-details";
+import EditRemark from "@/components/website/pages/customers/edit-customers/edit-remark";
 
 const EditDetails = () => {
   return (
@@ -69,10 +70,9 @@ const EditDetails = () => {
 
           {/* Remarks */}
           <TabsContent value="remarks" className="mt-4">
-            <textarea
-              className="w-full min-h-25 p-3 rounded-md border bg-background"
-              placeholder="Write remarks..."
-            />
+            <div className="space-y-4">
+              <EditRemark />
+            </div>
           </TabsContent>
         </Tabs>
       </CardContent>

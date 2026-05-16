@@ -305,6 +305,8 @@ export const otherDetailsSchema = z.object({
   designation: z.string().min(1, { message: "designation is required " }),
   x: z.string().min(1, { message: "X is required" }),
   facebook: z.string().min(1, { message: "facebook is required" }),
+  // remarks
+  remarks: z.string().min(1, { message: "remarks is required" }),
 });
 export type OtherDetailsSchema = z.infer<typeof otherDetailsSchema>;
 

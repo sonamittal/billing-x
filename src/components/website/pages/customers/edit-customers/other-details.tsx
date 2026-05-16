@@ -108,46 +108,6 @@ const OtherDetailsForm = () => {
               />
 
               {/* Documents */}
-              {/* <FormField
-                control={form.control}
-                name="documents"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Documents <span className="text-red-500">*</span>
-                    </FormLabel>
-
-                    <FormControl>
-                      <FileUpload
-                        value={field.value || []}
-                        onValueChange={field.onChange}
-                        accept="image/*,.pdf"
-                        multiple
-                      >
-                        <FileUploadDropzone />
-                        <FileUploadTrigger />
-
-                        <FileUploadList>
-                          {(field.value || []).map((file: File) => (
-                            <FileUploadItem key={file.name} value={file}>
-                              <FileUploadItemPreview />
-                              <FileUploadItemMetadata />
-                              <FileUploadItemProgress />
-                              <FileUploadItemDelete />
-                            </FileUploadItem>
-                          ))}
-                        </FileUploadList>
-
-                        <FileUploadClear />
-                      </FileUpload>
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-
-              {/* Documents */}
               <FormField
                 control={form.control}
                 name="documents"
@@ -156,7 +116,6 @@ const OtherDetailsForm = () => {
                     <FormLabel>
                       Documents <span className="text-red-500">*</span>
                     </FormLabel>
-
                     <FormControl>
                       <FileUpload
                         value={field.value || []}
@@ -201,7 +160,6 @@ const OtherDetailsForm = () => {
                         </FileUploadList>
                       </FileUpload>
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}

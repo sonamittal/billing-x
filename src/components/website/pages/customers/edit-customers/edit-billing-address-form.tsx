@@ -242,6 +242,7 @@ const EditBillingAddressForm = () => {
               {isEditCustomerPending ? (
                 <>
                   <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                  please wait
                 </>
               ) : (
                 "Update details"
