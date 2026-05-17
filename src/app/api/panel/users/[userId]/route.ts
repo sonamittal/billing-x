@@ -12,11 +12,11 @@ export const GET = async (
     const session = await auth.api.getSession({
       headers: await headers(),
     });
-    // Checking sessions and applying logic from controller for each role
+    // Checking session
     if (!session || !session?.user?.id) {
       return Response.json(
         { error: `Please sign in to access this content.` },
-        { status: 400 },
+        { status: 401 },
       );
     }
     const { userId } = await params;
@@ -35,7 +35,7 @@ export const GET = async (
       .limit(1);
     const userRow = userData[0];
     if (!userRow) {
-      return Response.json({ error: `User not found.` }, { status: 400 });
+      return Response.json({ error: `User not found.` }, { status: 404 });
     }
     // Returning user data >>>>>>>>>>>>>>
     return Response.json({ ...userRow }, { status: 200 });
@@ -44,7 +44,7 @@ export const GET = async (
       {
         error: `Fetching user failed. ${process.env.NODE_ENV == "development" ? error : ""}`,
       },
-      { status: 400 },
+      { status: 500 },
     );
   }
 };

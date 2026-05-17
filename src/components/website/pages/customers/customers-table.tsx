@@ -190,7 +190,7 @@ const CustomersTable = () => {
       {
         id: "actions",
         cell: ({ row }) => {
-          const userId = row.original.id;
+          const customerId = row.original.id;
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -202,7 +202,7 @@ const CustomersTable = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
                   <Link
-                    href={`/panel/users/${userId}`}
+                    href={`/panel/customers/${customerId}`}
                     className="flex items-center text-white-800"
                   >
                     <Pencil className="mr-2 h-3 w-2  text-white-800" />
@@ -211,7 +211,7 @@ const CustomersTable = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive">
                   <Link
-                    href={`/panel/users/${userId}`}
+                    href={`/panel/customers/${customerId}`}
                     className="flex items-center"
                   >
                     <Trash2 className="mr-2 h-4 w-4  text-red-400" />
