@@ -20,7 +20,7 @@ export const GET = async (
       );
     }
 
-    const customerId = params.customerId;
+    const { customerId } = await params;
     // Checking for cusid >>>>>>>>>>>>>>
     if (!customerId) {
       return Response.json(
