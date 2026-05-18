@@ -31,12 +31,19 @@ import { CURRENCY_TYPE } from "@/lib/constants";
 import { Sal_titles } from "@/lib/constants";
 import { GetLanguages } from "react-country-state-city";
 import { useState, useEffect } from "react";
-interface userIdProps {
-  user: any;
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
+import Message from "@/components/ui/message";
+import { is } from "zod/v4/locales";
+import { Loader2 } from "lucide-react";
+
+interface customerIdProps {
+  customer: any;
   callback?: string;
 }
 
-const EditCustomer = ({ user }: userIdProps) => {
+const EditCustomer = ({ customer }: customerIdProps) => {
   const [languageList, setLanguageList] = useState<any[]>([]);
   // Fetch countries & languages
   useEffect(() => {
@@ -47,23 +54,46 @@ const EditCustomer = ({ user }: userIdProps) => {
   const form = useForm<EditCustomerFormSchema>({
     resolver: zodResolver(editCustomerFormSchema),
     defaultValues: {
-      customerType: undefined,
+      customerType: customer?.customerType || "",
       primaryContact: {
-        salutation: "",
-        firstName: "",
-        lastName: "",
+        salutation: customer?.primaryContact?.salutation || "",
+        firstName: customer?.primaryContact?.firstName || "",
+        lastName: customer?.primaryContact?.lastName || "",
       },
-      companyName: "",
-      currency: "",
-      language: "",
-      email: "",
-      workPhone: "",
-      mobile: "",
+      companyName: customer?.companyName || "",
+      currency: customer?.currency || "",
+      language: customer?.language || "",
+      email: customer?.email || "",
+      workPhone: customer?.workPhone || "",
+      mobile: customer?.mobile || "",
     },
   });
-
+  // edit customer form handling >>>>>>>>>>
+  const {
+    data: editCustomerData,
+    mutate: editCustomer,
+    isPending: isEditCustomerPending,
+    isSuccess: isEditCustomerSuccess,
+    error: editCustomerError,
+  } = useMutation({
+    mutationFn: async (data: EditCustomerFormSchema) => {
+      try {
+        const res = await axios.post("", data);
+        return res.data;
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message || "Failed to create user",
+        );
+      }
+    },
+    onSuccess: () => {
+      toast.success("update details successfully!");
+      form.reset();
+    },
+  });
   const onSubmit = (data: EditCustomerFormSchema) => {
     console.log(" form data sbmitted:", data);
+    editCustomer(data);
   };
 
   return (
@@ -72,11 +102,18 @@ const EditCustomer = ({ user }: userIdProps) => {
         <CardTitle>Edit customer details</CardTitle>
         <CardDescription>
           Edit account details of{" "}
-          <span className="text-foreground font-medium">{user.name}</span>{" "}
+          <span className="text-foreground font-medium">{customer.name}</span>{" "}
           account.
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <Message
+          variant={editCustomerError ? "destructive" : "default"}
+          message={
+            editCustomerError?.message ||
+            (isEditCustomerSuccess && editCustomerData.message)
+          }
+        />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Customer Type */}
@@ -182,6 +219,7 @@ const EditCustomer = ({ user }: userIdProps) => {
             <div className="grid md:grid-cols-2 gap-4">
               {/* Currency */}
               <FormField
+                control={form.control}
                 name="currency"
                 render={({ field }) => (
                   <FormItem>
@@ -207,6 +245,7 @@ const EditCustomer = ({ user }: userIdProps) => {
 
               {/* Language */}
               <FormField
+                control={form.control}
                 name="language"
                 render={({ field }) => (
                   <FormItem>
@@ -263,7 +302,7 @@ const EditCustomer = ({ user }: userIdProps) => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          type="phone"
+                          type="tel"
                           placeholder="eg: +918045682231"
                           {...field}
                         />
@@ -281,7 +320,7 @@ const EditCustomer = ({ user }: userIdProps) => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          type="mobile"
+                          type="tel"
                           placeholder="eg: +918045682231"
                           {...field}
                         />
@@ -292,8 +331,18 @@ const EditCustomer = ({ user }: userIdProps) => {
               </div>
             </div>
 
-            <Button type="submit" className="w-full">
-              Update Details
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isEditCustomerPending}
+            >
+              {isEditCustomerPending ? (
+                <>
+                  <Loader2 className="animate-spin h-5 w-5 mr-2" /> please wait
+                </>
+              ) : (
+                "Update Details"
+              )}
             </Button>
           </form>
         </Form>

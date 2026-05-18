@@ -19,7 +19,6 @@ export const GET = async (
         { status: 401 },
       );
     }
-
     const { customerId } = await params;
     // Checking for cusid >>>>>>>>>>>>>>
     if (!customerId) {

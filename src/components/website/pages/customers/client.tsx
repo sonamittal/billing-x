@@ -28,6 +28,8 @@ const CustomersClient = ({ customerId }: props) => {
     },
     retry: false,
   });
+  console.log(data);
+
   if (!customerId) {
     return notFound();
   }
@@ -42,7 +44,7 @@ const CustomersClient = ({ customerId }: props) => {
       {!error && data && (
         <Breadcrumb className="mb-5 flex items-center gap-0.5">
           <BreadcrumbItem>
-            <a className="text-[#e8dad0] " href="/customers/${customerId}">
+            <a className="" href="/panel/customers">
               customers
             </a>
           </BreadcrumbItem>
@@ -57,7 +59,7 @@ const CustomersClient = ({ customerId }: props) => {
       {isSuccess && data && (
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <EditCustomer user={data} callback="/panel/customers" />
+            <EditCustomer customer={data} callback="/panel/customers" />
             <div className="grid grid-cols-1 gap-5 h-fit">
               <UpdateUserPassword user={data} />
               <DeleteUser user={data} />
