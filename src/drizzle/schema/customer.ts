@@ -23,7 +23,7 @@ export const customer = pgTable("customer", {
   lastName: text("last_name"),
   email: text("email"),
   workPhone: text("work_phone"),
-  phone: text("phone"),
+  mobile: text("mobile"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

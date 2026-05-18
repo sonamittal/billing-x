@@ -236,7 +236,7 @@ export const editCustomerFormSchema = z.object({
     firstName: z.string().min(1, { message: "first name is required" }),
     lastName: z.string().min(1, { message: "last name is required" }),
   }),
-  companyName: z.string().min(1, { message: "company name is required" }),
+  companyName: z.string().optional(),
   currency: z.string().min(1, { message: "currency is required" }),
   language: z.string().min(1, { message: "language is required" }),
   email: z.email({ message: "email is required" }),

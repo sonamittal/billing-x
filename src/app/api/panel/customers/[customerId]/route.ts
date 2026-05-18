@@ -3,6 +3,7 @@ import { customer } from "@/drizzle/schema/index";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
 import { eq } from "drizzle-orm";
+import { putCustomerController } from "@/app/api/panel/customers/[customerId]/putController";
 
 export const GET = async (
   req: Request,
@@ -47,6 +48,41 @@ export const GET = async (
           process.env.NODE_ENV === "development"
             ? `Fetching customer failed. ${error}`
             : "Fetching customer failed.",
+      },
+      { status: 500 },
+    );
+  }
+};
+
+export const PUT = async (req: Request) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    if (!session?.user?.id) {
+      return Response.json(
+        {
+          success: false,
+          error: "Unauthorized - please login",
+        },
+        { status: 401 },
+      );
+    }
+    const body = await req.json().catch(() => null);
+
+    if (!body) {
+      return Response.json(
+        { success: false, message: "Invalid data" },
+        { status: 400 },
+      );
+    }
+    const result = await putCustomerController(body);
+    return Response.json(result.json, { status: result.status });
+  } catch (error: any) {
+    return Response.json(
+      {
+        success: false,
+        message: error?.message || "Internal Server Error",
       },
       { status: 500 },
     );

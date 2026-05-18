@@ -56,9 +56,9 @@ const EditCustomer = ({ customer }: customerIdProps) => {
     defaultValues: {
       customerType: customer?.customerType || "",
       primaryContact: {
-        salutation: customer?.primaryContact?.salutation || "",
-        firstName: customer?.primaryContact?.firstName || "",
-        lastName: customer?.primaryContact?.lastName || "",
+        salutation: customer?.salutation || "",
+        firstName: customer?.firstName || "",
+        lastName: customer?.lastName || "",
       },
       companyName: customer?.companyName || "",
       currency: customer?.currency || "",
@@ -78,7 +78,10 @@ const EditCustomer = ({ customer }: customerIdProps) => {
   } = useMutation({
     mutationFn: async (data: EditCustomerFormSchema) => {
       try {
-        const res = await axios.post("", data);
+        const res = await axios.put(`/api/panel/customers/${customer.id}`, {
+          id: customer.id,
+          ...data,
+        });
         return res.data;
       } catch (error: any) {
         throw new Error(
@@ -87,8 +90,9 @@ const EditCustomer = ({ customer }: customerIdProps) => {
       }
     },
     onSuccess: () => {
-      toast.success("update details successfully!");
-      form.reset();
+      setTimeout(() => {
+        toast.success("customer update details successfully!");
+      }, 2000);
     },
   });
   const onSubmit = (data: EditCustomerFormSchema) => {
@@ -102,17 +106,17 @@ const EditCustomer = ({ customer }: customerIdProps) => {
         <CardTitle>Edit customer details</CardTitle>
         <CardDescription>
           Edit account details of{" "}
-          <span className="text-foreground font-medium">{customer.name}</span>{" "}
+          <span className="text-foreground font-medium">
+            {" "}
+            {customer.firstName} {customer.lastName}
+          </span>{" "}
           account.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Message
           variant={editCustomerError ? "destructive" : "default"}
-          message={
-            editCustomerError?.message ||
-            (isEditCustomerSuccess && editCustomerData.message)
-          }
+          message={editCustomerError?.message}
         />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
