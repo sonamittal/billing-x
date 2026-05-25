@@ -16,7 +16,7 @@ import {
   type OtherDetailsSchema,
 } from "@/components/validation/validation";
 import { Payment_Terms } from "@/lib/constants";
-import { Plus, Upload, Trash2 } from "lucide-react";
+import { Plus, Upload, Trash2, Loader2 } from "lucide-react";
 import { useState } from "react";
 import MultiSelect from "@/components/ui/multiselect";
 import AddNewPayTForm from "@/components/website/pages/customers/edit-customers/add-payemt-trems";
@@ -33,26 +33,84 @@ import {
   FileUploadItemDelete,
   FileUploadClear,
 } from "@/components/ui/file-upload";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
+import Message from "@/components/ui/message";
+interface OtherDetailsFormProps {
+  customerId: string;
+  customerData?: any;
+}
+// uploadFile
+const uploadFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
 
-const OtherDetailsForm = () => {
+  const res = await axios.post("/api/upload", formData);
+  return res.data.url; // S3 URL
+};
+
+const OtherDetailsForm = ({
+  customerId,
+  customerData,
+}: OtherDetailsFormProps) => {
   const [open, setOpen] = useState(false);
   const [paymentTerms, setPaymentTerms] = useState(Payment_Terms);
+
+  // form handling >>>>>>>>>>
   const form = useForm<OtherDetailsSchema>({
     resolver: zodResolver(otherDetailsSchema),
     defaultValues: {
-      pan: "",
-      paymentTerms: "",
-      documents: [],
-      websiteURL: "",
-      department: "",
-      designation: "",
-      x: "",
-      facebook: "",
+      pan: customerData?.pan || "",
+      paymentTerms: customerData?.paymentTerms || "",
+      documents: customerData?.documents || [],
+      websiteURL: customerData?.websiteUrl || "",
+      department: customerData?.department || "",
+      designation: customerData?.designation || "",
+      x: customerData?.x || "",
+      facebook: customerData?.facebook || "",
     },
   });
+  // edit other details  customer form handling >>>>>>>>>>
+  const {
+    data: editODCustomerData,
+    mutate: editODCustomer,
+    isPending: isEditODCustomerPending,
+    isSuccess: isEditODCustomerSuccess,
+    error: editODCustomerError,
+  } = useMutation({
+    mutationFn: async (data: OtherDetailsSchema) => {
+      // 1. upload files first
+      const uploadedUrls = await Promise.all(
+        (data.documents ?? []).map(async (file: any) => {
+          if (typeof file === "string") {
+            return file;
+          }
+          return await uploadFile(file);
+        }),
+      );
+      // api request
+      const res = await axios.put(`/api/panel/customers/${customerId}`, {
+        id: customerId,
+        action: "otherDetails",
+        ...data,
+        documents: uploadedUrls,
+      });
 
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Customer  other details updated successfully");
+    },
+
+    onError: (err: any) => {
+      console.log(err);
+      toast.error(err?.response?.data?.message || "Something went wrong");
+    },
+  });
   const onSubmit = (data: OtherDetailsSchema) => {
-    console.log(data);
+    console.log(" form data sbmitted:", data);
+    editODCustomer(data);
   };
   return (
     <>
@@ -106,7 +164,6 @@ const OtherDetailsForm = () => {
                   </FormItem>
                 )}
               />
-
               {/* Documents */}
               <FormField
                 control={form.control}
@@ -164,7 +221,6 @@ const OtherDetailsForm = () => {
                   </FormItem>
                 )}
               />
-
               {/* Website URL */}
               <FormField
                 control={form.control}
@@ -264,8 +320,19 @@ const OtherDetailsForm = () => {
                 />
               </div>
               {/* Submit */}
-              <Button type="submit" className="w-full">
-                Submit
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isEditODCustomerPending}
+              >
+                {isEditODCustomerPending ? (
+                  <>
+                    <Loader2 className="animate-spin h-5 w-5 mr-2" /> please
+                    wait
+                  </>
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </form>
           </Form>

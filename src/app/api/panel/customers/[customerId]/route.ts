@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
 import { eq } from "drizzle-orm";
 import { putCustomerController } from "@/app/api/panel/customers/[customerId]/putController";
+import { putCustomerOtherDetailsController } from "@/app/api/panel/customers/[customerId]/putController";
 
 export const GET = async (
   req: Request,
@@ -53,32 +54,57 @@ export const GET = async (
     );
   }
 };
-
-export const PUT = async (req: Request) => {
+// PUt req
+export const PUT = async (
+  req: Request,
+  context: { params: Promise<{ customerId: string }> },
+) => {
   try {
+    // session check
     const session = await auth.api.getSession({
       headers: await headers(),
     });
+
     if (!session?.user?.id) {
       return Response.json(
         {
           success: false,
-          error: "Unauthorized - please login",
+          message: "Unauthorized - please login",
         },
         { status: 401 },
       );
     }
-    const body = await req.json().catch(() => null);
+    // customer id
+    const { customerId } = await context.params;
+    // body
+    const body = await req.json();
 
-    if (!body) {
-      return Response.json(
-        { success: false, message: "Invalid data" },
-        { status: 400 },
-      );
+    // Updated body
+    const updatedBody = {
+      ...body,
+      id: customerId,
+    };
+    console.log("BODY ACTION =>", body.action);
+    console.log("UPDATED BODY =>", updatedBody);
+
+    //
+    if (body.action === "customer") {
+      return await putCustomerController(updatedBody);
     }
-    const result = await putCustomerController(body);
-    return Response.json(result.json, { status: result.status });
+    //
+    if (body.action === "otherDetails") {
+      return await putCustomerOtherDetailsController(updatedBody);
+    }
+    return Response.json(
+      {
+        success: false,
+        message: "Invalid action",
+      },
+      { status: 400 },
+    );
   } catch (error: any) {
+    console.log("error:", error?.message);
+
     return Response.json(
       {
         success: false,

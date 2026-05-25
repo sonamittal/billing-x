@@ -59,7 +59,11 @@ const CustomersClient = ({ customerId }: props) => {
       {isSuccess && data && (
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <EditCustomer customer={data} callback="/panel/customers" />
+            <EditCustomer
+              customer={data}
+              customerId={data.id}
+              callback="/panel/customers"
+            />
             <div className="grid grid-cols-1 gap-5 h-fit">
               <UpdateUserPassword user={data} />
               <DeleteUser user={data} />

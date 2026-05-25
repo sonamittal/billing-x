@@ -31,18 +31,22 @@ import { CURRENCY_TYPE } from "@/lib/constants";
 import { Sal_titles } from "@/lib/constants";
 import { GetLanguages } from "react-country-state-city";
 import { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface customerIdProps {
   customer: any;
   callback?: string;
+  customerId: string;
 }
 
-const EditCustomer = ({ customer }: customerIdProps) => {
+const EditCustomer = ({ customer, customerId, callback }: customerIdProps) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [languageList, setLanguageList] = useState<any[]>([]);
   // Fetch countries & languages
   useEffect(() => {
@@ -77,21 +81,27 @@ const EditCustomer = ({ customer }: customerIdProps) => {
   } = useMutation({
     mutationFn: async (data: EditCustomerFormSchema) => {
       try {
-        const res = await axios.put(`/api/panel/customers/${customer.id}`, {
-          id: customer.id,
+        const res = await axios.put(`/api/panel/customers/${customerId}`, {
+          id: customerId,
+          action: "customer",
           ...data,
         });
         return res.data;
       } catch (error: any) {
         throw new Error(
-          error.response?.data?.message || "Failed to create user",
+          error.response?.data?.message || "Failed to edit customer ",
         );
       }
     },
     onSuccess: () => {
-      setTimeout(() => {
-        toast.success("customer update details successfully!");
-      }, 2000);
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
+      toast.success("customer update details successfully!");
+      form.reset();
+      if (callback) {
+        setTimeout(() => {
+          router.push(callback);
+        }, 1200);
+      }
     },
   });
   const onSubmit = (data: EditCustomerFormSchema) => {

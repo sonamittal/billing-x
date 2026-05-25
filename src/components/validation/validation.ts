@@ -295,10 +295,7 @@ export type ContactPersonsSchema = z.infer<typeof contactPersonsSchema>;
 export const otherDetailsSchema = z.object({
   pan: z.string().min(1, { message: "pan is required" }),
   paymentTerms: z.string().min(1, { message: "Payment terms are required" }),
-  documents: z
-    .array(z.instanceof(File))
-    .min(1, { message: "At least one document is required" }),
-
+  documents: z.array(z.instanceof(File)).optional(),
   // meta info
   websiteURL: z.url({ message: "Enter a valid website URL" }),
   department: z.string().min(1, { message: " department is required " }),
@@ -310,7 +307,7 @@ export const otherDetailsSchema = z.object({
 });
 export type OtherDetailsSchema = z.infer<typeof otherDetailsSchema>;
 
-// payment term schema >>>>>>>>>>>>>>>>>>>>>>>>
+// add payment term schema >>>>>>>>>>>>>>>>>>>>>>>>
 export const paymentTermSchema = z.object({
   termName: z.string().min(1, {
     message: "Term name is required",
