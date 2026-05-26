@@ -7,7 +7,13 @@ import ContactPersonTable from "@/components/website/pages/customers/edit-custom
 import OtherDetailsForm from "@/components/website/pages/customers/edit-customers/other-details";
 import EditRemark from "@/components/website/pages/customers/edit-customers/edit-remark";
 
-const EditDetails = () => {
+const EditDetails = ({
+  customerData,
+  callback,
+}: {
+  customerData: any;
+  callback?: string;
+}) => {
   return (
     <Card>
       <CardHeader>
@@ -27,7 +33,11 @@ const EditDetails = () => {
           {/* Other Details */}
           <TabsContent value="other" className="mt-4">
             <div className="space-y-4">
-              <OtherDetailsForm />
+              <OtherDetailsForm
+                customerId={customerData?.id}
+                customerData={customerData}
+                callback={callback}
+              />
             </div>
           </TabsContent>
 

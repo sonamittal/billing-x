@@ -55,10 +55,7 @@ export const GET = async (
   }
 };
 // PUt req
-export const PUT = async (
-  req: Request,
-  context: { params: Promise<{ customerId: string }> },
-) => {
+export const PUT = async (req: Request, context: any) => {
   try {
     // session check
     const session = await auth.api.getSession({
@@ -75,7 +72,8 @@ export const PUT = async (
       );
     }
     // customer id
-    const { customerId } = await context.params;
+    const params = await context.params;
+    const customerId = params.customerId;
     // body
     const body = await req.json();
 
@@ -84,8 +82,8 @@ export const PUT = async (
       ...body,
       id: customerId,
     };
-    console.log("BODY ACTION =>", body.action);
-    console.log("UPDATED BODY =>", updatedBody);
+    console.log("body action =>", body.action);
+    console.log("Updated body =>", updatedBody);
 
     //
     if (body.action === "customer") {

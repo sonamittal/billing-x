@@ -92,10 +92,9 @@ export const putCustomerOtherDetailsController = async (body: any) => {
     });
 
     if (!existingCustomerOD) {
-      return Response.json(
-        { success: false, message: "Customer other details not found" },
-        { status: 404 },
-      );
+      await db
+        .insert(customerOtherDetails)
+        .values({ id: crypto.randomUUID(), customerId: id });
     }
     // Get paymentTerm id by term name
     const paymentTerm = await db.query.paymentTerms.findFirst({

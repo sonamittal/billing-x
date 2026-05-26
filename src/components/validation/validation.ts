@@ -295,15 +295,24 @@ export type ContactPersonsSchema = z.infer<typeof contactPersonsSchema>;
 export const otherDetailsSchema = z.object({
   pan: z.string().min(1, { message: "pan is required" }),
   paymentTerms: z.string().min(1, { message: "Payment terms are required" }),
-  documents: z.array(z.instanceof(File)).optional(),
+  documents: z
+    .array(
+      z.union([
+        z.instanceof(File),
+        z.object({
+          url: z.string(),
+          key: z.string(),
+          name: z.string().optional(),
+        }),
+      ]),
+    )
+    .optional(),
   // meta info
   websiteURL: z.url({ message: "Enter a valid website URL" }),
   department: z.string().min(1, { message: " department is required " }),
   designation: z.string().min(1, { message: "designation is required " }),
   x: z.string().min(1, { message: "X is required" }),
   facebook: z.string().min(1, { message: "facebook is required" }),
-  // remarks
-  remarks: z.string().min(1, { message: "remarks is required" }),
 });
 export type OtherDetailsSchema = z.infer<typeof otherDetailsSchema>;
 

@@ -19,6 +19,7 @@ export const POST = async (req: Request) => {
       "image/webp": [".webp"],
       "image/gif": [".gif"],
       "image/svg+xml": [".svg"],
+      "application/pdf": [".pdf"],
     };
 
     // Validate file

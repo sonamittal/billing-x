@@ -95,7 +95,7 @@ const EditCustomer = ({ customer, customerId, callback }: customerIdProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success("customer update details successfully!");
+      toast.success("customer updated successfully!");
       form.reset();
       if (callback) {
         setTimeout(() => {

@@ -1,0 +1,2 @@
+ALTER TABLE "customer_other_details" ALTER COLUMN "documents" SET DATA TYPE json;--> statement-breakpoint
+ALTER TABLE "customer_address" ADD CONSTRAINT "customer_address_customer_id_unique" UNIQUE("customer_id");

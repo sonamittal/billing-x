@@ -1,6 +1,6 @@
 import { user } from "@/drizzle/schema/schema";
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer, json } from "drizzle-orm/pg-core";
 
 export const customer = pgTable("customer", {
   id: text("id").primaryKey(),
@@ -46,14 +46,16 @@ export const paymentTerms = pgTable("payment_terms", {
 // other details
 export const customerOtherDetails = pgTable("customer_other_details", {
   id: text("id").primaryKey(),
-  customerId: text("customer_id")
-    .notNull()
-    .references(() => customer.id, { onDelete: "cascade" }),
+ customerId: text("customer_id")
+  .notNull()
+  .unique()
+  .references(() => customer.id, { onDelete: "cascade" }),
   pan: text("pan"),
   paymentTermId: text("payment_term_id").references(() => paymentTerms.id, {
     onDelete: "set null",
   }),
-  documents: text("documents"),
+  documents:
+    json("documents").$type<{ url: string; key: string; name?: string }[]>(),
   websiteUrl: text("website_url"),
   department: text("department"),
   designation: text("designation"),
@@ -115,7 +117,7 @@ export const customerRelations = relations(customer, ({ many, one }) => ({
   }),
   contacts: many(contactPerson),
   addresses: many(customerAddress),
-  otherDetails: many(customerOtherDetails),
+  otherDetails: one(customerOtherDetails),
 }));
 // payment terms relations
 export const paymentTermsRelations = relations(paymentTerms, ({ many }) => ({

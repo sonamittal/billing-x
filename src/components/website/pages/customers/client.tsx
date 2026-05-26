@@ -70,7 +70,7 @@ const CustomersClient = ({ customerId }: props) => {
             </div>
           </div>
           <div className="mt-10">
-            <EditDetails />
+            <EditDetails customerData={data}  callback="/panel/customers" />
           </div>
         </div>
       )}
