@@ -50,7 +50,7 @@ export const POST = async (req: Request) => {
 };
 
 // get request
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
     const username = searchParams.get("username") || undefined;
@@ -62,4 +62,4 @@ export async function GET(request: Request) {
       { status: 500 },
     );
   }
-}
+};

@@ -35,7 +35,7 @@ export const postUser = async (body: any) => {
     .returning();
 
   return {
-    status: 201,
+    status: 200,
     json: {
       success: true,
       message: "User created successfully",
@@ -109,7 +109,7 @@ export const postCustomer = async (body: any) => {
     .returning();
 
   return {
-    status: 201,
+    status: 200,
     json: {
       success: true,
       message: "Customer created successfully",

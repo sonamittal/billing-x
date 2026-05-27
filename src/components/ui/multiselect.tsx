@@ -233,9 +233,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     : [];
 
   const filtered = options.filter((o) =>
-    o.label.toLowerCase().includes(search.toLowerCase()),
+    o?.label?.toLowerCase?.().includes(search.toLowerCase()),
   );
-
   const toggleSelect = (val: string) => {
     if (disabled) return;
 

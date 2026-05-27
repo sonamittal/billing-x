@@ -46,10 +46,10 @@ export const paymentTerms = pgTable("payment_terms", {
 // other details
 export const customerOtherDetails = pgTable("customer_other_details", {
   id: text("id").primaryKey(),
- customerId: text("customer_id")
-  .notNull()
-  .unique()
-  .references(() => customer.id, { onDelete: "cascade" }),
+  customerId: text("customer_id")
+    .notNull()
+    .unique()
+    .references(() => customer.id, { onDelete: "cascade" }),
   pan: text("pan"),
   paymentTermId: text("payment_term_id").references(() => paymentTerms.id, {
     onDelete: "set null",

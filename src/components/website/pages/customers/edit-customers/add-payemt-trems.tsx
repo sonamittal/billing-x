@@ -22,13 +22,23 @@ import {
   type PaymentTermSchema,
 } from "@/components/validation/validation";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddPaymentTerm: (data: PaymentTermSchema) => void;
+  customerId: string;
 }
-const AddNewPayTForm = ({ open, onOpenChange, onAddPaymentTerm }: Props) => {
+const AddNewPayTForm = ({
+  open,
+  onOpenChange,
+  onAddPaymentTerm,
+  customerId,
+}: Props) => {
   // form handling >>>>>>>>>>>>>>>
   const form = useForm<PaymentTermSchema>({
     resolver: zodResolver(paymentTermSchema),
@@ -37,11 +47,37 @@ const AddNewPayTForm = ({ open, onOpenChange, onAddPaymentTerm }: Props) => {
       dueAfter: 1,
     },
   });
+  // add payment form handling >>>>>>>>>>>>>>
+  const {
+    data: addCPTData,
+    mutate: addCPaymentTerm,
+    isPending: isAddCPaymentTermPending,
+    isSuccess: isAddCPaymentTermSuccess,
+    error: addCPTError,
+  } = useMutation({
+    mutationFn: async (data: PaymentTermSchema) => {
+      try {
+        const res = await axios.post(
+          `/api/panel/customers/${customerId}/payment-terms`,
+          data,
+        );
+        return res.data;
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message || "Failed to add new payment terms",
+        );
+      }
+    },
+    onSuccess: (data) => {
+      onAddPaymentTerm(data);
+      toast.success(" New Payment term  has been added successfully!");
+      form.reset();
+      onOpenChange(false);
+    },
+  });
   const onSubmit = (data: PaymentTermSchema) => {
-    console.log(data);
-    onAddPaymentTerm(data);
-    form.reset();
-    onOpenChange(false);
+    console.log("Form Data Submitted:", data);
+    addCPaymentTerm(data);
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -92,7 +128,11 @@ const AddNewPayTForm = ({ open, onOpenChange, onAddPaymentTerm }: Props) => {
                       type="number"
                       placeholder="Enter days"
                       value={field.value}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value === "" ? 0 : Number(e.target.value),
+                        )
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -101,8 +141,19 @@ const AddNewPayTForm = ({ open, onOpenChange, onAddPaymentTerm }: Props) => {
             />
             {/* Submit */}
             <div className="flex justify-start gap-3">
-              <Button type="submit" className="px-5 py-2">
-                Save
+              <Button
+                type="submit"
+                className="px-5 py-2"
+                disabled={isAddCPaymentTermPending}
+              >
+                {isAddCPaymentTermPending ? (
+                  <>
+                    <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                    Please wait
+                  </>
+                ) : (
+                  "Save"
+                )}
               </Button>
               <Button
                 type="button"
