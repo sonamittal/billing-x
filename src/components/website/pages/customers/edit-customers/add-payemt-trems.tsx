@@ -27,10 +27,15 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+interface PTR {
+  id: string;
+  termName: string;
+  dueAfter: number;
+}
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddPaymentTerm: (data: PaymentTermSchema) => void;
+  onAddPaymentTerm: (data: PTR) => void;
   customerId: string;
 }
 const AddNewPayTForm = ({

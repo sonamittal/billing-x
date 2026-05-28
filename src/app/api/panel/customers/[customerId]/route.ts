@@ -1,11 +1,11 @@
 import { db } from "@/lib/database/db-connect";
-import { customer } from "@/drizzle/schema/index";
+import { customer, customerOtherDetails } from "@/drizzle/schema/index";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
 import { eq } from "drizzle-orm";
 import { putCustomerController } from "@/app/api/panel/customers/[customerId]/putController";
 import { putCustomerOtherDetailsController } from "@/app/api/panel/customers/[customerId]/putController";
-
+// get req
 export const GET = async (
   req: Request,
   { params }: { params: { customerId: string } },
@@ -15,33 +15,53 @@ export const GET = async (
     const session = await auth.api.getSession({
       headers: await headers(),
     });
+
     if (!session || !session?.user?.id) {
       return Response.json(
         { error: `Please sign in to access this content.` },
         { status: 401 },
       );
     }
+
     const { customerId } = await params;
-    // Checking for cusid >>>>>>>>>>>>>>
+
     if (!customerId) {
       return Response.json(
         { error: `Customer id is required` },
         { status: 400 },
       );
     }
-    //  Database query
+
+    // customer data
     const customerData = await db
       .select()
       .from(customer)
       .where(eq(customer.id, customerId))
       .limit(1);
-    // First row
+
     const customerRow = customerData[0];
+
     if (!customerRow) {
-      return Response.json({ error: `customer not found.` }, { status: 404 });
+      return Response.json({ error: `Customer not found.` }, { status: 404 });
     }
-    // Success response
-    return Response.json(customerRow, { status: 200 });
+
+    // other details data
+    const otherDetailsData = await db
+      .select()
+      .from(customerOtherDetails)
+      .where(eq(customerOtherDetails.customerId, customerId))
+      .limit(1);
+
+    const otherDetailsRow = otherDetailsData[0] || null;
+
+    //  response
+    return Response.json(
+      {
+        ...customerRow,
+        otherDetails: otherDetailsRow,
+      },
+      { status: 200 },
+    );
   } catch (error) {
     return Response.json(
       {

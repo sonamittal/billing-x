@@ -19,12 +19,12 @@ import {
   otherDetailsSchema,
   type OtherDetailsSchema,
 } from "@/components/validation/validation";
-import { Payment_Terms } from "@/lib/constants";
 import MultiSelect from "@/components/ui/multiselect";
 import AddNewPayTForm from "@/components/website/pages/customers/edit-customers/add-payemt-trems";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import Message from "@/components/ui/message";
 
 import {
   FileUpload,
@@ -39,7 +39,7 @@ interface PaymentOption {
 }
 interface OtherDetailsFormProps {
   customerId: string;
-  customerData?: any;
+  customer?: any;
   callback?: string;
 }
 
@@ -68,7 +68,7 @@ const deleteFile = async (key: string) => {
 
 const OtherDetailsForm = ({
   customerId,
-  customerData,
+  customer,
   callback,
 }: OtherDetailsFormProps) => {
   const queryClient = useQueryClient();
@@ -76,8 +76,7 @@ const OtherDetailsForm = ({
 
   const [open, setOpen] = useState(false);
 
-  const [paymentTerms, setPaymentTerms] =
-    useState<PaymentOption[]>(Payment_Terms);
+  const [paymentTerms, setPaymentTerms] = useState<PaymentOption[]>([]);
   // fetch payment terms
   const { data: paymentTermsData } = useQuery({
     queryKey: ["payment-terms"],
@@ -89,44 +88,30 @@ const OtherDetailsForm = ({
     },
   });
 
-  // merge static and db data >>>>>>>>>>>>>>>>
   useEffect(() => {
     if (paymentTermsData?.data) {
       const dbOptions = paymentTermsData.data.map((t: any) => ({
         label: t.termName,
-        value: t.termName,
+        value: t.id,
       }));
 
-      const merged = [
-        ...Payment_Terms,
-        ...dbOptions.filter(
-          (db: any) => !Payment_Terms.some((p) => p.value === db.value),
-        ),
-      ];
-
-      setPaymentTerms(merged);
+      setPaymentTerms(dbOptions);
     }
   }, [paymentTermsData]);
+
   // form handling >>>>>>>>>>>>>>>>>>>>
   const form = useForm<OtherDetailsSchema>({
     resolver: zodResolver(otherDetailsSchema),
 
     defaultValues: {
-      pan: customerData?.pan || "",
-
-      paymentTerms: customerData?.paymentTerms || "",
-
-      documents: customerData?.documents || [],
-
-      websiteURL: customerData?.websiteUrl || "",
-
-      department: customerData?.department || "",
-
-      designation: customerData?.designation || "",
-
-      x: customerData?.x || "",
-
-      facebook: customerData?.facebook || "",
+      pan: customer?.otherDetails?.pan || "",
+      paymentTermId: customer?.otherDetails?.paymentTermId || "",
+      documents: customer?.otherDetails?.documents || [],
+      websiteUrl: customer?.otherDetails?.websiteUrl || "",
+      department: customer?.otherDetails?.department || "",
+      designation: customer?.otherDetails?.designation || "",
+      x: customer?.otherDetails?.x || "",
+      facebook: customer?.otherDetails?.facebook || "",
     },
   });
 
@@ -142,7 +127,6 @@ const OtherDetailsForm = ({
       // upload new files
       const uploadedDocuments = await Promise.all(
         (data.documents || []).map(async (doc: DocumentType) => {
-          // already uploaded
           if (!(doc instanceof File)) {
             return doc;
           }
@@ -158,7 +142,7 @@ const OtherDetailsForm = ({
         }),
       );
 
-      // save customer
+      // customer api
       const res = await axios.put(`/api/panel/customers/${customerId}`, {
         id: customerId,
         action: "otherDetails",
@@ -192,6 +176,10 @@ const OtherDetailsForm = ({
     <>
       <Card>
         <CardContent className="pt-6">
+          <Message
+            variant={editODCustomerError ? "destructive" : "default"}
+            message={editODCustomerError?.message}
+          />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {/* PAN */}
@@ -214,7 +202,7 @@ const OtherDetailsForm = ({
               {/* Payment Terms */}
               <FormField
                 control={form.control}
-                name="paymentTerms"
+                name="paymentTermId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Payment Terms</FormLabel>
@@ -365,7 +353,7 @@ const OtherDetailsForm = ({
               {/* Website URL */}
               <FormField
                 control={form.control}
-                name="websiteURL"
+                name="websiteUrl"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Website URL</FormLabel>
@@ -479,7 +467,7 @@ const OtherDetailsForm = ({
             onAddPaymentTerm={(newTerm) => {
               const option = {
                 label: newTerm.termName,
-                value: newTerm.termName,
+                value: newTerm.id,
               };
               setPaymentTerms((prev) => {
                 const exists = prev.some((p) => p.value === option.value);
@@ -487,7 +475,7 @@ const OtherDetailsForm = ({
                 return [...prev, option];
               });
 
-              form.setValue("paymentTerms", newTerm.termName);
+              form.setValue("paymentTermId", newTerm.id);
 
               queryClient.invalidateQueries({
                 queryKey: ["payment-terms"],

@@ -294,7 +294,9 @@ export type ContactPersonsSchema = z.infer<typeof contactPersonsSchema>;
 // other details schema >>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const otherDetailsSchema = z.object({
   pan: z.string().min(1, { message: "pan is required" }),
-  paymentTerms: z.string().min(1, { message: "Payment terms are required" }),
+  paymentTermId: z.string().min(1, {
+    message: "Payment terms are required",
+  }),
   documents: z
     .array(
       z.union([
@@ -308,7 +310,7 @@ export const otherDetailsSchema = z.object({
     )
     .optional(),
   // meta info
-  websiteURL: z.url({ message: "Enter a valid website URL" }),
+  websiteUrl: z.url({ message: "Enter a valid website URL" }),
   department: z.string().min(1, { message: " department is required " }),
   designation: z.string().min(1, { message: "designation is required " }),
   x: z.string().min(1, { message: "X is required" }),

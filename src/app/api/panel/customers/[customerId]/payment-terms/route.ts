@@ -7,7 +7,7 @@ export const GET = async (
   req: Request,
   { params }: { params: { customerId: string } },
 ) => {
-  const customerId = params.customerId;
+  const customerId = await params.customerId;
   return getPaymentTermsController(customerId);
 };
 

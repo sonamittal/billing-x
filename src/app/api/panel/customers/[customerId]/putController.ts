@@ -1,9 +1,5 @@
 import { db } from "@/lib/database/db-connect";
-import {
-  customer,
-  paymentTerms,
-  customerOtherDetails,
-} from "@/drizzle/schema/index";
+import { customer, customerOtherDetails } from "@/drizzle/schema/index";
 import { eq } from "drizzle-orm";
 export const putCustomerController = async (body: any) => {
   try {
@@ -71,7 +67,7 @@ export const putCustomerOtherDetailsController = async (body: any) => {
     const {
       id,
       pan,
-      paymentTerms: paymentTermName,
+      paymentTermId,
       documents,
       websiteURL,
       department,
@@ -96,16 +92,12 @@ export const putCustomerOtherDetailsController = async (body: any) => {
         .insert(customerOtherDetails)
         .values({ id: crypto.randomUUID(), customerId: id });
     }
-    // Get paymentTerm id by term name
-    const paymentTerm = await db.query.paymentTerms.findFirst({
-      where: (p, { eq }) => eq(p.termName, paymentTermName),
-    });
     // db query
     const result = await db
       .update(customerOtherDetails)
       .set({
         pan,
-        paymentTermId: paymentTerm?.id || null,
+        paymentTermId,
         documents: documents || [],
         websiteUrl: websiteURL,
         department,

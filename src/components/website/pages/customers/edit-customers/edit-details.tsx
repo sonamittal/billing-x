@@ -8,10 +8,10 @@ import OtherDetailsForm from "@/components/website/pages/customers/edit-customer
 import EditRemark from "@/components/website/pages/customers/edit-customers/edit-remark";
 
 const EditDetails = ({
-  customerData,
+  customer,
   callback,
 }: {
-  customerData: any;
+  customer: any;
   callback?: string;
 }) => {
   return (
@@ -34,8 +34,8 @@ const EditDetails = ({
           <TabsContent value="other" className="mt-4">
             <div className="space-y-4">
               <OtherDetailsForm
-                customerId={customerData?.id}
-                customerData={customerData}
+                customerId={customer?.id}
+                customer={customer}
                 callback={callback}
               />
             </div>
