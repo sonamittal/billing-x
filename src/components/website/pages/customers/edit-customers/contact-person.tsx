@@ -27,8 +27,9 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 interface CPProps {
   callback?: string;
+  customerId: string;
 }
-const ContactPersonTable = ({ callback }: CPProps) => {
+const ContactPersonTable = ({ callback, customerId }: CPProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -68,8 +69,13 @@ const ContactPersonTable = ({ callback }: CPProps) => {
   } = useMutation({
     mutationFn: async (data: ContactPersonsSchema) => {
       try {
-        const res = await axios.put("", data);
-        return res.data;
+        const res = await axios.post(
+          `/api/panel/customers/${customerId}/contact-person`,
+          {
+            customerId,
+            contacts: data.contacts,
+          },
+        );
       } catch (error: any) {
         throw new Error(
           error.response?.data?.message ||

@@ -74,7 +74,10 @@ const EditDetails = ({
           {/* Contact */}
           <TabsContent value="contact" className="mt-4">
             <div className="space-y-4">
-              <ContactPersonTable callback={callback} />
+              <ContactPersonTable
+                callback={callback}
+                customerId={customer?.id}
+              />
             </div>
           </TabsContent>
 
