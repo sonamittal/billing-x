@@ -115,7 +115,7 @@ const OtherDetailsForm = ({
     },
   });
 
-  //  edit other details  customer form handling >>>>>>>>>>>>>>>>>>>
+  //  edit mutation other details  customer form handling >>>>>>>>>>>>>>>>>>>
   const {
     data: editODCustomerData,
     mutate: editODCustomer,

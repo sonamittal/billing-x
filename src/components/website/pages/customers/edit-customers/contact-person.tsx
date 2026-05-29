@@ -20,8 +20,19 @@ import {
 import { contactPersonsSchema } from "@/components/validation/validation";
 import type { ContactPersonsSchema } from "@/components/validation/validation";
 import { Sal_titles } from "@/lib/constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+interface CPProps {
+  callback?: string;
+}
+const ContactPersonTable = ({ callback }: CPProps) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
-const ContactPersonTable = () => {
+  // form handling >>>>>>>>>>>>>
   const form = useForm<ContactPersonsSchema>({
     resolver: zodResolver(contactPersonsSchema),
 
@@ -47,9 +58,40 @@ const ContactPersonTable = () => {
     control,
     name: "contacts",
   });
-
+  // edit conatct person mtattion handling >>>>>>>>>>>
+  const {
+    data: editCPCustomerData,
+    mutate: editCPCustomer,
+    isPending: isEditCPCustomerPending,
+    isSuccess: isEditCPCustomerSuccess,
+    error: editCPCustomerError,
+  } = useMutation({
+    mutationFn: async (data: ContactPersonsSchema) => {
+      try {
+        const res = await axios.put("", data);
+        return res.data;
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message ||
+            "Failed to edit customer contact person  ",
+        );
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
+      toast.success("customer conatct person details updated successfully!");
+      form.reset();
+      if (callback) {
+        setTimeout(() => {
+          router.push(callback);
+        }, 1200);
+      }
+    },
+  });
+  // onSubmit
   const onSubmit = (data: ContactPersonsSchema) => {
     console.log("Submitted Data:", data);
+    editCPCustomer(data);
   };
 
   return (
@@ -267,8 +309,15 @@ const ContactPersonTable = () => {
             >
               + Add Contact Person
             </Button>
-
-            <Button type="submit">Save All</Button>
+            <Button type="submit" disabled={isEditCPCustomerPending}>
+              {isEditCPCustomerPending ? (
+                <>
+                  <Loader2 className="animate-spin h-5 w-5 mr-2" /> please wait
+                </>
+              ) : (
+                "Save All"
+              )}
+            </Button>
           </div>
         </form>
       </Form>

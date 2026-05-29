@@ -38,13 +38,13 @@ import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-interface customerIdProps {
+interface CustomerIdProps {
   customer: any;
   callback?: string;
   customerId: string;
 }
 
-const EditCustomer = ({ customer, customerId, callback }: customerIdProps) => {
+const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [languageList, setLanguageList] = useState<any[]>([]);

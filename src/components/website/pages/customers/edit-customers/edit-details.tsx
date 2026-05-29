@@ -74,7 +74,7 @@ const EditDetails = ({
           {/* Contact */}
           <TabsContent value="contact" className="mt-4">
             <div className="space-y-4">
-              <ContactPersonTable />
+              <ContactPersonTable callback={callback} />
             </div>
           </TabsContent>
 
