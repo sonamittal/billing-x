@@ -1,11 +1,11 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
-import { postCPController } from "@/app/api/panel/customers/[customerId]/contact-person/postController";
-import { getCPController } from "@/app/api/panel/customers/[customerId]/contact-person/getController";
-// get req
-export const GET = async (
-  _req: Request,
-  { params }: { params: Promise<{ customerId: string }> },
+import { putCPController } from "@/app/api/panel/customers/[customerId]/contact-person/[contactId]/putController";
+import { deleteCPController } from "@/app/api/panel/customers/[customerId]/contact-person/[contactId]/deleteController";
+// PUt req
+export const PUT = async (
+  req: Request,
+  { params }: { params: Promise<{ contactId: string }> },
 ) => {
   try {
     const session = await auth.api.getSession({
@@ -18,8 +18,10 @@ export const GET = async (
         { status: 401 },
       );
     }
-    const { customerId } = await params;
-    return getCPController(customerId);
+    const { contactId } = await params;
+    const body = await req.json();
+
+    return putCPController(contactId, body);
   } catch (error: any) {
     return Response.json(
       {
@@ -31,21 +33,23 @@ export const GET = async (
   }
 };
 
-// post req
-export const POST = async (req: Request) => {
+// delete req
+export const DELETE = async (
+  _req: Request,
+  { params }: { params: Promise<{ contactId: string }> },
+) => {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
     });
-
     if (!session?.user?.id) {
       return Response.json(
         { success: false, message: "Unauthorized - please login" },
         { status: 401 },
       );
     }
-    const body = await req.json();
-    return await postCPController(body);
+    const { contactId } = await params;
+    return deleteCPController(contactId);
   } catch (error: any) {
     return Response.json(
       {

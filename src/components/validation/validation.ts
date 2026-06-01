@@ -240,8 +240,14 @@ export const editCustomerFormSchema = z.object({
   currency: z.string().min(1, { message: "currency is required" }),
   language: z.string().min(1, { message: "language is required" }),
   email: z.email({ message: "email is required" }),
-  workPhone: z.string().min(10, { message: "work phone is required" }),
-  mobile: z.string().min(10, { message: "mobile number is required" }),
+  workPhone: z
+    .string()
+    .length(10, { message: "Mobile number must be exactly 10 digits" })
+    .regex(/^\d+$/, "Phone number must contain only digits"),
+  mobile: z
+    .string()
+    .length(10, { message: "Work phone must be exactly 10 digits" })
+    .regex(/^\d+$/, "Phone number must contain only digits"),
 });
 
 export type EditCustomerFormSchema = z.infer<typeof editCustomerFormSchema>;
@@ -267,7 +273,10 @@ export const editAddressCustomerFormSchema = z.object({
       message: "street2 is required",
     }),
   }),
-  phone: z.string().min(10, { message: "phone no is required" }),
+  phone: z
+    .string()
+    .length(10, { message: "Phone number must be exactly 10 digits" })
+    .regex(/^\d+$/, "Phone number must contain only digits"),
 });
 export type EditAddressCustomerFormSchema = z.infer<
   typeof editAddressCustomerFormSchema
@@ -275,12 +284,19 @@ export type EditAddressCustomerFormSchema = z.infer<
 
 // contact person schema >>>>>>>>>>>>>>>>>>>>>>>>>>
 export const contactPersonSchema = z.object({
+  id: z.string().optional(),
   salutation: z.string().min(1, { message: "salutation is required" }),
   firstName: z.string().min(1, { message: "first name is required" }),
   lastName: z.string().min(1, { message: "last name is required" }),
   email: z.email({ message: "email is required" }),
-  workPhone: z.string().min(10, { message: "work phone is required" }),
-  mobile: z.string().min(10, { message: "mobile number is required" }),
+  workPhone: z
+    .string()
+    .length(10, { message: "Mobile number must be exactly 10 digits" })
+    .regex(/^\d+$/, "Phone number must contain only digits"),
+  mobile: z
+    .string()
+    .length(10, { message: "Work phone must be exactly 10 digits" })
+    .regex(/^\d+$/, "Phone number must contain only digits"),
   designation: z.string().min(1, { message: "Designation is required" }),
   department: z.string().min(1, { message: "Department is required" }),
 });

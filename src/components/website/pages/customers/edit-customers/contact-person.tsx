@@ -20,11 +20,13 @@ import {
 import { contactPersonsSchema } from "@/components/validation/validation";
 import type { ContactPersonsSchema } from "@/components/validation/validation";
 import { Sal_titles } from "@/lib/constants";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
+
 interface CPProps {
   callback?: string;
   customerId: string;
@@ -32,6 +34,22 @@ interface CPProps {
 const ContactPersonTable = ({ callback, customerId }: CPProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  // fetch cp data
+  const { data: contactPersonsData } = useQuery({
+    queryKey: ["contact-persons", customerId],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(
+          `/api/panel/customers/${customerId}/contact-person`,
+        );
+        return res.data.data;
+      } catch (error: any) {
+        throw new Error(
+          error?.response?.data?.message || "Failed to fetch contact person",
+        );
+      }
+    },
+  });
 
   // form handling >>>>>>>>>>>>>
   const form = useForm<ContactPersonsSchema>({
@@ -52,7 +70,14 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
       ],
     },
   });
-
+  // useEffect
+  useEffect(() => {
+    if (contactPersonsData?.length) {
+      form.reset({
+        contacts: contactPersonsData,
+      });
+    }
+  }, [contactPersonsData, form]);
   const { control, handleSubmit } = form;
 
   const { fields, append, remove } = useFieldArray({
@@ -69,24 +94,51 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
   } = useMutation({
     mutationFn: async (data: ContactPersonsSchema) => {
       try {
-        const res = await axios.post(
-          `/api/panel/customers/${customerId}/contact-person`,
-          {
-            customerId,
-            contacts: data.contacts,
-          },
-        );
+        const hasNewContact = data.contacts.some((contact: any) => !contact.id);
+
+        const cpData = data.contacts.map((contact: any) => {
+          // Update
+          if (contact.id) {
+            return axios.put(
+              `/api/panel/customers/${customerId}/contact-person/${contact.id}`,
+              contact,
+            );
+          }
+
+          // Create
+          return axios.post(
+            `/api/panel/customers/${customerId}/contact-person`,
+            {
+              customerId,
+              contacts: [contact],
+            },
+          );
+        });
+        const res = await Promise.all(cpData);
+        return {
+          res,
+          action: hasNewContact ? "create" : "update",
+        };
       } catch (error: any) {
         throw new Error(
-          error.response?.data?.message ||
-            "Failed to edit customer contact person  ",
+          error?.response?.data?.message ||
+            "Failed to edit customer contact person",
         );
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success("customer conatct person details updated successfully!");
+
+    onSuccess: (result) => {
+      toast.success(
+        result.action === "create"
+          ? "Contact person added successfully!"
+          : "Contact person updated successfully!",
+      );
+      queryClient.invalidateQueries({
+        queryKey: ["customers"],
+      });
+
       form.reset();
+
       if (callback) {
         setTimeout(() => {
           router.push(callback);
@@ -94,12 +146,12 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
       }
     },
   });
-  // onSubmit
+
+  // Submit
   const onSubmit = (data: ContactPersonsSchema) => {
     console.log("Submitted Data:", data);
     editCPCustomer(data);
   };
-
   return (
     <div>
       <Form {...form}>
