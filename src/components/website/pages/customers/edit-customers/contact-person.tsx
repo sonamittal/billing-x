@@ -25,13 +25,17 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import DeleteContactPersonDialog from "@/components/website/pages/customers/edit-customers/DeleteContactPersonDialog";
 
 interface CPProps {
   callback?: string;
   customerId: string;
 }
 const ContactPersonTable = ({ callback, customerId }: CPProps) => {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedContact, setSelectedContact] = useState<any>(null);
+
   const queryClient = useQueryClient();
   const router = useRouter();
   // fetch cp data
@@ -80,7 +84,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
   }, [contactPersonsData, form]);
   const { control, handleSubmit } = form;
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: "contacts",
   });
@@ -337,7 +341,12 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                       <Button
                         type="button"
                         variant="destructive"
-                        onClick={() => remove(index)}
+                        onClick={() => {
+                          setSelectedContact(
+                            form.getValues(`contacts.${index}`),
+                          );
+                          setIsDeleteDialogOpen(true);
+                        }}
                       >
                         Delete
                       </Button>
@@ -379,6 +388,13 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
           </div>
         </form>
       </Form>
+      <DeleteContactPersonDialog
+        contact={selectedContact}
+        customerId={customerId}
+        open={isDeleteDialogOpen}
+        setOpen={setIsDeleteDialogOpen}
+        callback="/panel/customers"
+      />
     </div>
   );
 };
