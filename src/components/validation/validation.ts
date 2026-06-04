@@ -254,9 +254,6 @@ export type EditCustomerFormSchema = z.infer<typeof editCustomerFormSchema>;
 
 // edit address customer from schema >>>>>>>>>>>>>>
 export const editAddressCustomerFormSchema = z.object({
-  type: z.enum(["billing", "shipping"], {
-    message: "address type isrequired",
-  }),
   country: z.string().min(1, { message: "country is required" }),
   state: z.string().min(1, { message: "state is required" }),
   city: z.string().min(1, { message: "city is required" }),

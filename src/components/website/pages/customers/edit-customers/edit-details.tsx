@@ -14,6 +14,13 @@ const EditDetails = ({
   customer: any;
   callback?: string;
 }) => {
+  const billingAddress = customer?.addresses?.find(
+    (a: any) => a.type === "billing",
+  );
+
+  const shippingAddress = customer?.addresses?.find(
+    (a: any) => a.type === "shipping",
+  );
   return (
     <Card>
       <CardHeader>
@@ -66,7 +73,11 @@ const EditDetails = ({
                     </h4>
                   </div>
                 </div>
-                <EditShippingAddressForm />
+                <EditShippingAddressForm
+                  customerId={customer.id}
+                  addressId={shippingAddress?.id}
+                  callback={callback}
+                />
               </div>
             </div>
           </TabsContent>

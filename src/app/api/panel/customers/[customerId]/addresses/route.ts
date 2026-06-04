@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
-import { getCAController } from "@/app/api/panel/customers/[customerId]/adresses/getController";
+import { getCAController } from "@/app/api/panel/customers/[customerId]/addresses/getController";
 // get req
 export const GET = async (
   _req: Request,

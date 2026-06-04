@@ -10,7 +10,7 @@ export const getCAController = async ({ customerId }: GetCAControllerParam) => {
     const data = await db
       .select()
       .from(customerAddress)
-      .where(eq(customerAddress.customerId, customerId));
+      .where(and(eq(customerAddress.customerId, customerId)));
     return Response.json(
       {
         success: true,

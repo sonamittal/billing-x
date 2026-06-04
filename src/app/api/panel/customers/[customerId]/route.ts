@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth/auth";
 import { eq } from "drizzle-orm";
 import { putCustomerController } from "@/app/api/panel/customers/[customerId]/putController";
 import { putCustomerOtherDetailsController } from "@/app/api/panel/customers/[customerId]/putController";
+
 // get req
 export const GET = async (
   _req: Request,
@@ -74,7 +75,8 @@ export const GET = async (
     );
   }
 };
-// PUt req
+
+//PUt req
 export const PUT = async (req: Request, context: any) => {
   try {
     // session check

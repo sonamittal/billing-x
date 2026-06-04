@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
-import { putCAController } from "@/app/api/panel/customers/[customerId]/adresses/[addressId]/putController";
+import { putCAController } from "@/app/api/panel/customers/[customerId]/addresses/[addressId]/putController";
 
 export const PUT = async (
   req: Request,

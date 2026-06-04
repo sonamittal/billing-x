@@ -16,12 +16,25 @@ import { GetCountries, GetState, GetCity } from "react-country-state-city";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 import axios from "axios";
+import { toast } from "sonner";
 
-const EditShippingAddressForm = () => {
+interface Props {
+  customerId: string;
+  addressId: string;
+  callback?: string;
+}
+const EditShippingAddressForm = ({
+  customerId,
+  addressId,
+  callback,
+}: Props) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
   const [citiesList, setCitiesList] = useState<any[]>([]);
@@ -32,11 +45,27 @@ const EditShippingAddressForm = () => {
   useEffect(() => {
     GetCountries().then((result) => setCountriesList(result));
   }, []);
+  // ca fetch data
+  const { data: customerAddress } = useQuery({
+    queryKey: ["customer-addresses", customerId],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(
+          `/api/panel/customers/${customerId}/addresses`,
+        );
+        return res.data.data;
+      } catch (error: any) {
+        throw new Error(
+          error?.response?.data?.message || "Failed to fetch customer address",
+        );
+      }
+    },
+  });
+
   // form handling >>>>>>>>>>>>>>>>
   const form = useForm<EditAddressCustomerFormSchema>({
     resolver: zodResolver(editAddressCustomerFormSchema),
     defaultValues: {
-      type: undefined,
       country: "",
       state: "",
       city: "",
@@ -48,7 +77,26 @@ const EditShippingAddressForm = () => {
       phone: "",
     },
   });
+  //
+  useEffect(() => {
+    if (!customerAddress?.length) return;
 
+    const address = customerAddress.find((item: any) => item.id === addressId);
+
+    if (!address) return;
+
+    form.reset({
+      country: address.country || "",
+      state: address.state || "",
+      city: address.city || "",
+      pinCode: address.pinCode || "",
+      address: {
+        street1: address.street1 || "",
+        street2: address.street2 || "",
+      },
+      phone: address.phone || "",
+    });
+  }, [customerAddress, addressId, form]);
   // edit customer form handling >>>>>>>>>>
   const {
     data: editCustomerData,
@@ -57,8 +105,36 @@ const EditShippingAddressForm = () => {
     isSuccess: isEditCustomerSuccess,
     error: editCustomerError,
   } = useMutation({
-    mutationFn: async () => {
-      const res = await axios.put("");
+    mutationFn: async ({
+      addressId,
+      data,
+    }: {
+      addressId: string;
+      data: EditAddressCustomerFormSchema;
+    }) => {
+      const res = await axios.put(
+        `/api/panel/customers/${customerId}/addresses/${addressId}`,
+        data,
+      );
+      console.log("RESPONSE:", res.data);
+      return res.data;
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["customer-addresses", customerId],
+      });
+
+      toast.success("Customer shipping address updated successfully!");
+
+      if (callback) {
+        setTimeout(() => {
+          router.push(callback);
+        }, 1200);
+      }
+    },
+    onError: (error: any) => {
+      console.error(error);
     },
   });
 
@@ -84,7 +160,10 @@ const EditShippingAddressForm = () => {
 
   // Submit
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
-    console.log("data form submitted:", data);
+    editCustomer({
+      addressId,
+      data,
+    });
   };
   return (
     <Card>

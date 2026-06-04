@@ -1,6 +1,6 @@
 import { db } from "@/lib/database/db-connect";
 import { customer, customerOtherDetails } from "@/drizzle/schema/index";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 export const putCustomerController = async (body: any) => {
   try {
     const {

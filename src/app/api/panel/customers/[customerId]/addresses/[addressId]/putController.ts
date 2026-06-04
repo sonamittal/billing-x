@@ -2,7 +2,6 @@ import { db } from "@/lib/database/db-connect";
 import { customerAddress } from "@/drizzle/schema";
 import { and, eq, ne } from "drizzle-orm";
 interface EditAddressBody {
-  type: "billing" | "shipping";
   country: string;
   state: string;
   city: string;
@@ -39,19 +38,35 @@ export const putCAController = async ({
       ),
     });
     if (!existingAddress) {
+      const inserted = await db
+        .insert(customerAddress)
+        .values({
+          id: crypto.randomUUID(),
+          customerId,
+          type: "SHIPPING",
+          country: body.country,
+          state: body.state,
+          city: body.city,
+          pinCode: body.pinCode,
+          street1: body.address.street1,
+          street2: body.address.street2,
+          phone: body.phone,
+        })
+        .returning();
+
       return Response.json(
         {
-          success: false,
-          message: "Address not found",
+          success: true,
+          message: "Address created successfully",
+          data: inserted[0],
         },
-        { status: 404 },
+        { status: 201 },
       );
     }
     // update query
     const response = await db
       .update(customerAddress)
       .set({
-        type: body.type,
         country: body.country,
         state: body.state,
         city: body.city,
