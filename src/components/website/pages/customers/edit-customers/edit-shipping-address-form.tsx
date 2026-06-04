@@ -19,12 +19,15 @@ import { Loader2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import axios from "axios";
+
 const EditShippingAddressForm = () => {
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
   const [citiesList, setCitiesList] = useState<any[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
+
   // Fetch countries
   useEffect(() => {
     GetCountries().then((result) => setCountriesList(result));
@@ -45,6 +48,7 @@ const EditShippingAddressForm = () => {
       phone: "",
     },
   });
+
   // edit customer form handling >>>>>>>>>>
   const {
     data: editCustomerData,
@@ -52,7 +56,12 @@ const EditShippingAddressForm = () => {
     isPending: isEditCustomerPending,
     isSuccess: isEditCustomerSuccess,
     error: editCustomerError,
-  } = useMutation({});
+  } = useMutation({
+    mutationFn: async () => {
+      const res = await axios.put("");
+    },
+  });
+
   // Fetch states when country changes
   useEffect(() => {
     if (selectedCountry) {
@@ -72,6 +81,8 @@ const EditShippingAddressForm = () => {
       form.setValue("city", "");
     }
   }, [selectedState, selectedCountry]);
+
+  // Submit
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
     console.log("data form submitted:", data);
   };

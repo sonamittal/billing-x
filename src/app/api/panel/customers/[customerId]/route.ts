@@ -7,7 +7,7 @@ import { putCustomerController } from "@/app/api/panel/customers/[customerId]/pu
 import { putCustomerOtherDetailsController } from "@/app/api/panel/customers/[customerId]/putController";
 // get req
 export const GET = async (
-  req: Request,
+  _req: Request,
   { params }: { params: { customerId: string } },
 ) => {
   try {

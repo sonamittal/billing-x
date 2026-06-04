@@ -1,12 +1,16 @@
 import { db } from "@/lib/database/db-connect";
-import { eq } from "drizzle-orm";
-import { contactPerson } from "@/drizzle/schema";
-export const getCPController = async (customerId: string) => {
+import { customerAddress } from "@/drizzle/schema";
+import { and, eq } from "drizzle-orm";
+interface GetCAControllerParam {
+  customerId: string;
+  //addressId: string;
+}
+export const getCAController = async ({ customerId }: GetCAControllerParam) => {
   try {
     const data = await db
       .select()
-      .from(contactPerson)
-      .where(eq(contactPerson.customerId, customerId));
+      .from(customerAddress)
+      .where(eq(customerAddress.customerId, customerId));
     return Response.json(
       {
         success: true,
