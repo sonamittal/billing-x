@@ -16,43 +16,86 @@ import { GetCountries, GetState, GetCity } from "react-country-state-city";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-const EditBillingAddressForm = () => {
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "sonner";
+
+interface Props {
+  customerId: string;
+  callback?: string;
+  customer: any;
+}
+const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
   const [citiesList, setCitiesList] = useState<any[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
+
   // Fetch countries
   useEffect(() => {
     GetCountries().then((result) => setCountriesList(result));
   }, []);
+
   // form handling >>>>>>>>>>>>>>>>
   const form = useForm<EditAddressCustomerFormSchema>({
     resolver: zodResolver(editAddressCustomerFormSchema),
     defaultValues: {
-      type: undefined,
-      country: "",
-      state: "",
-      city: "",
-      pinCode: "",
-      address: {
-        street1: "",
-        street2: "",
-      },
-      phone: "",
+     country: customer?.country || "",
+    state: customer?.state || "",
+    city: customer?.city || "",
+    pinCode: customer?.pinCode || "",
+    address: {
+      street1: customer?.street1 || "",
+      street2: customer?.street2 || "",
+    },
+    mobile: customer?.mobile || "",
     },
   });
+  //
+
   // edit customer form handling >>>>>>>>>>
   const {
     data: editCustomerData,
-    mutate: editCustomer,
+    mutate: editCustomerAddress,
     isPending: isEditCustomerPending,
     isSuccess: isEditCustomerSuccess,
     error: editCustomerError,
-  } = useMutation({});
+  } = useMutation({
+    mutationFn: async (data: EditAddressCustomerFormSchema) => {
+      try {
+        const res = await axios.put(`/api/panel/customers/${customerId}`, {
+          id: customerId,
+          action: "billingAddress",
+          ...data,
+        });
+        return res.data;
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message || "Failed to edit customer ",
+        );
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
+      toast.success("Customer billing  address updated successfully!");
+
+      if (callback) {
+        setTimeout(() => {
+          router.push(callback);
+        }, 1200);
+      }
+    },
+    onError: (error: any) => {
+      console.error(error);
+    },
+  });
+
   // Fetch states when country changes
   useEffect(() => {
     if (selectedCountry) {
@@ -73,8 +116,10 @@ const EditBillingAddressForm = () => {
     }
   }, [selectedState, selectedCountry]);
 
+  // Submit
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
-    console.log("data form submitted:", data);
+    console.log(" form data sbmitted:", data);
+    editCustomerAddress(data);
   };
   return (
     <Card>
@@ -99,8 +144,8 @@ const EditBillingAddressForm = () => {
                         label: c.name,
                         value: c.id.toString(),
                       }))}
-                      mode="single"
                       darkBg="secondary"
+                      mode="single"
                       value={field.value}
                       onChange={(val) => {
                         field.onChange(val);
@@ -212,27 +257,21 @@ const EditBillingAddressForm = () => {
                 )}
               />
             </div>
-            {/* Phone */}
-
+            {/* mobile */}
             <FormField
               control={form.control}
-              name="phone"
+              name="mobile"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Phone no <span className="text-red-500">*</span>
+                    Mobile No <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="phone"
-                      placeholder="eg: +918045682231"
-                      {...field}
-                    />
+                    <Input type="text" placeholder="9876543210" {...field} />
                   </FormControl>
                 </FormItem>
               )}
             />
-
             <Button
               type="submit"
               form="user-form"
@@ -241,8 +280,7 @@ const EditBillingAddressForm = () => {
             >
               {isEditCustomerPending ? (
                 <>
-                  <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                  please wait
+                  <Loader2 className="animate-spin h-5 w-5 mr-2" /> please wait
                 </>
               ) : (
                 "Update details"

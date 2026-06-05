@@ -14,13 +14,6 @@ const EditDetails = ({
   customer: any;
   callback?: string;
 }) => {
-  const billingAddress = customer?.addresses?.find(
-    (a: any) => a.type === "billing",
-  );
-
-  const shippingAddress = customer?.addresses?.find(
-    (a: any) => a.type === "shipping",
-  );
   return (
     <Card>
       <CardHeader>
@@ -50,7 +43,7 @@ const EditDetails = ({
 
           {/* Address */}
           <TabsContent value="address" className="mt-7">
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-1 gap-6">
               <div className="space-y-5">
                 <div className="flex items-center gap-3">
                   <MapPin className="h-9 w-9 text-green-600 bg-green-100 rounded-md p-1.5" />
@@ -61,9 +54,13 @@ const EditDetails = ({
                     </h4>
                   </div>
                 </div>
-                <EditBillingAddressForm />
+                <EditBillingAddressForm
+                  customerId={customer.id}
+                  customer={customer}
+                  callback={callback}
+                />
               </div>
-              <div className="space-y-5">
+              {/* <div className="space-y-5">
                 <div className="flex items-center gap-3">
                   <MapPin className="h-9 w-9 text-green-600 bg-green-100 rounded-md p-1.5" />
                   <div>
@@ -73,12 +70,8 @@ const EditDetails = ({
                     </h4>
                   </div>
                 </div>
-                <EditShippingAddressForm
-                  customerId={customer.id}
-                  addressId={shippingAddress?.id}
-                  callback={callback}
-                />
-              </div>
+                <EditShippingAddressForm />
+              </div> */}
             </div>
           </TabsContent>
 

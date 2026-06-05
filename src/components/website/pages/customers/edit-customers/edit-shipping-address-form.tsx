@@ -16,56 +16,24 @@ import { GetCountries, GetState, GetCity } from "react-country-state-city";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { toast } from "sonner";
-
-interface Props {
-  customerId: string;
-  addressId: string;
-  callback?: string;
-}
-const EditShippingAddressForm = ({
-  customerId,
-  addressId,
-  callback,
-}: Props) => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
+const EditBillingAddressForm = () => {
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
   const [citiesList, setCitiesList] = useState<any[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
-
   // Fetch countries
   useEffect(() => {
     GetCountries().then((result) => setCountriesList(result));
   }, []);
-  // ca fetch data
-  const { data: customerAddress } = useQuery({
-    queryKey: ["customer-addresses", customerId],
-    queryFn: async () => {
-      try {
-        const res = await axios.get(
-          `/api/panel/customers/${customerId}/addresses`,
-        );
-        return res.data.data;
-      } catch (error: any) {
-        throw new Error(
-          error?.response?.data?.message || "Failed to fetch customer address",
-        );
-      }
-    },
-  });
-
   // form handling >>>>>>>>>>>>>>>>
   const form = useForm<EditAddressCustomerFormSchema>({
     resolver: zodResolver(editAddressCustomerFormSchema),
     defaultValues: {
+      type: undefined,
       country: "",
       state: "",
       city: "",
@@ -77,26 +45,6 @@ const EditShippingAddressForm = ({
       phone: "",
     },
   });
-  //
-  useEffect(() => {
-    if (!customerAddress?.length) return;
-
-    const address = customerAddress.find((item: any) => item.id === addressId);
-
-    if (!address) return;
-
-    form.reset({
-      country: address.country || "",
-      state: address.state || "",
-      city: address.city || "",
-      pinCode: address.pinCode || "",
-      address: {
-        street1: address.street1 || "",
-        street2: address.street2 || "",
-      },
-      phone: address.phone || "",
-    });
-  }, [customerAddress, addressId, form]);
   // edit customer form handling >>>>>>>>>>
   const {
     data: editCustomerData,
@@ -104,40 +52,7 @@ const EditShippingAddressForm = ({
     isPending: isEditCustomerPending,
     isSuccess: isEditCustomerSuccess,
     error: editCustomerError,
-  } = useMutation({
-    mutationFn: async ({
-      addressId,
-      data,
-    }: {
-      addressId: string;
-      data: EditAddressCustomerFormSchema;
-    }) => {
-      const res = await axios.put(
-        `/api/panel/customers/${customerId}/addresses/${addressId}`,
-        data,
-      );
-      console.log("RESPONSE:", res.data);
-      return res.data;
-    },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["customer-addresses", customerId],
-      });
-
-      toast.success("Customer shipping address updated successfully!");
-
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
-    },
-    onError: (error: any) => {
-      console.error(error);
-    },
-  });
-
+  } = useMutation({});
   // Fetch states when country changes
   useEffect(() => {
     if (selectedCountry) {
@@ -158,12 +73,8 @@ const EditShippingAddressForm = ({
     }
   }, [selectedState, selectedCountry]);
 
-  // Submit
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
-    editCustomer({
-      addressId,
-      data,
-    });
+    console.log("data form submitted:", data);
   };
   return (
     <Card>
@@ -188,8 +99,8 @@ const EditShippingAddressForm = ({
                         label: c.name,
                         value: c.id.toString(),
                       }))}
-                      darkBg="secondary"
                       mode="single"
+                      darkBg="secondary"
                       value={field.value}
                       onChange={(val) => {
                         field.onChange(val);
@@ -330,7 +241,8 @@ const EditShippingAddressForm = ({
             >
               {isEditCustomerPending ? (
                 <>
-                  <Loader2 className="animate-spin h-5 w-5 mr-2" /> please wait
+                  <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                  please wait
                 </>
               ) : (
                 "Update details"
@@ -342,4 +254,4 @@ const EditShippingAddressForm = ({
     </Card>
   );
 };
-export default EditShippingAddressForm;
+export default EditBillingAddressForm;

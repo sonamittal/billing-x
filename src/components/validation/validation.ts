@@ -213,7 +213,15 @@ export const addCustomerFormSchema = z
       .string()
       .trim()
       .regex(/^[1-9][0-9]{5}$/, "invalid pin code"),
-    address: z.string().min(1, { message: "address is required" }),
+    address: z.object({
+      street1: z.string().min(1, {
+        message: "street1 is required",
+      }),
+
+      street2: z.string().min(1, {
+        message: "street2 is required",
+      }),
+    }),
   })
   .superRefine((data, ctx) => {
     // business case condition
@@ -242,11 +250,11 @@ export const editCustomerFormSchema = z.object({
   email: z.email({ message: "email is required" }),
   workPhone: z
     .string()
-    .length(10, { message: "Mobile number must be exactly 10 digits" })
+    .length(10, { message: "Work phone must be exactly 10 digits" })
     .regex(/^\d+$/, "Phone number must contain only digits"),
   mobile: z
     .string()
-    .length(10, { message: "Work phone must be exactly 10 digits" })
+    .length(10, { message: "Mobile number must be exactly 10 digits" })
     .regex(/^\d+$/, "Phone number must contain only digits"),
 });
 
@@ -270,9 +278,9 @@ export const editAddressCustomerFormSchema = z.object({
       message: "street2 is required",
     }),
   }),
-  phone: z
+  mobile: z
     .string()
-    .length(10, { message: "Phone number must be exactly 10 digits" })
+    .length(10, { message: "Mobile number must be exactly 10 digits" })
     .regex(/^\d+$/, "Phone number must contain only digits"),
 });
 export type EditAddressCustomerFormSchema = z.infer<

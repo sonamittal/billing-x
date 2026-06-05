@@ -12,11 +12,13 @@ export const customer = pgTable("customer", {
   companyName: text("company_name"),
   currency: text("currency").notNull(),
   language: text("language").notNull(),
+  // billing address
   country: text("country").notNull(),
   state: text("state").notNull(),
   city: text("city").notNull(),
   pinCode: text("pin_code").notNull(),
-  address: text("address").notNull(),
+  street1: text("street_1").notNull(),
+  street2: text("street_2"),
   // Primary Contact
   salutation: text("salutation"),
   firstName: text("first_name"),
@@ -71,20 +73,20 @@ export const customerOtherDetails = pgTable("customer_other_details", {
 });
 
 // address
-export const customerAddress = pgTable("customer_address", {
-  id: text("id").primaryKey(),
-  customerId: text("customer_id")
-    .notNull()
-    .references(() => customer.id, { onDelete: "cascade" }),
-  type: text("type").notNull(), // billing | shipping
-  country: text("country"),
-  state: text("state"),
-  city: text("city"),
-  pinCode: text("pin_code"),
-  street1: text("street_1"),
-  street2: text("street_2"),
-  phone: text("phone"),
-});
+// export const customerAddress = pgTable("customer_address", {
+//   id: text("id").primaryKey(),
+//   customerId: text("customer_id")
+//     .notNull()
+//     .references(() => customer.id, { onDelete: "cascade" }),
+//   // type: text("type").notNull(), // billing | shipping
+//   country: text("country"),
+//   state: text("state"),
+//   city: text("city"),
+//   pinCode: text("pin_code"),
+//   street1: text("street_1"),
+//   street2: text("street_2"),
+//   phone: text("phone"),
+// });
 // contact person
 export const contactPerson = pgTable("contact_person", {
   id: text("id").primaryKey(),
@@ -116,7 +118,6 @@ export const customerRelations = relations(customer, ({ many, one }) => ({
     references: [user.id],
   }),
   contacts: many(contactPerson),
-  addresses: many(customerAddress),
   otherDetails: one(customerOtherDetails),
 }));
 // payment terms relations

@@ -77,7 +77,10 @@ const AddCustomerForm = ({
       state: "",
       city: "",
       pinCode: "",
-      address: "",
+      address: {
+        street1: "",
+        street2: "",
+      },
     },
   });
 
@@ -387,19 +390,37 @@ const AddCustomerForm = ({
             </div>
 
             {/* Address */}
-            <FormField
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Address <span className="text-red-500">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Full address..." {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div className="space-y-3">
+              <h3 className="text-md font-medium">Address</h3>
+              <FormField
+                control={form.control}
+                name="address.street1"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Street1 <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Full address..." {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="address.street2"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Street2 <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Full address..." {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
             <DialogFooter>
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 w-full">
                 {onBack && (

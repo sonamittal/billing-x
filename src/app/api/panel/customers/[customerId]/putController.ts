@@ -122,3 +122,46 @@ export const putCustomerOtherDetailsController = async (body: any) => {
     );
   }
 };
+
+// billing address
+export const putCAController = async (body: any) => {
+  const { id, country, state, city, pinCode, mobile, address } = body;
+
+  if (!id) {
+    return Response.json(
+      { success: false, message: "Customer id is required" },
+      { status: 400 },
+    );
+  }
+
+  const existingCustomer = await db.query.customer.findFirst({
+    where: (c, { eq }) => eq(c.id, id),
+  });
+
+  if (!existingCustomer) {
+    return Response.json(
+      { success: false, message: "Customer not found" },
+      { status: 404 },
+    );
+  }
+
+  const result = await db
+    .update(customer)
+    .set({
+      country,
+      state,
+      city,
+      pinCode,
+      mobile,
+      street1: address?.street1 ?? "",
+      street2: address?.street2 ?? "",
+    })
+    .where(eq(customer.id, id))
+    .returning();
+
+  return Response.json({
+    success: true,
+    message: "Billing address updated successfully",
+    data: result[0],
+  });
+};

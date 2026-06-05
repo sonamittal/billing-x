@@ -104,7 +104,8 @@ export const postCustomer = async (body: any) => {
       state,
       city,
       pinCode,
-      address,
+      street1: address.street1,
+      street2: address.street2,
     })
     .returning();
 

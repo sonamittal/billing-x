@@ -1,0 +1,1 @@
+ALTER TABLE "customer_other_details" DROP COLUMN "documents";
