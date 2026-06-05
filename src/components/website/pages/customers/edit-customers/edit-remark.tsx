@@ -12,23 +12,32 @@ import {
 } from "@/components/ui/form";
 
 import {
-  otherDetailsSchema,
-  type OtherDetailsSchema,
+  editCRSchema,
+  type EditCRSchema,
 } from "@/components/validation/validation";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Message from "@/components/ui/message";
+import { useRouter } from "next/navigation";
 
-const EditRemark = () => {
+interface Props {
+  customerId: string;
+  callback?: string;
+  customer: any;
+}
+const EditRemark = ({ callback, customer, customerId }: Props) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   // form handling
-  const form = useForm<OtherDetailsSchema>({
-    resolver: zodResolver(otherDetailsSchema),
+  const form = useForm<EditCRSchema>({
+    resolver: zodResolver(editCRSchema),
     defaultValues: {
-      remarks: "",
+      remarks: customer?.otherDetails?.remarks || "",
     },
   });
   // edit remark >>>>>>>>>>>>>>>
@@ -39,19 +48,27 @@ const EditRemark = () => {
     isSuccess: isEditCustomerSuccess,
     error: editCustomerError,
   } = useMutation({
-    mutationFn: async (data: OtherDetailsSchema) => {
-      const res = await axios.post("", data);
+    mutationFn: async (data: EditCRSchema) => {
+      const res = await axios.put(`/api/panel/customers/${customerId}`, {
+        action: "remarks",
+        ...data,
+      });
       return res.data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
       toast.success("Remarks updated successfully");
-      form.reset();
+      if (callback) {
+        setTimeout(() => {
+          router.push(callback);
+        }, 1200);
+      }
     },
     onError: (error) => {
       console.log("Error:", error);
     },
   });
-  const onSubmit = (data: OtherDetailsSchema) => {
+  const onSubmit = (data: EditCRSchema) => {
     console.log("Form Data Submitted:", data);
     editCustomer(data);
   };
@@ -61,10 +78,7 @@ const EditRemark = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Message
           variant={editCustomerError ? "destructive" : "default"}
-          message={
-            editCustomerError?.message ||
-            (isEditCustomerSuccess && editCustomerData.message)
-          }
+          message={editCustomerError?.message}
         />
         {/* Remark */}
         <FormField

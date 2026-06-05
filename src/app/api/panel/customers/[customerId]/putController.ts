@@ -1,6 +1,7 @@
 import { db } from "@/lib/database/db-connect";
 import { customer, customerOtherDetails } from "@/drizzle/schema/index";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
+import { nanoid } from "nanoid";
 export const putCustomerController = async (body: any) => {
   try {
     const {
@@ -124,44 +125,110 @@ export const putCustomerOtherDetailsController = async (body: any) => {
 };
 
 // billing address
-export const putCAController = async (body: any) => {
-  const { id, country, state, city, pinCode, mobile, address } = body;
+export const putCBAController = async (body: any) => {
+  try {
+    const { id, country, state, city, pinCode, mobile, address } = body;
 
-  if (!id) {
+    if (!id) {
+      return Response.json(
+        { success: false, message: "Customer id is required" },
+        { status: 400 },
+      );
+    }
+
+    const existingCustomer = await db.query.customer.findFirst({
+      where: (c, { eq }) => eq(c.id, id),
+    });
+
+    if (!existingCustomer) {
+      return Response.json(
+        { success: false, message: "Customer not found" },
+        { status: 404 },
+      );
+    }
+
+    const result = await db
+      .update(customer)
+      .set({
+        country,
+        state,
+        city,
+        pinCode,
+        mobile,
+        street1: address?.street1 ?? "",
+        street2: address?.street2 ?? "",
+      })
+      .where(eq(customer.id, id))
+      .returning();
+
     return Response.json(
-      { success: false, message: "Customer id is required" },
-      { status: 400 },
+      {
+        success: true,
+        message: "Billing address updated successfully",
+        data: result[0],
+      },
+      { status: 200 },
+    );
+  } catch (error: any) {
+    return Response.json(
+      { success: false, message: error?.message || "Internal Server Error" },
+      { status: 500 },
     );
   }
+};
 
-  const existingCustomer = await db.query.customer.findFirst({
-    where: (c, { eq }) => eq(c.id, id),
-  });
+// remarks
+export const putCRController = async (body: {
+  id: string;
+  remarks: string;
+}) => {
+  try {
+    const { id, remarks } = body;
+    if (!id) {
+      return Response.json(
+        { success: false, message: "Customer id is required" },
+        { status: 400 },
+      );
+    }
+    const exstingCR = await db.query.customerOtherDetails.findFirst({
+      where: (c, { eq }) => eq(c.customerId, id),
+    });
+    if (!exstingCR) {
+      const res = await db
+        .insert(customerOtherDetails)
+        .values({
+          id: nanoid(),
+          customerId: id,
+          remarks,
+        })
+        .returning();
+      return Response.json(
+        {
+          success: true,
+          message: "Remarks added successfully",
+          data: res[0],
+        },
+        { status: 200 },
+      );
+    }
+    // db query
+    const result = await db
+      .update(customerOtherDetails)
+      .set({
+        remarks,
+      })
+      .where(eq(customerOtherDetails.customerId, id))
+      .returning();
 
-  if (!existingCustomer) {
+    return Response.json({
+      success: true,
+      message: "Billing address updated successfully",
+      data: result[0],
+    });
+  } catch (error: any) {
     return Response.json(
-      { success: false, message: "Customer not found" },
-      { status: 404 },
+      { success: false, message: error?.message || "Internal Server Error" },
+      { status: 500 },
     );
   }
-
-  const result = await db
-    .update(customer)
-    .set({
-      country,
-      state,
-      city,
-      pinCode,
-      mobile,
-      street1: address?.street1 ?? "",
-      street2: address?.street2 ?? "",
-    })
-    .where(eq(customer.id, id))
-    .returning();
-
-  return Response.json({
-    success: true,
-    message: "Billing address updated successfully",
-    data: result[0],
-  });
 };

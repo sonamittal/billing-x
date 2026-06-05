@@ -352,3 +352,11 @@ export const paymentTermSchema = z.object({
 });
 
 export type PaymentTermSchema = z.infer<typeof paymentTermSchema>;
+
+// edit remarks
+export const editCRSchema = z.object({
+  remarks : z.string().min(1 , {
+      message: "remarks is required",
+  }),
+})
+export type EditCRSchema = z.infer<typeof editCRSchema>

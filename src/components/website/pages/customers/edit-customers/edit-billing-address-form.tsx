@@ -22,6 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
+import Message from "@/components/ui/message";
 
 interface Props {
   customerId: string;
@@ -31,6 +32,7 @@ interface Props {
 const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
   const [citiesList, setCitiesList] = useState<any[]>([]);
@@ -46,15 +48,15 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
   const form = useForm<EditAddressCustomerFormSchema>({
     resolver: zodResolver(editAddressCustomerFormSchema),
     defaultValues: {
-     country: customer?.country || "",
-    state: customer?.state || "",
-    city: customer?.city || "",
-    pinCode: customer?.pinCode || "",
-    address: {
-      street1: customer?.street1 || "",
-      street2: customer?.street2 || "",
-    },
-    mobile: customer?.mobile || "",
+      country: customer?.country || "",
+      state: customer?.state || "",
+      city: customer?.city || "",
+      pinCode: customer?.pinCode || "",
+      address: {
+        street1: customer?.street1 || "",
+        street2: customer?.street2 || "",
+      },
+      mobile: customer?.mobile || "",
     },
   });
   //
@@ -62,7 +64,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
   // edit customer form handling >>>>>>>>>>
   const {
     data: editCustomerData,
-    mutate: editCustomerAddress,
+    mutate: editCustomerBAddress,
     isPending: isEditCustomerPending,
     isSuccess: isEditCustomerSuccess,
     error: editCustomerError,
@@ -119,11 +121,15 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
   // Submit
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
     console.log(" form data sbmitted:", data);
-    editCustomerAddress(data);
+    editCustomerBAddress(data);
   };
   return (
     <Card>
       <CardContent>
+        <Message
+          variant={editCustomerError ? "destructive" : "default"}
+          message={editCustomerError?.message}
+        />
         <Form {...form}>
           <form
             id="user-form"

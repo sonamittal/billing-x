@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
 import EditBillingAddressForm from "@/components/website/pages/customers/edit-customers/edit-billing-address-form";
-import EditShippingAddressForm from "@/components/website/pages/customers/edit-customers/edit-shipping-address-form";
 import ContactPersonTable from "@/components/website/pages/customers/edit-customers/contact-person";
 import OtherDetailsForm from "@/components/website/pages/customers/edit-customers/other-details";
 import EditRemark from "@/components/website/pages/customers/edit-customers/edit-remark";
@@ -88,7 +87,11 @@ const EditDetails = ({
           {/* Remarks */}
           <TabsContent value="remarks" className="mt-4">
             <div className="space-y-4">
-              <EditRemark />
+              <EditRemark
+                customerId={customer?.id}
+                customer={customer}
+                callback={callback}
+              />
             </div>
           </TabsContent>
         </Tabs>
