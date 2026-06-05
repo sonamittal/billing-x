@@ -138,9 +138,12 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
           : "Contact person updated successfully!",
       );
       queryClient.invalidateQueries({
+        queryKey: ["contact-persons", customerId],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["customers"],
       });
-
+      
       form.reset();
 
       if (callback) {
