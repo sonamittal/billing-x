@@ -42,6 +42,12 @@ export const GET = async (
         user: {
           id: user.id,
           name: user.name,
+          email: user.email,
+          image: user.image,
+          banned: user.banned,
+          role: user.role,
+          emailVerified: user.emailVerified,
+          createdAt: user.createdAt,
         },
       })
       .from(customer)

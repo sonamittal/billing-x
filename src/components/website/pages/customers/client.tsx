@@ -65,10 +65,10 @@ const CustomersClient = ({ customerId }: props) => {
               callback="/panel/customers"
             />
             <div className="grid grid-cols-1 gap-5 h-fit">
-              <UserCard user={data} userId={data.user.id} />
+              <UserCard user={data.user} userId={data.user.id} />
               <DeleteUser user={data} />
             </div>
-          </div>
+          </div>  
           <div className="mt-10">
             <EditDetails customer={data} callback="/panel/customers" />
           </div>

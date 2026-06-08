@@ -100,7 +100,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
       }
     },
   });
-  
+
   // onSubmit
   const onSubmit = (data: EditCustomerFormSchema) => {
     console.log(" form data sbmitted:", data);
@@ -114,10 +114,8 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
         <CardDescription>
           Edit account details of{" "}
           <span className="text-foreground font-medium">
-            {" "}
             {customer?.user?.name || "Unknown"}
-          </span>
-          {""}
+          </span>{" "}
           account.
         </CardDescription>
       </CardHeader>
