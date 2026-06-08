@@ -46,9 +46,7 @@ const UsersClient = ({ userId }: props) => {
             </a>
           </BreadcrumbItem>
           <ChevronRight className="h-4 w-4 mt-1 text-muted-foreground" />
-          <BreadcrumbItem>
-            {data?.name ?? data?.username ?? "Unknown"}
-          </BreadcrumbItem>
+          <BreadcrumbItem>{data?.name ?? "Unknown"}</BreadcrumbItem>
         </Breadcrumb>
       )}
 

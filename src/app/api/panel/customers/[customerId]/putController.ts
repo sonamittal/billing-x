@@ -7,7 +7,7 @@ export const putCustomerController = async (body: any) => {
     const {
       id,
       customerType,
-      primaryContact,
+      // primaryContact,
       companyName,
       currency,
       language,
@@ -40,10 +40,10 @@ export const putCustomerController = async (body: any) => {
         companyName,
         currency,
         language,
-        // primary contact
-        salutation: primaryContact.salutation,
-        firstName: primaryContact.firstName,
-        lastName: primaryContact.lastName,
+        // // primary contact
+        // salutation: primaryContact.salutation,
+        // firstName: primaryContact.firstName,
+        // lastName: primaryContact.lastName,
         email,
         workPhone,
         mobile,

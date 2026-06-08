@@ -32,12 +32,14 @@ interface PTR {
   termName: string;
   dueAfter: number;
 }
+
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddPaymentTerm: (data: PTR) => void;
   customerId: string;
 }
+
 const AddNewPayTForm = ({
   open,
   onOpenChange,
@@ -52,6 +54,7 @@ const AddNewPayTForm = ({
       dueAfter: 1,
     },
   });
+
   // add payment form handling >>>>>>>>>>>>>>
   const {
     data: addCPTData,
@@ -73,6 +76,7 @@ const AddNewPayTForm = ({
         );
       }
     },
+
     onSuccess: (data) => {
       onAddPaymentTerm(data);
       toast.success(" New Payment term  has been added successfully!");
@@ -80,10 +84,13 @@ const AddNewPayTForm = ({
       onOpenChange(false);
     },
   });
+
+  //onSubmit
   const onSubmit = (data: PaymentTermSchema) => {
     console.log("Form Data Submitted:", data);
     addCPaymentTerm(data);
   };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-auto w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">

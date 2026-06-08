@@ -74,6 +74,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
       ],
     },
   });
+
   // useEffect
   useEffect(() => {
     if (contactPersonsData?.length) {
@@ -88,6 +89,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
     control,
     name: "contacts",
   });
+
   // edit conatct person mtattion handling >>>>>>>>>>>
   const {
     data: editCPCustomerData,
@@ -143,7 +145,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
       queryClient.invalidateQueries({
         queryKey: ["customers"],
       });
-      
+
       form.reset();
 
       if (callback) {
@@ -159,6 +161,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
     console.log("Submitted Data:", data);
     editCPCustomer(data);
   };
+  
   return (
     <div>
       <Form {...form}>

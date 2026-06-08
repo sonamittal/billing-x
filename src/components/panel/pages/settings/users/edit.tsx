@@ -63,7 +63,7 @@ const EditUser = ({ user, callback }: userIdProps) => {
         userId: user.id, // required
         data: {
           image: data.image,
-          name: data.username,
+          name: data.name,
           email: data.email,
           role: data.role,
           emailVerified: data.isVerified,
@@ -120,7 +120,7 @@ const EditUser = ({ user, callback }: userIdProps) => {
     resolver: zodResolver(editUserFormSchema),
     defaultValues: {
       image: user.image || "",
-      username: user.name || "",
+      name: user.name || "",
       email: user.email || "",
       role: user.role,
       banned: user.banned ? "true" : "false",
@@ -184,11 +184,11 @@ const EditUser = ({ user, callback }: userIdProps) => {
             />
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Username <span className="text-red-500">*</span>
+                 Name <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="eg:sonam" {...field} />

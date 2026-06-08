@@ -29,25 +29,28 @@ import axios from "axios";
 
 interface Customer {
   id: string;
-  username: string;
-  companyName?: string;
+  userId: string;
+  user: {
+    name: string;
+    image?: string;
+  };
+  mobile?: string;
   email: string;
-  image?: string;
-  phone: string;
+  companyName?: string;
   receivable: number;
   unusedCredit: number;
 }
 
 const CustomersTable = () => {
-  const [username] = useQueryState("username", parseAsString.withDefault(""));
+  const [name] = useQueryState("name", parseAsString.withDefault(""));
 
   // Fetch users
   const { data: customers = [], isLoading } = useQuery<Customer[]>({
-    queryKey: ["customers", username],
+    queryKey: ["customers", name],
     queryFn: async () => {
       try {
         const res = await axios.get("/api/panel/customers", {
-          params: { username },
+          params: { name },
         });
         return res.data;
       } catch (err: any) {
@@ -57,14 +60,17 @@ const CustomersTable = () => {
       }
     },
   });
+
+// filter data
   const filteredData = React.useMemo(() => {
     return customers.filter((customer) => {
-      const matchUsername =
-        username === "" ||
-        customer.username.toLowerCase().includes(username.toLowerCase());
-      return matchUsername;
+      const matchName =
+        name === "" ||
+        customer.user.name.toLowerCase().includes(name.toLowerCase());
+      return matchName;
     });
-  }, [customers, username]);
+  }, [customers, name]);
+
   const columns = React.useMemo<ColumnDef<Customer>[]>(
     () => [
       {
@@ -92,42 +98,44 @@ const CustomersTable = () => {
         enableSorting: false,
         enableHiding: false,
       },
-      // username
+
+      // User deatils
       {
-        id: "username",
-        accessorKey: "username",
+        id: "name",
+        accessorKey: "name",
         header: ({ column }: { column: Column<Customer, unknown> }) => (
-          <DataTableColumnHeader column={column} label="username" />
+          <DataTableColumnHeader column={column} label="User" />
         ),
 
         cell: ({ row }) => {
-          const user = row.original;
+          const user = row.original.user;
           return (
             <div className="flex items-center gap-2">
               {user.image ? (
                 <img
                   src={user.image}
-                  alt={user.username}
+                  alt={user.name}
                   className="h-8 w-8 rounded-full object-cover border"
                 />
               ) : (
                 <div className="h-7 w-7 rounded-full bg-[#F5F5F5] text-black flex items-center justify-center text-sm font-medium">
-                  {user.username.charAt(0).toUpperCase()}
+                  {user.name.charAt(0).toUpperCase()}
                 </div>
               )}
 
-              <span>{user.username}</span>
+              <span>{user.name}</span>
             </div>
           );
         },
         meta: {
-          label: "username",
+          label: "name",
           placeholder: "Search username...",
           variant: "text",
           icon: Text,
         },
         enableColumnFilter: true,
       },
+
       // contact details
       {
         id: "conatct details",
@@ -144,12 +152,13 @@ const CustomersTable = () => {
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-muted-foreground mt-1" />
               <span className="text-sm">
-                {row.original.phone ?? "not provided"}
+                {row.original.mobile ?? "not provided"}
               </span>
             </div>
           </div>
         ),
       },
+
       // company name
       {
         id: "companyName",
@@ -173,6 +182,7 @@ const CustomersTable = () => {
           </span>
         ),
       },
+      
       // unusedCredit
       {
         id: "unusedCredit",
@@ -233,7 +243,7 @@ const CustomersTable = () => {
     columns,
     pageCount: 2,
     initialState: {
-      sorting: [{ id: "username", desc: false }],
+      sorting: [{ id: "name", desc: false } as any],
       columnPinning: { right: ["actions"] },
     },
     getRowId: (row) => row.id,

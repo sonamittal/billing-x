@@ -32,7 +32,7 @@ interface Props {
 const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  
+
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
   const [citiesList, setCitiesList] = useState<any[]>([]);
@@ -123,6 +123,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
     console.log(" form data sbmitted:", data);
     editCustomerBAddress(data);
   };
+
   return (
     <Card>
       <CardContent>

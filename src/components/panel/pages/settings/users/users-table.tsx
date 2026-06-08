@@ -33,7 +33,7 @@ import DeleteUserDialog from "@/components/panel/pages/settings/users/delete-dia
 
 interface User {
   id: string;
-  username: string;
+  name: string;
   email: string;
   image?: string;
   banned: boolean;
@@ -49,12 +49,12 @@ const UsersTable = () => {
     row.toggleSelected(true);
     setSelectedUser({
       ...user,
-      username: user.username ?? "Unknown",
+      name: user.name ?? "Unknown",
     });
     setSelectedRow(row);
     setIsDeleteOpen(true);
   };
-  const [username] = useQueryState("username", parseAsString.withDefault(""));
+  const [name] = useQueryState("username", parseAsString.withDefault(""));
   const [banned] = useQueryState(
     "banned",
     parseAsArrayOf(parseAsString).withDefault([]),
@@ -76,7 +76,7 @@ const UsersTable = () => {
 
       return (data?.users || []).map((u: any) => ({
         id: u.id,
-        username: u.username || u.name || "Unknown",
+        name: u.name || "Unknown",
         email: u.email,
         image: u.image || u.avatar_url || "",
         banned: u.banned,
@@ -91,14 +91,13 @@ const UsersTable = () => {
   const filteredData = React.useMemo(() => {
     return users.filter((user) => {
       const matchUsername =
-        username === "" ||
-        user.username.toLowerCase().includes(username.toLowerCase());
+        name === "" || user.name.toLowerCase().includes(name.toLowerCase());
       const matchesStatus =
         banned.length === 0 || banned.includes(user.banned ? "true" : "false");
       const matchesRole = role.length === 0 || role.includes(user.role);
       return matchUsername && matchesStatus && matchesRole;
     });
-  }, [users, username, banned, role]);
+  }, [users, name, banned, role]);
 
   const columns = React.useMemo<ColumnDef<User>[]>(
     () => [
@@ -129,10 +128,10 @@ const UsersTable = () => {
       },
 
       {
-        id: "username",
-        accessorKey: "username",
+        id: "name",
+        accessorKey: "name",
         header: ({ column }: { column: Column<User, unknown> }) => (
-          <DataTableColumnHeader column={column} label="Username" />
+          <DataTableColumnHeader column={column} label="User" />
         ),
         cell: ({ row }) => {
           const user = row.original;
@@ -141,20 +140,20 @@ const UsersTable = () => {
               {user.image ? (
                 <img
                   src={user.image}
-                  alt={user.username}
+                  alt={user.name}
                   className="h-8 w-8 rounded-full object-cover border"
                 />
               ) : (
                 <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-semibold">
-                  {user.username.charAt(0).toUpperCase()}
+                  {user.name.charAt(0).toUpperCase()}
                 </div>
               )}
-              <span>{user.username}</span>
+              <span>{user.name}</span>
             </div>
           );
         },
         meta: {
-          label: "Username",
+          label: "name",
           placeholder: "Search username...",
           variant: "text",
           icon: Text,
@@ -298,7 +297,7 @@ const UsersTable = () => {
     columns,
     pageCount: 2,
     initialState: {
-      sorting: [{ id: "username", desc: false }],
+      sorting: [{ id: "name", desc: false }],
       columnPinning: { right: ["actions"] },
     },
     getRowId: (row) => row.id,

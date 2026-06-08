@@ -1,21 +1,24 @@
 import { db } from "@/lib/database/db-connect";
 import { customer, user } from "@/drizzle/schema/index";
-import { ilike, eq } from "drizzle-orm";
+import { ilike, eq, and } from "drizzle-orm";
 
-export const getCustomers = async (username?: string) => {
+export const getCustomers = async (name?: string) => {
   const data = await db
     .select({
       id: customer.id,
       userId: customer.userId,
-      // from user table
-      username: user.name,
-      email: user.email,
-      image: user.image,
       // from customer table
       companyName: customer.companyName,
+      mobile: customer.mobile,
+      email: customer.email,
+      // from user table
+      user: {
+        name: user.name,
+        image: user.image,
+      },
     })
     .from(customer)
     .leftJoin(user, eq(customer.userId, user.id))
-    .where(username ? ilike(user.name, `%${username}%`) : undefined);
+    .where(and(name ? ilike(user.name, `%${name}%`) : undefined));
   return data;
 };

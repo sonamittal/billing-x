@@ -20,9 +20,9 @@ export const customer = pgTable("customer", {
   street1: text("street_1").notNull(),
   street2: text("street_2"),
   // Primary Contact
-  salutation: text("salutation"),
-  firstName: text("first_name"),
-  lastName: text("last_name"),
+  // salutation: text("salutation"),
+  // firstName: text("first_name"),
+  // lastName: text("last_name"),
   email: text("email"),
   workPhone: text("work_phone"),
   mobile: text("mobile"),

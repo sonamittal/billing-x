@@ -52,7 +52,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
     resolver: zodResolver(addNewUserFormSchema),
     defaultValues: {
       image: "",
-      username: "",
+      name: "",
       email: "",
       role: undefined,
       banned: undefined,
@@ -71,7 +71,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
   } = useMutation({
     mutationFn: async (data: AddNewUserFormSchema) => {
       const res = await authClient.admin.createUser({
-        name: data.username,
+        name: data.name,
         email: data.email,
         role: data.role as any,
         password: data.password,
@@ -151,11 +151,11 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
             />
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Username <span className="text-red-500">*</span>
+                    Name <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="eg:sonam" {...field} />

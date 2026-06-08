@@ -40,6 +40,7 @@ const EditRemark = ({ callback, customer, customerId }: Props) => {
       remarks: customer?.otherDetails?.remarks || "",
     },
   });
+
   // edit remark >>>>>>>>>>>>>>>
   const {
     data: editCustomerData,
@@ -68,6 +69,8 @@ const EditRemark = ({ callback, customer, customerId }: Props) => {
       console.log("Error:", error);
     },
   });
+
+  //onSubmit
   const onSubmit = (data: EditCRSchema) => {
     console.log("Form Data Submitted:", data);
     editCustomer(data);

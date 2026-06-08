@@ -115,7 +115,7 @@ export type OrganizationSchema = z.infer<typeof organizationSchema>;
 // add user form schema >>>>>>>>>>
 export const addNewUserFormSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
-  username: z.string().min(1, { message: "username is required" }),
+  name: z.string().min(1, { message: "name is required" }),
   email: z.email({ message: "email is required" }),
   role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
     message: "Role is required",
@@ -138,7 +138,7 @@ export type AddNewUserFormSchema = z.infer<typeof addNewUserFormSchema>;
 // edit user form schema >>>>>>>>>>
 export const editUserFormSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
-  username: z.string().min(1, { message: "username is required" }),
+  name: z.string().min(1, { message: "name is required" }),
   email: z.email({ message: "email is required" }),
   role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
     message: "Role is required",
@@ -182,7 +182,7 @@ export type UpdateUserPasswordFormSchema = z.infer<
 // customer (user-form) schema >>>>>>>>>>>>>>>
 export const userFormSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
-  username: z.string().min(1, { message: "username is required" }),
+  name: z.string().min(1, { message: "name is required" }),
   email: z.email({ message: "email is required" }),
   // phoneno: z
   //   .string()
@@ -239,11 +239,11 @@ export type AddCustomerFormSchema = z.infer<typeof addCustomerFormSchema>;
 // edit customer from schema >>>>>>>>>>>>>>
 export const editCustomerFormSchema = z.object({
   customerType: z.enum(["individual", "business"]),
-  primaryContact: z.object({
-    salutation: z.string().min(1, { message: "salutation is required" }),
-    firstName: z.string().min(1, { message: "first name is required" }),
-    lastName: z.string().min(1, { message: "last name is required" }),
-  }),
+  // primaryContact: z.object({
+  //   salutation: z.string().min(1, { message: "salutation is required" }),
+  //   firstName: z.string().min(1, { message: "first name is required" }),
+  //   lastName: z.string().min(1, { message: "last name is required" }),
+  // }),
   companyName: z.string().optional(),
   currency: z.string().min(1, { message: "currency is required" }),
   language: z.string().min(1, { message: "language is required" }),
@@ -355,8 +355,8 @@ export type PaymentTermSchema = z.infer<typeof paymentTermSchema>;
 
 // edit remarks
 export const editCRSchema = z.object({
-  remarks : z.string().min(1 , {
-      message: "remarks is required",
+  remarks: z.string().min(1, {
+    message: "remarks is required",
   }),
-})
-export type EditCRSchema = z.infer<typeof editCRSchema>
+});
+export type EditCRSchema = z.infer<typeof editCRSchema>;

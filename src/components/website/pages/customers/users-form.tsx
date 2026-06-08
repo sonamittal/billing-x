@@ -42,7 +42,7 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
     resolver: zodResolver(userFormSchema),
     defaultValues: {
       image: "",
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
@@ -129,11 +129,11 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
           />
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Username <span className="text-red-500">*</span>
+                Name <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input type="text" placeholder="eg:sonam" {...field} />

@@ -6,7 +6,7 @@ import Message from "@/components/ui/message";
 import EditCustomer from "@/components/website/pages/customers/edit-customers/edit";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import UpdateUserPassword from "@/components/panel/pages/settings/users/update-password";
+import UserCard from "@/components/website/pages/customers/edit-customers/user-card";
 import DeleteUser from "@/components/panel/pages/settings/users/delete";
 import EditDetails from "@/components/website/pages/customers/edit-customers/edit-details";
 
@@ -50,7 +50,7 @@ const CustomersClient = ({ customerId }: props) => {
           </BreadcrumbItem>
           <ChevronRight className="h-4 w-4 mt-1 text-muted-foreground" />
           <BreadcrumbItem>
-            {data?.name ?? data?.username ?? "Unknown"}
+            {data?.user?.name ?? data?.name ?? "Unknown"}
           </BreadcrumbItem>
         </Breadcrumb>
       )}
@@ -65,7 +65,7 @@ const CustomersClient = ({ customerId }: props) => {
               callback="/panel/customers"
             />
             <div className="grid grid-cols-1 gap-5 h-fit">
-              <UpdateUserPassword user={data} />
+              <UserCard user={data} userId={data.user.id} />
               <DeleteUser user={data} />
             </div>
           </div>

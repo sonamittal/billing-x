@@ -53,8 +53,11 @@ export const POST = async (req: Request) => {
 export const GET = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
-    const username = searchParams.get("username") || undefined;
-    const data = await getCustomers(username);
+    
+    const name = searchParams.get("name") || undefined;
+
+    const data = await getCustomers(name);
+
     return Response.json(data);
   } catch (error: any) {
     return Response.json(

@@ -5,7 +5,7 @@ import { getPaymentTermsController } from "@/app/api/panel/customers/[customerId
 // get req
 export const GET = async (
   _req: Request,
-  { params }: { params: { customerId: string } },
+  { params }: { params: Promise<{ customerId: string }> },
 ) => {
   try {
     const session = await auth.api.getSession({
@@ -18,7 +18,7 @@ export const GET = async (
         { status: 401 },
       );
     }
-    const customerId = await params.customerId;
+    const {customerId} = await params;
     return getPaymentTermsController(customerId);
   } catch (error: any) {
     return Response.json(

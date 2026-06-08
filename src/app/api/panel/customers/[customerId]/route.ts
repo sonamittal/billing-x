@@ -1,12 +1,12 @@
 import { db } from "@/lib/database/db-connect";
-import { customer, customerOtherDetails } from "@/drizzle/schema/index";
+import { customer, customerOtherDetails, user } from "@/drizzle/schema/index";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
 import { eq } from "drizzle-orm";
 import { putCustomerController } from "@/app/api/panel/customers/[customerId]/putController";
 import { putCustomerOtherDetailsController } from "@/app/api/panel/customers/[customerId]/putController";
 import { putCBAController } from "@/app/api/panel/customers/[customerId]/putController";
-import {putCRController} from "@/app/api/panel/customers/[customerId]/putController";
+import { putCRController } from "@/app/api/panel/customers/[customerId]/putController";
 
 // get req
 export const GET = async (
@@ -37,8 +37,15 @@ export const GET = async (
 
     // customer data
     const customerData = await db
-      .select()
+      .select({
+        customer: customer,
+        user: {
+          id: user.id,
+          name: user.name,
+        },
+      })
       .from(customer)
+      .leftJoin(user, eq(customer.userId, user.id))
       .where(eq(customer.id, customerId))
       .limit(1);
 
@@ -60,7 +67,8 @@ export const GET = async (
     //  response
     return Response.json(
       {
-        ...customerRow,
+        ...customerRow.customer,
+        user: customerRow.user,
         otherDetails: otherDetailsRow,
       },
       { status: 200 },

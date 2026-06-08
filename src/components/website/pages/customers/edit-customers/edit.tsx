@@ -58,11 +58,6 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
     resolver: zodResolver(editCustomerFormSchema),
     defaultValues: {
       customerType: customer?.customerType || "",
-      primaryContact: {
-        salutation: customer?.salutation || "",
-        firstName: customer?.firstName || "",
-        lastName: customer?.lastName || "",
-      },
       companyName: customer?.companyName || "",
       currency: customer?.currency || "",
       language: customer?.language || "",
@@ -71,6 +66,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
       mobile: customer?.mobile || "",
     },
   });
+
   // edit customer form handling >>>>>>>>>>
   const {
     data: editCustomerData,
@@ -104,6 +100,8 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
       }
     },
   });
+  
+  // onSubmit
   const onSubmit = (data: EditCustomerFormSchema) => {
     console.log(" form data sbmitted:", data);
     editCustomer(data);
@@ -117,8 +115,9 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
           Edit account details of{" "}
           <span className="text-foreground font-medium">
             {" "}
-            {customer.firstName} {customer.lastName}
-          </span>{" "}
+            {customer?.user?.name || "Unknown"}
+          </span>
+          {""}
           account.
         </CardDescription>
       </CardHeader>
@@ -150,71 +149,6 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                 </FormItem>
               )}
             />
-
-            {/* Primary Contact */}
-            <div className="space-y-3">
-              <h3 className="text-md  font-medium">Primary Contact</h3>
-
-              <div className="grid md:grid-cols-3 gap-4">
-                {/* Salutation */}
-                <FormField
-                  control={form.control}
-                  name="primaryContact.salutation"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Salutation<span className="text-red-500">*</span>
-                      </FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Sal_titles.map((s) => (
-                            <SelectItem key={s.value} value={s.value}>
-                              {s.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
-                  )}
-                />
-
-                {/* First Name */}
-                <FormField
-                  control={form.control}
-                  name="primaryContact.firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        First Name<span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Riya" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                {/* Last Name */}
-                <FormField
-                  control={form.control}
-                  name="primaryContact.lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last Name *</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Sharma" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
             {/* Company */}
             <FormField
               control={form.control}

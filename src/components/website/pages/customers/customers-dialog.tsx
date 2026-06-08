@@ -27,7 +27,7 @@ interface Props {
 export type User = {
   id: string;
   image?: string;
-  username: string;
+  name: string;
   email: string;
   banned?: boolean;
 };
@@ -49,7 +49,7 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
       return (data?.users || []).map((u: any) => ({
         id: u.id,
         image: u.image || u.avatar_url || "",
-        username: u.username || u.name || "Unknown",
+        name: u.name || u.name || "Unknown",
         email: u.email,
         banned: u.banned,
       }));
@@ -61,7 +61,7 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
       ? users
       : users.filter(
           (user: User) =>
-            user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             user.email.toLowerCase().includes(searchQuery.toLowerCase()),
         );
 
@@ -188,15 +188,13 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
                         <div className="flex gap-3 item-center">
                           <div className="h-10 w-10 rounded-full overflow-hidden bg-muted flex items-center justify-center">
                             {user.image ? (
-                              <img alt={user.username} src={user.image} />
+                              <img alt={user.name} src={user.image} />
                             ) : (
                               <User className="h-5 w-5 text-primary" />
                             )}
                           </div>
                           <div>
-                            <p className="font-medium text-sm">
-                              {user.username}
-                            </p>
+                            <p className="font-medium text-sm">{user.name}</p>
                             <p className="text-xs text-muted-foreground">
                               {user.email}
                             </p>
