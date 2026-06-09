@@ -20,7 +20,7 @@ export const postCPController = async (body: {
     // customer validation
     if (!customerId) {
       return Response.json(
-        { success: false, message: "Customer id is required" },
+        { success: false, message: `Customer id is required` },
         { status: 400 },
       );
     }
@@ -29,7 +29,7 @@ export const postCPController = async (body: {
       return Response.json(
         {
           success: false,
-          message: "At least one contact person is required",
+          message: `At least one contact person is required`,
         },
         { status: 400 },
       );
@@ -48,7 +48,7 @@ export const postCPController = async (body: {
       return Response.json(
         {
           success: false,
-          message: "Duplicate emails found contact person ",
+          message: `Duplicate emails found contact person `,
           emails: [...new Set(duplicateEmails)],
         },
         { status: 409 },
@@ -67,7 +67,7 @@ export const postCPController = async (body: {
       return Response.json(
         {
           success: false,
-          message: "Some contact emails already exist",
+          message: `Some contact emails already exist`,
           emails: existingContacts.map((c) => c.email),
         },
         { status: 409 },
@@ -89,7 +89,7 @@ export const postCPController = async (body: {
     return Response.json(
       {
         success: true,
-        message: "Contact person added successfully",
+        message: `Contact person added successfully`,
         data: res,
       },
       { status: 200 },
@@ -97,7 +97,7 @@ export const postCPController = async (body: {
   } catch (error: any) {
     console.error("Contact Person Error:", error);
     return Response.json(
-      { success: false, message: error?.message || "Internal Server Error" },
+      { success: false, message: error?.message || `Internal Server Error` },
       { status: 500 },
     );
   }

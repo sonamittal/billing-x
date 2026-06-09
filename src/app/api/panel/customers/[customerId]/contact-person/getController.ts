@@ -18,7 +18,7 @@ export const getCPController = async (customerId: string) => {
     return Response.json(
       {
         success: false,
-        message: error?.message || "Internal Server Error",
+        message: error?.message || `Internal Server Error`,
       },
       { status: 500 },
     );

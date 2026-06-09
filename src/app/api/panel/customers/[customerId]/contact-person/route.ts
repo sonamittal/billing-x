@@ -14,7 +14,7 @@ export const GET = async (
 
     if (!session?.user?.id) {
       return Response.json(
-        { success: false, message: "Unauthorized - please login" },
+        { success: false, message: `Unauthorized - please login` },
         { status: 401 },
       );
     }
@@ -24,7 +24,7 @@ export const GET = async (
     return Response.json(
       {
         success: false,
-        message: error?.message || "Internal Server Error",
+        message: error?.message || `Internal Server Error`,
       },
       { status: 500 },
     );
@@ -40,7 +40,7 @@ export const POST = async (req: Request) => {
 
     if (!session?.user?.id) {
       return Response.json(
-        { success: false, message: "Unauthorized - please login" },
+        { success: false, message: `Unauthorized - please login` },
         { status: 401 },
       );
     }
@@ -50,7 +50,7 @@ export const POST = async (req: Request) => {
     return Response.json(
       {
         success: false,
-        message: error?.message || "Internal Server Error",
+        message: error?.message || `Internal Server Error`,
       },
       { status: 500 },
     );

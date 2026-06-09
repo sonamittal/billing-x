@@ -9,7 +9,7 @@ export const postUser = async (body: any) => {
   if (!image || !username || !email) {
     return {
       status: 400,
-      json: { success: false, message: "All fields are required" },
+      json: { success: false, message: `All fields are required` },
     };
   }
 
@@ -20,7 +20,7 @@ export const postUser = async (body: any) => {
   if (existingUser) {
     return {
       status: 409,
-      json: { success: false, message: "User already exists" },
+      json: { success: false, message: `User already exists` },
     };
   }
 
@@ -38,7 +38,7 @@ export const postUser = async (body: any) => {
     status: 200,
     json: {
       success: true,
-      message: "User created successfully",
+      message: `User created successfully`,
       data: result[0],
     },
   };
@@ -62,7 +62,7 @@ export const postCustomer = async (body: any) => {
   if (!userId) {
     return {
       status: 400,
-      json: { success: false, message: "userId is required" },
+      json: { success: false, message: `userId is required` },
     };
   }
 
@@ -73,7 +73,7 @@ export const postCustomer = async (body: any) => {
   if (!existingUser) {
     return {
       status: 404,
-      json: { success: false, message: "User not found" },
+      json: { success: false, message: `User not found` },
     };
   }
 
@@ -86,7 +86,7 @@ export const postCustomer = async (body: any) => {
       status: 409,
       json: {
         success: false,
-        message: "Customer already exists for this user",
+        message: `Customer already exists for this user`,
       },
     };
   }
@@ -113,7 +113,7 @@ export const postCustomer = async (body: any) => {
     status: 200,
     json: {
       success: true,
-      message: "Customer created successfully",
+      message: `Customer created successfully`,
       data: result[0],
     },
   };

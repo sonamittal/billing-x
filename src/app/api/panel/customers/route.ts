@@ -14,7 +14,7 @@ export const POST = async (req: Request) => {
 
     if (!session?.user?.id) {
       return Response.json(
-        { success: false, message: "Unauthorized - please login" },
+        { success: false, message: `Unauthorized - please login` },
         { status: 401 },
       );
     }
@@ -23,7 +23,7 @@ export const POST = async (req: Request) => {
 
     if (!body) {
       return Response.json(
-        { success: false, message: "Invalid data" },
+        { success: false, message: `Invalid data` },
         { status: 400 },
       );
     }
@@ -42,7 +42,7 @@ export const POST = async (req: Request) => {
     return Response.json(
       {
         success: false,
-        message: error?.message || "Internal Server Error",
+        message: error?.message || `Internal Server Error`,
       },
       { status: 500 },
     );
@@ -53,7 +53,7 @@ export const POST = async (req: Request) => {
 export const GET = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
-    
+
     const name = searchParams.get("name") || undefined;
 
     const data = await getCustomers(name);
@@ -61,7 +61,7 @@ export const GET = async (request: Request) => {
     return Response.json(data);
   } catch (error: any) {
     return Response.json(
-      { message: error.message || "Failed to fetch customers" },
+      { message: error.message || `Failed to fetch customers` },
       { status: 500 },
     );
   }

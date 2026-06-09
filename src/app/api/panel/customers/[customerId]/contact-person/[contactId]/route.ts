@@ -14,7 +14,7 @@ export const PUT = async (
 
     if (!session?.user?.id) {
       return Response.json(
-        { success: false, message: "Unauthorized - please login" },
+        { success: false, message: `Unauthorized - please login` },
         { status: 401 },
       );
     }
@@ -44,7 +44,7 @@ export const DELETE = async (
     });
     if (!session?.user?.id) {
       return Response.json(
-        { success: false, message: "Unauthorized - please login" },
+        { success: false, message: `Unauthorized - please login` },
         { status: 401 },
       );
     }
@@ -54,7 +54,7 @@ export const DELETE = async (
     return Response.json(
       {
         success: false,
-        message: error?.message || "Internal Server Error",
+        message: error?.message || `Internal Server Error`,
       },
       { status: 500 },
     );

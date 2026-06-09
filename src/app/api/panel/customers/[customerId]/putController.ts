@@ -18,7 +18,7 @@ export const putCustomerController = async (body: any) => {
 
     if (!id) {
       return Response.json(
-        { success: false, message: "Customer id is required" },
+        { success: false, message: `Customer id is required` },
         { status: 400 },
       );
     }
@@ -28,7 +28,7 @@ export const putCustomerController = async (body: any) => {
     });
     if (!existingCustomer) {
       return Response.json(
-        { success: false, message: "Customer not found" },
+        { success: false, message: `Customer not found` },
         { status: 404 },
       );
     }
@@ -51,12 +51,12 @@ export const putCustomerController = async (body: any) => {
       .where(eq(customer.id, id))
       .returning();
     return Response.json(
-      { success: true, message: "Customer updated successfully", data: res[0] },
+      { success: true, message: `Customer updated successfully`, data: res[0] },
       { status: 200 },
     );
   } catch (error: any) {
     return Response.json(
-      { success: false, message: error?.message || "Internal Server Error" },
+      { success: false, message: error?.message || `Internal Server Error` },
       { status: 500 },
     );
   }
@@ -79,7 +79,7 @@ export const putCustomerOtherDetailsController = async (body: any) => {
 
     if (!id) {
       return Response.json(
-        { success: false, message: "Customer id is required" },
+        { success: false, message: `Customer id is required` },
         { status: 400 },
       );
     }
@@ -111,14 +111,14 @@ export const putCustomerOtherDetailsController = async (body: any) => {
     return Response.json(
       {
         success: true,
-        message: "Customer other details updated successfully",
+        message: `Customer other details updated successfully`,
         data: result[0],
       },
       { status: 200 },
     );
   } catch (error: any) {
     return Response.json(
-      { success: false, message: error?.message || "Internal Server Error" },
+      { success: false, message: error?.message || `Internal Server Error` },
       { status: 500 },
     );
   }
@@ -131,7 +131,7 @@ export const putCBAController = async (body: any) => {
 
     if (!id) {
       return Response.json(
-        { success: false, message: "Customer id is required" },
+        { success: false, message: `Customer id is required` },
         { status: 400 },
       );
     }
@@ -142,7 +142,7 @@ export const putCBAController = async (body: any) => {
 
     if (!existingCustomer) {
       return Response.json(
-        { success: false, message: "Customer not found" },
+        { success: false, message: `Customer not found` },
         { status: 404 },
       );
     }
@@ -164,14 +164,14 @@ export const putCBAController = async (body: any) => {
     return Response.json(
       {
         success: true,
-        message: "Billing address updated successfully",
+        message: `Billing address updated successfully`,
         data: result[0],
       },
       { status: 200 },
     );
   } catch (error: any) {
     return Response.json(
-      { success: false, message: error?.message || "Internal Server Error" },
+      { success: false, message: error?.message || `Internal Server Error` },
       { status: 500 },
     );
   }
@@ -186,7 +186,7 @@ export const putCRController = async (body: {
     const { id, remarks } = body;
     if (!id) {
       return Response.json(
-        { success: false, message: "Customer id is required" },
+        { success: false, message: `Customer id is required` },
         { status: 400 },
       );
     }
@@ -205,7 +205,7 @@ export const putCRController = async (body: {
       return Response.json(
         {
           success: true,
-          message: "Remarks added successfully",
+          message: `Remarks added successfully`,
           data: res[0],
         },
         { status: 200 },
@@ -222,12 +222,12 @@ export const putCRController = async (body: {
 
     return Response.json({
       success: true,
-      message: "Billing address updated successfully",
+      message: `Remarks updated successfully`,
       data: result[0],
     });
   } catch (error: any) {
     return Response.json(
-      { success: false, message: error?.message || "Internal Server Error" },
+      { success: false, message: error?.message || `Internal Server Error` },
       { status: 500 },
     );
   }

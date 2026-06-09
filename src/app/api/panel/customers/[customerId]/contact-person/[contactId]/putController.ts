@@ -19,7 +19,7 @@ export const putCPController = async (
     // customer validation
     if (!contactId) {
       return Response.json(
-        { success: false, message: "conatct id is required" },
+        { success: false, message: `conatct id is required` },
         { status: 400 },
       );
     }
@@ -32,7 +32,7 @@ export const putCPController = async (
       return Response.json(
         {
           success: false,
-          message: "Contact person not found",
+          message: `Contact person not found`,
         },
         { status: 404 },
       );
@@ -51,7 +51,7 @@ export const putCPController = async (
       return Response.json(
         {
           success: false,
-          message: "Email already exists",
+          message: `Email already exists`,
         },
         {
           status: 409,
@@ -71,7 +71,7 @@ export const putCPController = async (
     return Response.json(
       {
         success: true,
-        message: "Contact person updated successfully",
+        message: `Contact person updated successfully`,
         data: res[0],
       },
       { status: 200 },
@@ -80,7 +80,7 @@ export const putCPController = async (
     return Response.json(
       {
         success: false,
-        message: error.message || "internal  server error ",
+        message: error.message || `internal  server error `,
       },
       { status: 500 },
     );

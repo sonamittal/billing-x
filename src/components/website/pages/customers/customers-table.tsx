@@ -103,9 +103,9 @@ const CustomersTable = () => {
       // User deatils
       {
         id: "name",
-        accessorKey: "name",
+        accessorFn: (row) => row.user.name,
         header: ({ column }: { column: Column<Customer, unknown> }) => (
-          <DataTableColumnHeader column={column} label="User Details" />
+          <DataTableColumnHeader column={column} label="Customer" />
         ),
 
         cell: ({ row }) => {
@@ -132,7 +132,7 @@ const CustomersTable = () => {
         },
         meta: {
           label: "name",
-          placeholder: "Search username...",
+          placeholder: "Search name ...",
           variant: "text",
           icon: Text,
         },
@@ -161,19 +161,11 @@ const CustomersTable = () => {
 
               <div className="flex items-center gap-1 font-semiBold text-sm text-muted-foreground">
                 <ArrowUpRight className="h-3 w-3" />
-                View Profile  
+                View Profile
               </div>
             </Link>
           );
         },
-
-        meta: {
-          label: "linked user",
-          placeholder: "Search linked user...",
-          variant: "text",
-          icon: Text,
-        },
-        enableColumnFilter: true,
       },
 
       // contact details
@@ -237,6 +229,7 @@ const CustomersTable = () => {
           </span>
         ),
       },
+      // actions
       {
         id: "actions",
         cell: ({ row }) => {

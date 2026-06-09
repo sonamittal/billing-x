@@ -1,6 +1,6 @@
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import DeleteUserDialog from "@/components/panel/pages/settings/users/delete-dialog";
+import DeleteCustomerDialog from "@/components/website/pages/customers/edit-customers/delete-dialog";
 import {
   Card,
   CardContent,
@@ -9,11 +9,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React, { useState } from "react";
-interface userIdProps {
-  user: any;
+interface CustomerIdProps {
+  customer: any;
 }
 
-const DeleteCustomer = ({ user }: userIdProps) => {
+const DeleteCustomer = ({ customer }: CustomerIdProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   return (
     <>
@@ -28,7 +28,7 @@ const DeleteCustomer = ({ user }: userIdProps) => {
           <CardDescription>
             This will permanently delete{" "}
             <span className="text-foreground font-medium">
-              {(user.name ?? "Unknown") + "'s"}
+              {(customer?.user.name ?? "Unknown") + "'s"}
             </span>{" "}
             account and it{"'"}s data from the server.
           </CardDescription>
@@ -41,15 +41,15 @@ const DeleteCustomer = ({ user }: userIdProps) => {
               setIsDeleteDialogOpen(true);
             }}
           >
-            Delete user
+            Delete Customer
           </Button>
         </CardContent>
       </Card>
-      <DeleteUserDialog
-        user={user}
+      <DeleteCustomerDialog
+        customer={customer}
         open={isDeleteDialogOpen}
         setOpen={setIsDeleteDialogOpen}
-        callback="/panel/users"
+        callback="/panel/customer"
       />
     </>
   );

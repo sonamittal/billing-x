@@ -58,7 +58,7 @@ export const GET = async (
     const customerRow = customerData[0];
 
     if (!customerRow) {
-      return Response.json({ error: `Customer not found.` }, { status: 404 });
+      return Response.json({ error: `Customer not found` }, { status: 404 });
     }
 
     // other details data
@@ -107,7 +107,7 @@ export const PUT = async (
       return Response.json(
         {
           success: false,
-          message: "Unauthorized - please login",
+          message: `Unauthorized - please login`,
         },
         { status: 401 },
       );
@@ -119,7 +119,7 @@ export const PUT = async (
       return Response.json(
         {
           success: false,
-          message: "Customer id is required",
+          message: `Customer id is required`,
         },
         { status: 400 },
       );
@@ -160,7 +160,7 @@ export const PUT = async (
     return Response.json(
       {
         success: false,
-        message: "Invalid action",
+        message: `Invalid action`,
       },
       { status: 400 },
     );
@@ -170,7 +170,7 @@ export const PUT = async (
     return Response.json(
       {
         success: false,
-        message: error?.message || "Internal Server Error",
+        message: error?.message || `Internal Server Error`,
       },
       { status: 500 },
     );

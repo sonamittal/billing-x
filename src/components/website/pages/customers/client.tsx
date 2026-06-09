@@ -7,7 +7,7 @@ import EditCustomer from "@/components/website/pages/customers/edit-customers/ed
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import UserCard from "@/components/website/pages/customers/edit-customers/user-card";
-import DeleteUser from "@/components/panel/pages/settings/users/delete";
+import DeleteCustomer from "@/components/website/pages/customers/edit-customers/delete";
 import EditDetails from "@/components/website/pages/customers/edit-customers/edit-details";
 
 interface props {
@@ -66,7 +66,7 @@ const CustomersClient = ({ customerId }: props) => {
             />
             <div className="grid grid-cols-1 gap-5 h-fit">
               <UserCard user={data.user} userId={data.user.id} />
-              <DeleteUser user={data} />
+              <DeleteCustomer customer={data} />
             </div>
           </div>
           <div className="mt-10">

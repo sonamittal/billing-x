@@ -54,7 +54,7 @@ const UsersTable = () => {
     setSelectedRow(row);
     setIsDeleteOpen(true);
   };
-  const [name] = useQueryState("username", parseAsString.withDefault(""));
+  const [name] = useQueryState("name", parseAsString.withDefault(""));
   const [banned] = useQueryState(
     "banned",
     parseAsArrayOf(parseAsString).withDefault([]),
@@ -90,12 +90,12 @@ const UsersTable = () => {
 
   const filteredData = React.useMemo(() => {
     return users.filter((user) => {
-      const matchUsername =
+      const matchName =
         name === "" || user.name.toLowerCase().includes(name.toLowerCase());
       const matchesStatus =
         banned.length === 0 || banned.includes(user.banned ? "true" : "false");
       const matchesRole = role.length === 0 || role.includes(user.role);
-      return matchUsername && matchesStatus && matchesRole;
+      return matchName && matchesStatus && matchesRole;
     });
   }, [users, name, banned, role]);
 
@@ -131,7 +131,7 @@ const UsersTable = () => {
         id: "name",
         accessorKey: "name",
         header: ({ column }: { column: Column<User, unknown> }) => (
-          <DataTableColumnHeader column={column} label="User details" />
+          <DataTableColumnHeader column={column} label="User" />
         ),
         cell: ({ row }) => {
           const user = row.original;
@@ -154,7 +154,7 @@ const UsersTable = () => {
         },
         meta: {
           label: "name",
-          placeholder: "Search username...",
+          placeholder: "Search name...",
           variant: "text",
           icon: Text,
         },
