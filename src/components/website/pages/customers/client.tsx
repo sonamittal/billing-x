@@ -44,8 +44,8 @@ const CustomersClient = ({ customerId }: props) => {
       {!error && data && (
         <Breadcrumb className="mb-5 flex items-center gap-0.5">
           <BreadcrumbItem>
-            <a className="" href="/panel/customers">
-              customers
+            <a className="font-light" href="/panel/customers">
+              Customers
             </a>
           </BreadcrumbItem>
           <ChevronRight className="h-4 w-4 mt-1 text-muted-foreground" />
@@ -68,7 +68,7 @@ const CustomersClient = ({ customerId }: props) => {
               <UserCard user={data.user} userId={data.user.id} />
               <DeleteUser user={data} />
             </div>
-          </div>  
+          </div>
           <div className="mt-10">
             <EditDetails customer={data} callback="/panel/customers" />
           </div>

@@ -92,25 +92,25 @@ const UserCard = ({ user, userId }: UserCardProps) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
           <div className="p-2 rounded-lg dark:bg-[#262321] bg-[#F5F5F4]">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">Role</p>
-            <p className="font-medium text-zinc-900 dark:text-zinc-100">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400">Role</p>
+            <p className="font-medium text-zinc-800 dark:text-zinc-100">
               {user.role || "user"}
             </p>
           </div>
 
           <div className="p-2 rounded-lg dark:bg-[#262321] bg-[#F5F5F4]">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">Joined</p>
-            <p className="font-medium text-zinc-900 dark:text-zinc-100">
+            <p className="text-xs text-zinc-600 dark:text-zinc-400">Joined</p>
+            <p className="font-medium text-zinc-800 dark:text-zinc-100">
               {joinedDate}
             </p>
           </div>
         </div>
 
-        {/* EMAIL + VERIFIED */}
+        {/* EMAIL */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 rounded-lg bg-[#F5F5F4] dark:bg-[#262321]">
           <div className="flex items-center gap-2 min-w-0">
-            <Mail className="h-4 w-4 text-zinc-600 dark:text-zinc-300 shrink-0" />
-            <span className="text-sm text-zinc-800 dark:text-zinc-200 truncate">
+            <Mail className="h-4 w-4  text-zinc-700 dark:text-zinc-300 shrink-0" />
+            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200 truncate">
               {user.email}
             </span>
           </div>

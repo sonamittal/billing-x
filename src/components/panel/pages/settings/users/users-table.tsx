@@ -131,7 +131,7 @@ const UsersTable = () => {
         id: "name",
         accessorKey: "name",
         header: ({ column }: { column: Column<User, unknown> }) => (
-          <DataTableColumnHeader column={column} label="User" />
+          <DataTableColumnHeader column={column} label="User details" />
         ),
         cell: ({ row }) => {
           const user = row.original;

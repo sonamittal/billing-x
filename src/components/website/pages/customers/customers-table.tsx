@@ -7,7 +7,8 @@ import {
   Trash2,
   Mail,
   Phone,
-  User,
+  ArrowUpRight,
+  ArrowUpLeft,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
@@ -61,7 +62,7 @@ const CustomersTable = () => {
     },
   });
 
-// filter data
+  // filter data
   const filteredData = React.useMemo(() => {
     return customers.filter((customer) => {
       const matchName =
@@ -104,7 +105,7 @@ const CustomersTable = () => {
         id: "name",
         accessorKey: "name",
         header: ({ column }: { column: Column<Customer, unknown> }) => (
-          <DataTableColumnHeader column={column} label="User" />
+          <DataTableColumnHeader column={column} label="User Details" />
         ),
 
         cell: ({ row }) => {
@@ -123,7 +124,9 @@ const CustomersTable = () => {
                 </div>
               )}
 
-              <span>{user.name}</span>
+              <span>
+                {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
+              </span>
             </div>
           );
         },
@@ -136,12 +139,49 @@ const CustomersTable = () => {
         enableColumnFilter: true,
       },
 
+      // linked user
+      {
+        id: "linkedUser",
+        accessorKey: "linkedUser",
+        header: ({ column }: { column: Column<Customer, unknown> }) => (
+          <DataTableColumnHeader column={column} label="Linked User" />
+        ),
+
+        cell: ({ row }) => {
+          const user = row.original.user;
+
+          return (
+            <Link
+              href={`/panel/users/${row.original.userId}`}
+              className="flex flex-col hover:underline"
+            >
+              <span>
+                {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
+              </span>
+
+              <div className="flex items-center gap-1 font-semiBold text-sm text-muted-foreground">
+                <ArrowUpRight className="h-3 w-3" />
+                View Profile  
+              </div>
+            </Link>
+          );
+        },
+
+        meta: {
+          label: "linked user",
+          placeholder: "Search linked user...",
+          variant: "text",
+          icon: Text,
+        },
+        enableColumnFilter: true,
+      },
+
       // contact details
       {
         id: "conatct details",
         accessorKey: "email",
         header: ({ column }: { column: Column<Customer, unknown> }) => (
-          <DataTableColumnHeader column={column} label="Conatct details" />
+          <DataTableColumnHeader column={column} label="Conatct Details" />
         ),
         cell: ({ row }) => (
           <div className="flex flex-col gap-1">
@@ -182,7 +222,7 @@ const CustomersTable = () => {
           </span>
         ),
       },
-      
+
       // unusedCredit
       {
         id: "unusedCredit",

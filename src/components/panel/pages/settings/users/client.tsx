@@ -41,7 +41,7 @@ const UsersClient = ({ userId }: props) => {
       {!error && data && (
         <Breadcrumb className="mb-5 flex items-center gap-0.5">
           <BreadcrumbItem>
-            <a className="text-[#e8dad0] " href="/panel/users">
+            <a className="font-light" href="/panel/users">
               Users
             </a>
           </BreadcrumbItem>
