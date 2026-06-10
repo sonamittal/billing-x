@@ -107,7 +107,7 @@ const AddCustomerForm = ({
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
       toast.success("Customer created successfully!");
       form.reset();
       onOpenChange?.(false);

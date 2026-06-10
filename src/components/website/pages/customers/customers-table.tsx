@@ -27,6 +27,7 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import axios from "axios";
+import DeleteCustomerDialog from "@/components/website/pages/customers/edit-customers/delete-dialog";
 
 interface Customer {
   id: string;
@@ -41,8 +42,24 @@ interface Customer {
   receivable: number;
   unusedCredit: number;
 }
-
+interface SelectedUser extends Customer {
+  name: string;
+}
 const CustomersTable = () => {
+  const [selectedRow, setSelectedRow] = React.useState<any | null>(null);
+  const [selectedUser, setSelectedUser] = React.useState<SelectedUser | null>(
+    null,
+  );
+  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
+  const handleOpenDeleteDialog = (customer: Customer, row: any) => {
+    row.toggleSelected(true);
+    setSelectedUser({
+      ...customer,
+      name: customer.user.name ?? "Unknown",
+    });
+    setSelectedRow(row);
+    setIsDeleteOpen(true);
+  };
   const [name] = useQueryState("name", parseAsString.withDefault(""));
 
   // Fetch users
@@ -252,14 +269,12 @@ const CustomersTable = () => {
                     Edit
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem variant="destructive">
-                  <Link
-                    href={`/panel/customers/${customerId}`}
-                    className="flex items-center"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4  text-red-400" />
-                    Delete
-                  </Link>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => handleOpenDeleteDialog(row.original, row)}
+                >
+                  <Trash2 className="mr-2 h-4 w-4  text-red-400" />
+                  Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -287,9 +302,24 @@ const CustomersTable = () => {
       {isLoading ? (
         <div>Loading users...</div>
       ) : (
-        <DataTable table={table}>
-          <DataTableToolbar table={table} />
-        </DataTable>
+        <>
+          <DataTable table={table}>
+            <DataTableToolbar table={table} />
+          </DataTable>
+          {selectedUser && (
+            <DeleteCustomerDialog
+              customer={selectedUser}
+              open={isDeleteOpen}
+              setOpen={(open) => {
+                setIsDeleteOpen(open);
+                if (!open && selectedRow) {
+                  selectedRow.toggleSelected(false);
+                  setSelectedRow(null);
+                }
+              }}
+            />
+          )}
+        </>
       )}
     </div>
   );

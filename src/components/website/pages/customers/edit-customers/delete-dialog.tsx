@@ -40,7 +40,7 @@ const DeleteCustomerDialog = ({
         queryClient.invalidateQueries({
           queryKey: ["customers"],
         });
-        toast.success("user delete Successfully!!");
+        toast.success(" Customer deleted Successfully!!");
         if (callback) {
           setTimeout(() => {
             router.push(callback);

@@ -49,7 +49,7 @@ const DeleteCustomer = ({ customer }: CustomerIdProps) => {
         customer={customer}
         open={isDeleteDialogOpen}
         setOpen={setIsDeleteDialogOpen}
-        callback="/panel/customer"
+        callback="/panel/customers"
       />
     </>
   );
