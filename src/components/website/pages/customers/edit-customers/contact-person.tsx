@@ -146,8 +146,6 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
         queryKey: ["customers"],
       });
 
-      form.reset();
-
       if (callback) {
         setTimeout(() => {
           router.push(callback);
@@ -161,7 +159,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
     console.log("Submitted Data:", data);
     editCPCustomer(data);
   };
-  
+
   return (
     <div>
       <Form {...form}>
@@ -197,7 +195,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                     {/* SALUTATION */}
                     <td className="border p-3">
                       <FormField
-                        control={control}
+                        control={form.control}
                         name={`contacts.${index}.salutation`}
                         render={({ field }) => (
                           <FormItem>
@@ -228,7 +226,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                     {/* FIRST NAME */}
                     <td className="border p-3">
                       <FormField
-                        control={control}
+                        control={form.control}
                         name={`contacts.${index}.firstName`}
                         render={({ field }) => (
                           <FormItem>
@@ -244,7 +242,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                     {/* LAST NAME */}
                     <td className="border p-3">
                       <FormField
-                        control={control}
+                        control={form.control}
                         name={`contacts.${index}.lastName`}
                         render={({ field }) => (
                           <FormItem>
@@ -260,7 +258,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                     {/* EMAIL */}
                     <td className="border p-3">
                       <FormField
-                        control={control}
+                        control={form.control}
                         name={`contacts.${index}.email`}
                         render={({ field }) => (
                           <FormItem>
@@ -280,7 +278,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                     {/* WORK PHONE */}
                     <td className="border p-3">
                       <FormField
-                        control={control}
+                        control={form.control}
                         name={`contacts.${index}.workPhone`}
                         render={({ field }) => (
                           <FormItem>
@@ -297,7 +295,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                     {/* MOBILE */}
                     <td className="border p-3">
                       <FormField
-                        control={control}
+                        control={form.control}
                         name={`contacts.${index}.mobile`}
                         render={({ field }) => (
                           <FormItem>
@@ -313,7 +311,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                     {/* DESIGNATION */}
                     <td className="border p-3">
                       <FormField
-                        control={control}
+                        control={form.control}
                         name={`contacts.${index}.designation`}
                         render={({ field }) => (
                           <FormItem>
@@ -329,7 +327,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
                     {/* DEPARTMENT */}
                     <td className="border p-3">
                       <FormField
-                        control={control}
+                        control={form.control}
                         name={`contacts.${index}.department`}
                         render={({ field }) => (
                           <FormItem>

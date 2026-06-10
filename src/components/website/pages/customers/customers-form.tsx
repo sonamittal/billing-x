@@ -128,7 +128,7 @@ const AddCustomerForm = ({
       form.setValue("state", "");
       form.setValue("city", "");
     }
-  }, [selectedCountry]);
+  }, [selectedCountry, form]);
 
   // Fetch cities when state changes
   useEffect(() => {
@@ -138,13 +138,14 @@ const AddCustomerForm = ({
       );
       form.setValue("city", "");
     }
-  }, [selectedState, selectedCountry]);
+  }, [selectedState, selectedCountry, form]);
 
   const onSubmit = (data: AddCustomerFormSchema) => {
     if (!selectedUser?.id) {
       toast.error("Please select a user first");
       return;
     }
+
     console.log("Form Data Submitted:", data);
     addCustomer({
       userId: selectedUser.id,
@@ -228,6 +229,7 @@ const AddCustomerForm = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Currency */}
               <FormField
+                control={form.control}
                 name="currency"
                 render={({ field }) => (
                   <FormItem>
@@ -253,6 +255,7 @@ const AddCustomerForm = ({
 
               {/* Language */}
               <FormField
+                control={form.control}
                 name="language"
                 render={({ field }) => (
                   <FormItem>
@@ -290,6 +293,7 @@ const AddCustomerForm = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {/* Country */}
               <FormField
+                control={form.control}
                 name="country"
                 render={({ field }) => (
                   <FormItem>
@@ -320,6 +324,7 @@ const AddCustomerForm = ({
 
               {/* State */}
               <FormField
+                control={form.control}
                 name="state"
                 render={({ field }) => (
                   <FormItem>
@@ -351,6 +356,7 @@ const AddCustomerForm = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {/* City */}
               <FormField
+                control={form.control}
                 name="city"
                 render={({ field }) => (
                   <FormItem>
@@ -377,6 +383,7 @@ const AddCustomerForm = ({
 
               {/* Pin*/}
               <FormField
+                control={form.control}
                 name="pinCode"
                 render={({ field }) => (
                   <FormItem>

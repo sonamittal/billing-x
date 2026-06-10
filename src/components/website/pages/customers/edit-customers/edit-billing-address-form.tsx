@@ -139,6 +139,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
           >
             {/* Country */}
             <FormField
+              control={form.control}
               name="country"
               render={({ field }) => (
                 <FormItem>
@@ -168,6 +169,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
             />
             {/* State */}
             <FormField
+              control={form.control}
               name="state"
               render={({ field }) => (
                 <FormItem>
@@ -196,6 +198,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
             />
             {/* City */}
             <FormField
+              control={form.control}
               name="city"
               render={({ field }) => (
                 <FormItem>
@@ -222,6 +225,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
 
             {/* Pin*/}
             <FormField
+              control={form.control}
               name="pinCode"
               render={({ field }) => (
                 <FormItem>
