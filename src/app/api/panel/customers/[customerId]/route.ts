@@ -7,11 +7,12 @@ import { putCustomerController } from "@/app/api/panel/customers/[customerId]/pu
 import { putCustomerOtherDetailsController } from "@/app/api/panel/customers/[customerId]/putController";
 import { putCBAController } from "@/app/api/panel/customers/[customerId]/putController";
 import { putCRController } from "@/app/api/panel/customers/[customerId]/putController";
+import { deleteCusController } from "@/app/api/panel/customers/[customerId]/deleteController";
 
 // get req
 export const GET = async (
   _req: Request,
-  { params }: { params: { customerId: string } },
+  { params }: { params: Promise<{ customerId: string }> },
 ) => {
   try {
     // checking session
@@ -95,7 +96,7 @@ export const GET = async (
 //PUt req
 export const PUT = async (
   req: Request,
-  { params }: { params: { customerId: string } },
+  { params }: { params: Promise<{ customerId: string }> },
 ) => {
   try {
     // session check
@@ -167,6 +168,38 @@ export const PUT = async (
   } catch (error: any) {
     console.error(error);
 
+    return Response.json(
+      {
+        success: false,
+        message: error?.message || `Internal Server Error`,
+      },
+      { status: 500 },
+    );
+  }
+};
+
+// delete req
+export const DELETE = async (
+  _req: Request,
+  { params }: { params: Promise<{ customerId: string }> },
+) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user?.id) {
+      return Response.json(
+        {
+          success: false,
+          message: `Unauthorized - please login`,
+        },
+        { status: 401 },
+      );
+    }
+    const { customerId } = await params;
+    return await deleteCusController(customerId);
+  } catch (error: any) {
     return Response.json(
       {
         success: false,

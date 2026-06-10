@@ -18,7 +18,7 @@ export const deleteCPController = async (contactId: string) => {
       .limit(1);
     if (!exstingCp.length) {
       return Response.json(
-        { error: `Contact person is not fond.` },
+        { error: `Contact person is not found.` },
         { status: 400 },
       );
     }
