@@ -14,7 +14,7 @@ import {
   GalleryVerticalEnd,
   ReceiptText,
 } from "lucide-react";
-import { ClerkLogo } from "@/assets/clerk-logo";
+
 import { type SidebarData } from "../types";
 
 export const sidebarData: SidebarData = {
@@ -23,6 +23,7 @@ export const sidebarData: SidebarData = {
     email: "satnaingdev@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
+
   teams: [
     {
       name: "Invoice",
@@ -40,20 +41,32 @@ export const sidebarData: SidebarData = {
       plan: "Startup",
     },
   ],
+
   navGroups: [
     {
       title: "General",
       items: [
         {
           title: "Dashboard",
-          url: "/",
+          url: "/panel/dashboard",
           icon: LayoutDashboard,
         },
         {
-          title: "Customers",
-          url: "/customers",
+          title: "Users",
+          url: "/panel/users",
           icon: Users,
         },
+        {
+          title: "Customers",
+          url: "/panel/customers",
+          icon: Users,
+        },
+      ],
+    },
+
+    {
+      title: "Invoices",
+      items: [
         {
           title: "Quotes",
           url: "/quotes",
@@ -65,6 +78,12 @@ export const sidebarData: SidebarData = {
           badge: "3",
           icon: ReceiptText,
         },
+      ],
+    },
+
+    {
+      title: "Expenses",
+      items: [
         {
           title: "Expenses",
           url: "/expenses",

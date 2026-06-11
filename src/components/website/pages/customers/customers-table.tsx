@@ -169,7 +169,7 @@ const CustomersTable = () => {
 
           return (
             <Link
-              href={`/panel/users/${row.original.userId}`}
+              href={`/panel/users/`}
               className="flex flex-col hover:underline"
             >
               <span>
