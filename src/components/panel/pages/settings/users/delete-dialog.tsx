@@ -13,8 +13,20 @@ import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+  banned: boolean;
+  emailVerified: boolean;
+  role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
+  banReason: string | null;
+  banExpires: string | Date | null;
+}
 interface userIdProps {
-  user: any;
+  user: User;
   open: boolean;
   setOpen: (open: boolean) => void;
   callback?: string;

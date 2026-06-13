@@ -28,7 +28,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import axios from "axios";
 import DeleteCustomerDialog from "@/components/website/pages/customers/edit-customers/delete-dialog";
-
+// types
 interface Customer {
   id: string;
   userId: string;
@@ -45,6 +45,8 @@ interface Customer {
 interface SelectedUser extends Customer {
   name: string;
 }
+
+// customer table
 const CustomersTable = () => {
   const [selectedRow, setSelectedRow] = React.useState<any | null>(null);
   const [selectedUser, setSelectedUser] = React.useState<SelectedUser | null>(

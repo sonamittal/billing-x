@@ -9,8 +9,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React, { useState } from "react";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+  banned: boolean;
+  emailVerified: boolean;
+  role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
+  banReason: string | null;
+  banExpires: string | Date | null;
+}
+
 interface userIdProps {
-  user: any;
+  user: User;
 }
 
 const DeleteCustomer = ({ user }: userIdProps) => {

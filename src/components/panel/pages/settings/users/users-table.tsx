@@ -39,6 +39,8 @@ interface User {
   banned: boolean;
   emailVerified: boolean;
   role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
+  banReason: string | null;
+  banExpires: string | Date | null;
 }
 
 const UsersTable = () => {
@@ -84,6 +86,8 @@ const UsersTable = () => {
         role: Array.isArray(u.role)
           ? (u.role[0] as User["role"])
           : (u.role as User["role"]),
+        banReason: u.banReason ?? null,
+        banExpires: u.banExpires ?? null,
       }));
     },
   });

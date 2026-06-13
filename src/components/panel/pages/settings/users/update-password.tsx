@@ -26,8 +26,21 @@ import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+  banned: boolean;
+  emailVerified: boolean;
+  role: "admin" | "staff" | "staffAssigned" | "timesheetStaff";
+  banReason: string | null;
+  banExpires: string | Date | null;
+}
+
 interface userIdProps {
-  user: any;
+  user: User;
 }
 const UpdateUserPassword = ({ user }: userIdProps) => {
   const queryClient = useQueryClient();

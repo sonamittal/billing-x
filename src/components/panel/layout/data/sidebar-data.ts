@@ -74,7 +74,7 @@ export const sidebarData: SidebarData = {
         },
         {
           title: "Invoices",
-          url: "/invoices",
+          url: "/panel/invoices",
           badge: "3",
           icon: ReceiptText,
         },

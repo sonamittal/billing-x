@@ -42,8 +42,20 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+export interface User {
+  id: string;
+  name: string | null;
+  email: string;
+  image: string | null;
+  role: EditUserFormSchema["role"];
+  emailVerified: boolean;
+  banned: boolean;
+  banReason: string | null;
+  banExpires: string | Date | null;
+}
+
 interface userIdProps {
-  user: any;
+  user: User;
   callback?: string;
 }
 
@@ -188,7 +200,7 @@ const EditUser = ({ user, callback }: userIdProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                 Name <span className="text-red-500">*</span>
+                    Name <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="eg:sonam" {...field} />
