@@ -1,12 +1,16 @@
 import { db } from "@/lib/database/db-connect";
 import { user, customer } from "@/drizzle/schema/index";
 import { nanoid } from "nanoid";
-
+interface PostUserBody {
+  image: string;
+  name: string;
+  email: string;
+}
 // user
-export const postUser = async (body: any) => {
-  const { image, username, email } = body;
+export const postUser = async (body: PostUserBody) => {
+  const { image, name, email } = body;
 
-  if (!image || !username || !email) {
+  if (!image || !name || !email) {
     return {
       status: 400,
       json: { success: false, message: `All fields are required` },
@@ -28,7 +32,7 @@ export const postUser = async (body: any) => {
     .insert(user)
     .values({
       id: nanoid(),
-      name: username,
+      name,
       email,
       image,
     })
@@ -44,8 +48,23 @@ export const postUser = async (body: any) => {
   };
 };
 
+interface PostCustomerBody {
+  userId: string;
+  customerType: "individual" | "business";
+  companyName?: string;
+  currency: string;
+  language: string;
+  country: string;
+  state: string;
+  city: string;
+  pinCode: string;
+  address: {
+    street1: string;
+    street2?: string;
+  };
+}
 // customer
-export const postCustomer = async (body: any) => {
+export const postCustomer = async (body: PostCustomerBody) => {
   const {
     userId,
     customerType,

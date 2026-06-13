@@ -19,12 +19,12 @@ export const GET = async (
       );
     }
     const { customerId } = await params;
-    return getPaymentTermsController(customerId);
-  } catch (error: any) {
+    return  await getPaymentTermsController(customerId);
+  } catch (error: unknown) {
     return Response.json(
       {
         success: false,
-        message: error?.message || `Internal Server Error`,
+        message: `Failed to fetch payment term`
       },
       { status: 500 },
     );
@@ -46,11 +46,11 @@ export const POST = async (req: Request) => {
     }
     const body = await req.json();
     return await addPaymentTermController(body);
-  } catch (error: any) {
+  } catch (error: unknown) {
     return Response.json(
       {
         success: false,
-        message: error?.message || `Internal Server Error`,
+        message: `Failed to add payment term`,
       },
       { status: 500 },
     );

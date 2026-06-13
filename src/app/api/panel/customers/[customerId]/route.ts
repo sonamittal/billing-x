@@ -22,7 +22,7 @@ export const GET = async (
 
     if (!session || !session?.user?.id) {
       return Response.json(
-        { error: `Please sign in to access this content.` },
+        { success: false, error: `Please sign in to access this content.` },
         { status: 401 },
       );
     }
@@ -31,7 +31,7 @@ export const GET = async (
 
     if (!customerId) {
       return Response.json(
-        { error: `Customer id is required` },
+        { success: false, error: `Customer id is required` },
         { status: 400 },
       );
     }
@@ -59,7 +59,10 @@ export const GET = async (
     const customerRow = customerData[0];
 
     if (!customerRow) {
-      return Response.json({ error: `Customer not found` }, { status: 404 });
+      return Response.json(
+        { success: false, error: `Customer not found` },
+        { status: 404 },
+      );
     }
 
     // other details data
@@ -165,13 +168,13 @@ export const PUT = async (
       },
       { status: 400 },
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
 
     return Response.json(
       {
         success: false,
-        message: error?.message || `Internal Server Error`,
+        message: `Internal Server Error`,
       },
       { status: 500 },
     );
@@ -199,11 +202,12 @@ export const DELETE = async (
     }
     const { customerId } = await params;
     return await deleteCusController(customerId);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error(" Detele Customer Error:", error);
     return Response.json(
       {
         success: false,
-        message: error?.message || `Internal Server Error`,
+        message: "Failed to delete Customer",
       },
       { status: 500 },
     );

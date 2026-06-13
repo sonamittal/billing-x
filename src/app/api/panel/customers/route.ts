@@ -38,11 +38,12 @@ export const POST = async (req: Request) => {
     }
 
     return Response.json(result.json, { status: result.status });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error(error);
     return Response.json(
       {
         success: false,
-        message: error?.message || `Internal Server Error`,
+        message: `Internal Server Error`,
       },
       { status: 500 },
     );
@@ -59,9 +60,10 @@ export const GET = async (request: Request) => {
     const data = await getCustomers(name);
 
     return Response.json(data);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error(error);
     return Response.json(
-      { message: error.message || `Failed to fetch customers` },
+      { message: `Failed to fetch customers` },
       { status: 500 },
     );
   }

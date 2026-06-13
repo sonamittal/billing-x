@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth/auth";
 import { eq } from "drizzle-orm";
 
 export const GET = async (
-  req: Request,
+  _req: Request,
   { params }: { params: { userId: string } },
 ) => {
   try {
