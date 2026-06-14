@@ -40,14 +40,18 @@ export const putCPController = async (
   const email = body.email.trim().toLowerCase();
 
   const existingEmail = await db.query.contactPerson.findFirst({
-    where: and(eq(contactPerson.email, email), ne(contactPerson.id, contactId)),
+    where: and(
+      eq(contactPerson.customerId, existingCustomerCP.customerId),
+      eq(contactPerson.email, email),
+      ne(contactPerson.id, contactId),
+    ),
   });
 
   if (existingEmail) {
     return Response.json(
       {
         success: false,
-        message: `Email already exists`,
+        message: `A contact person with this email already exists for this customer.`,
       },
       {
         status: 409,

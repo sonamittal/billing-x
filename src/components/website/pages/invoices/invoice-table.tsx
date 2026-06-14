@@ -22,7 +22,7 @@ import {
 
 import { useDataTable } from "@/hooks/use-data-table";
 import { parseAsString, useQueryState } from "nuqs";
-import { Placeholder } from "drizzle-orm";
+
 
 //types >>>>>>>>>>>>>>
 

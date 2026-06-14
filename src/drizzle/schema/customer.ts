@@ -1,6 +1,13 @@
 import { user } from "@/drizzle/schema/schema";
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, integer, json } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  integer,
+  json,
+  unique,
+} from "drizzle-orm/pg-core";
 
 export const customer = pgTable("customer", {
   id: text("id").primaryKey(),
@@ -88,25 +95,34 @@ export const customerOtherDetails = pgTable("customer_other_details", {
 //   phone: text("phone"),
 // });
 // contact person
-export const contactPerson = pgTable("contact_person", {
-  id: text("id").primaryKey(),
-  customerId: text("customer_id")
-    .notNull()
-    .references(() => customer.id, { onDelete: "cascade" }),
-  salutation: text("salutation"),
-  firstName: text("first_name"),
-  lastName: text("last_name"),
-  email: text("email"),
-  workPhone: text("work_phone"),
-  mobile: text("mobile"),
-  designation: text("designation"),
-  department: text("department"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
+export const contactPerson = pgTable(
+  "contact_person",
+  {
+    id: text("id").primaryKey(),
+    customerId: text("customer_id")
+      .notNull()
+      .references(() => customer.id, { onDelete: "cascade" }),
+    salutation: text("salutation"),
+    firstName: text("first_name"),
+    lastName: text("last_name"),
+    email: text("email"),
+    workPhone: text("work_phone"),
+    mobile: text("mobile"),
+    designation: text("designation"),
+    department: text("department"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    customerEmailUnique: unique("customer_email_unique").on(
+      table.customerId,
+      table.email,
+    ),
+  }),
+);
 
 export const userCustomerRelations = relations(user, ({ one }) => ({
   customer: one(customer),
