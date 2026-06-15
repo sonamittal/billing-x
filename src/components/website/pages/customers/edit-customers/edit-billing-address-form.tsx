@@ -106,7 +106,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
       form.setValue("state", "");
       form.setValue("city", "");
     }
-  }, [selectedCountry]);
+  }, [selectedCountry, form]);
 
   // Fetch cities when state changes
   useEffect(() => {
@@ -116,7 +116,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
       );
       form.setValue("city", "");
     }
-  }, [selectedState, selectedCountry]);
+  }, [selectedState, selectedCountry, form]);
 
   // Submit
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
@@ -152,7 +152,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                         label: c.name,
                         value: c.id.toString(),
                       }))}
-                      darkBg="secondary"
+                      darkBg="primary"
                       mode="single"
                       value={field.value}
                       onChange={(val) => {
@@ -167,6 +167,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                 </FormItem>
               )}
             />
+
             {/* State */}
             <FormField
               control={form.control}
@@ -182,7 +183,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                         label: s.name,
                         value: s.id.toString(),
                       }))}
-                      darkBg="secondary"
+                      darkBg="primary"
                       mode="single"
                       value={field.value}
                       onChange={(val) => {
@@ -211,7 +212,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                         label: c.name,
                         value: c.id.toString(),
                       }))}
-                      darkBg="secondary"
+                      darkBg="primary"
                       mode="single"
                       value={field.value}
                       onChange={(val) => field.onChange(val)}
