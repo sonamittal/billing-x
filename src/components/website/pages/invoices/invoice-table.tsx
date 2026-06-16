@@ -23,7 +23,6 @@ import {
 import { useDataTable } from "@/hooks/use-data-table";
 import { parseAsString, useQueryState } from "nuqs";
 
-
 //types >>>>>>>>>>>>>>
 
 interface Invoice {
@@ -56,7 +55,7 @@ const dummyInvoices: Invoice[] = [
   },
   {
     id: "2",
-    invoiceNo: "INV-1002",
+    invoiceNo: "INV-1002",  
     customer: { name: "Priya Verma" },
     invoiceDate: "2026-06-03",
     dueDate: "2026-06-12",

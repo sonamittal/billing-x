@@ -8,6 +8,7 @@ import {
   json,
   unique,
 } from "drizzle-orm/pg-core";
+import { invoice } from "@/drizzle/schema/invoices";
 
 export const customer = pgTable("customer", {
   id: text("id").primaryKey(),
@@ -116,12 +117,9 @@ export const contactPerson = pgTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => ({
-    customerEmailUnique: unique("customer_email_unique").on(
-      table.customerId,
-      table.email,
-    ),
-  }),
+  (table) => [
+    unique("customer_email_unique").on(table.customerId, table.email),
+  ],
 );
 
 export const userCustomerRelations = relations(user, ({ one }) => ({
@@ -135,7 +133,9 @@ export const customerRelations = relations(customer, ({ many, one }) => ({
   }),
   contacts: many(contactPerson),
   otherDetails: one(customerOtherDetails),
+  invoices: many(invoice),
 }));
+
 // payment terms relations
 export const paymentTermsRelations = relations(paymentTerms, ({ many }) => ({
   customerOtherDetails: many(customerOtherDetails),
