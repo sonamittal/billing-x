@@ -1,6 +1,13 @@
 import { customer } from "@/drizzle/schema/customer";
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, integer, jsonb } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  integer,
+  jsonb,
+  numeric,
+} from "drizzle-orm/pg-core";
 
 export const invoice = pgTable("invoice", {
   id: text("id").primaryKey(),
@@ -11,9 +18,9 @@ export const invoice = pgTable("invoice", {
       onDelete: "cascade",
     }),
 
-  invoiceNumber: text("invoice_number").notNull().unique(),
+  customerName: text("customer_name").notNull(),
 
-  orderNumber: text("order_number").notNull(),
+  invoiceNumber: text("invoice_number").notNull().unique(),
 
   invoiceDate: timestamp("invoice_date", {
     mode: "date",
@@ -21,7 +28,7 @@ export const invoice = pgTable("invoice", {
 
   dueDate: timestamp("due_date", {
     mode: "date",
-  }),
+  }).notNull(),
 
   paymentDate: timestamp("payment_date", {
     mode: "date",
@@ -37,11 +44,23 @@ export const invoice = pgTable("invoice", {
     }[]
   >(),
 
-  subtotal: integer("subtotal").notNull().default(0),
+  customerNotes: text("customer_notes").notNull(),
 
-  discount: integer("discount").notNull().default(0),
+  termsAndConditions: text("terms_and_conditions").notNull(),
+  subtotal: numeric("subtotal", {
+    precision: 10,
+    scale: 2,
+  }).notNull(),
 
-  totalAmount: integer("total_amount").notNull().default(0),
+  discount: numeric("discount", {
+    precision: 10,
+    scale: 2,
+  }).notNull(),
+
+  totalAmount: numeric("total_amount", {
+    precision: 10,
+    scale: 2,
+  }).notNull(),
 
   status: text("status")
     .$type<"draft" | "sent" | "unpaid" | "paid">()
@@ -74,17 +93,21 @@ export const invoiceItem = pgTable("invoice_item", {
 
   itemName: text("item_name").notNull(),
 
-  description: text("description"),
-
   unit: text("unit"),
 
-  quantity: integer("quantity").default(1).notNull(),
+  sellingPrice: numeric("selling_price", {
+    precision: 10,
+    scale: 2,
+  }).notNull(),
 
-  rate: integer("rate").notNull(),
-
-  amount: integer("amount").notNull(),
+  description: text("description"),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
+
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
 });
 
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({

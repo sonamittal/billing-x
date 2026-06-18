@@ -353,10 +353,76 @@ export const paymentTermSchema = z.object({
 
 export type PaymentTermSchema = z.infer<typeof paymentTermSchema>;
 
-// edit remarks
+// edit remarks >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const editCRSchema = z.object({
   remarks: z.string().min(1, {
     message: "remarks is required",
   }),
 });
 export type EditCRSchema = z.infer<typeof editCRSchema>;
+
+// add invoice schema >>>>>>>>>>>>>>>>>>>>>>>>>>
+export const addInvoiceSchema = z.object({
+  customerName: z.string().min(1, {
+    message: "Customer name is required",
+  }),
+  invoiceNumber: z.string().min(1, {
+    message: "Invoice number is required",
+  }),
+  invoiceDate: z.date({
+    message: "Invoice date is required",
+  }),
+  dueDate: z.date({
+    message: "Due date is required",
+  }),
+  subject: z.string().optional(),
+  attachments: z
+    .array(
+      z.object({
+        url: z.string(),
+        key: z.string(),
+        name: z.string().optional(),
+      }),
+    )
+    .min(1, {
+      message: "At least one attachment is required",
+    }),
+  subtotal: z.coerce.number().min(0, {
+    message: "Subtotal cannot be negative",
+  }),
+  discount: z.coerce.number().min(0, {
+    message: "Discount cannot be negative",
+  }),
+  totalAmount: z.coerce.number().min(0, {
+    message: "Total amount cannot be negative",
+  }),
+  customerNotes: z.string().min(1, {
+    message: "Customer notes is required",
+  }),
+  termsAndConditions: z.string().min(1, {
+    message: "Terms And Conditions is required",
+  }),
+});
+
+export type AddInvoiceSchema = z.infer<typeof addInvoiceSchema>;
+
+// add invoice item schema >>>>>>>>>>>>>>>>>>>>>>
+export const addItemSchema = z.object({
+  itemName: z.string().min(1, {
+    message: "Item name is required",
+  }),
+  unit: z.string().min(1, {
+    message:
+      "The item will be measured in terms of this unit (e.g.: kg, dozen)",
+  }),
+
+  sellingPrice: z.coerce.number().min(0, {
+    message: "Selling price must be greater than or equal to 0",
+  }),
+
+  description: z.string().min(1, {
+    message: "Description is required",
+  }),
+});
+
+export type AddItemSchema = z.infer<typeof addItemSchema>;
