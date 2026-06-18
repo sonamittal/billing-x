@@ -2,24 +2,24 @@
 import * as z from "zod";
 export const supFormSchema = z
   .object({
-    name: z.string().min(1, { message: "name is  required" }),
+    name: z.string().min(1, { message: "Name is  required" }),
     email: z.email({ message: "Email is required" }),
     password: z
       .string()
-      .min(8, { message: "password must be atleast 8 character" })
+      .min(8, { message: "Password must be atleast 8 character" })
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
         "Password must contain at least one letter and one number",
       ),
     confirmPassword: z
       .string()
-      .min(6, { message: "password must be atleast 8 character." }),
+      .min(6, { message: "Password must be atleast 8 character." }),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
       ctx.addIssue({
         code: "custom",
-        message: "password and confirm password should match",
+        message: "Password and confirm password should match",
         path: ["confirmPassword"],
       });
     }
@@ -31,7 +31,7 @@ export const sinFormSchema = z.object({
   email: z.email({ message: "Email is required" }),
   password: z
     .string()
-    .min(8, { message: "password must be atleast 8 character" })
+    .min(8, { message: "Password must be atleast 8 character" })
     .regex(
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
       "Password must contain at least one letter and one number",
@@ -62,20 +62,20 @@ export const setPasswordFormSchema = z
       .max(6, { message: "Verification code can have max 6 digits" }),
     password: z
       .string()
-      .min(8, { message: "password must be atleast 8 character" })
+      .min(8, { message: "Password must be atleast 8 character" })
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
         "Password must contain at least one letter and one number",
       ),
     confirmPassword: z
       .string()
-      .min(6, { message: "password must be atleast 8 character." }),
+      .min(6, { message: "Password must be atleast 8 character." }),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
       ctx.addIssue({
         code: "custom",
-        message: "password and confirm password should match",
+        message: "Password and confirm password should match",
         path: ["confirmPassword"],
       });
     }
@@ -85,15 +85,15 @@ export type SetPasswordFormSchema = z.infer<typeof setPasswordFormSchema>;
 // organization setup schema >>>>>>>>>>>
 export const organizationSchema = z
   .object({
-    name: z.string().min(1, { message: " organization name is  required" }),
+    name: z.string().min(1, { message: " Organization name is  required" }),
     industry: z.string().min(1, { message: "Industry is required" }),
-    country: z.string().min(1, { message: "country is required" }),
-    state: z.string().min(1, "state is required"),
-    city: z.string().min(1, { message: "city is required" }),
-    address: z.string().min(1, { message: "location is required" }),
-    currency: z.string().min(1, { message: "currency is required" }),
-    language: z.string().trim().min(1, { message: "language is required" }),
-    timezone: z.string().trim().min(1, { message: "timezone is required" }),
+    country: z.string().min(1, { message: "Country is required" }),
+    state: z.string().min(1, "State is required"),
+    city: z.string().min(1, { message: "City is required" }),
+    address: z.string().min(1, { message: "Location is required" }),
+    currency: z.string().min(1, { message: "Currency is required" }),
+    language: z.string().trim().min(1, { message: "Language is required" }),
+    timezone: z.string().trim().min(1, { message: "Timezone is required" }),
     gstRegistered: z.boolean(),
     gstNumber: z.string().trim().optional(),
     invoicingMethod: z
@@ -115,17 +115,17 @@ export type OrganizationSchema = z.infer<typeof organizationSchema>;
 // add user form schema >>>>>>>>>>
 export const addNewUserFormSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
-  name: z.string().min(1, { message: "name is required" }),
-  email: z.email({ message: "email is required" }),
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.email({ message: "Email is required" }),
   role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
     message: "Role is required",
   }),
   banned: z.enum(["true", "false"], {
-    message: "banned is required",
+    message: "Banned is required",
   }),
   password: z
     .string()
-    .min(8, { message: "password must be atleast 8 character" })
+    .min(8, { message: "Password must be atleast 8 character" })
     .regex(
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
       "Password must contain at least one letter and one number",
@@ -138,13 +138,13 @@ export type AddNewUserFormSchema = z.infer<typeof addNewUserFormSchema>;
 // edit user form schema >>>>>>>>>>
 export const editUserFormSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
-  name: z.string().min(1, { message: "name is required" }),
-  email: z.email({ message: "email is required" }),
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.email({ message: "Email is required" }),
   role: z.enum(["admin", "staff", "staffAssigned", "timesheetStaff"], {
     message: "Role is required",
   }),
   banned: z.enum(["true", "false"], {
-    message: "banned is required",
+    message: "Banned is required",
   }),
   banReason: z.string().optional(),
   banExpires: z.string().optional(),
@@ -157,20 +157,20 @@ export const updateUserPasswordFormSchema = z
   .object({
     password: z
       .string()
-      .min(8, { message: "password must be atleast 8 character" })
+      .min(8, { message: "Password must be atleast 8 character" })
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
         "Password must contain at least one letter and one number",
       ),
     confirmPassword: z
       .string()
-      .min(6, { message: "password must be atleast 8 character." }),
+      .min(6, { message: "Password must be atleast 8 character." }),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
       ctx.addIssue({
         code: "custom",
-        message: "password and confirm password should match",
+        message: "Password and confirm password should match",
         path: ["confirmPassword"],
       });
     }
@@ -182,15 +182,15 @@ export type UpdateUserPasswordFormSchema = z.infer<
 // customer (user-form) schema >>>>>>>>>>>>>>>
 export const userFormSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
-  name: z.string().min(1, { message: "name is required" }),
-  email: z.email({ message: "email is required" }),
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.email({ message: "Email is required" }),
   // phoneno: z
   //   .string()
   //   .length(10, { message: "Phone number must be exactly 10 digits" })
   //   .regex(/^\d+$/, "Phone number must contain only digits"),
   password: z
     .string()
-    .min(8, { message: "password must be atleast 8 character" })
+    .min(8, { message: "Password must be atleast 8 character" })
     .regex(
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
       "Password must contain at least one letter and one number",
@@ -204,22 +204,22 @@ export const addCustomerFormSchema = z
     userId: z.string().optional(),
     customerType: z.enum(["individual", "business"]),
     companyName: z.string().optional(),
-    currency: z.string().min(1, { message: "currency is required" }),
+    currency: z.string().min(1, { message: "Currency is required" }),
     language: z.string().trim().min(1, { message: "Language is required" }),
-    country: z.string().min(1, { message: "country is required" }),
-    state: z.string().min(1, { message: "state is required" }),
-    city: z.string().min(1, { message: "city is required" }),
+    country: z.string().min(1, { message: "Country is required" }),
+    state: z.string().min(1, { message: "State is required" }),
+    city: z.string().min(1, { message: "City is required" }),
     pinCode: z
       .string()
       .trim()
-      .regex(/^[1-9][0-9]{5}$/, "invalid pin code"),
+      .regex(/^[1-9][0-9]{5}$/, "Invalid pin code"),
     address: z.object({
       street1: z.string().min(1, {
-        message: "street1 is required",
+        message: "Street1 is required",
       }),
 
       street2: z.string().min(1, {
-        message: "street2 is required",
+        message: "Street2 is required",
       }),
     }),
   })
@@ -228,7 +228,7 @@ export const addCustomerFormSchema = z
     if (data.customerType === "business" && !data.companyName) {
       ctx.addIssue({
         code: "custom",
-        message: "company name is required",
+        message: "Company name is required",
         path: ["companyName"],
       });
     }
@@ -245,9 +245,9 @@ export const editCustomerFormSchema = z.object({
   //   lastName: z.string().min(1, { message: "last name is required" }),
   // }),
   companyName: z.string().optional(),
-  currency: z.string().min(1, { message: "currency is required" }),
-  language: z.string().min(1, { message: "language is required" }),
-  email: z.email({ message: "email is required" }),
+  currency: z.string().min(1, { message: "Currency is required" }),
+  language: z.string().min(1, { message: "Language is required" }),
+  email: z.email({ message: "Email is required" }),
   workPhone: z
     .string()
     .length(10, { message: "Work phone must be exactly 10 digits" })
@@ -262,20 +262,20 @@ export type EditCustomerFormSchema = z.infer<typeof editCustomerFormSchema>;
 
 // edit address customer from schema >>>>>>>>>>>>>>
 export const editAddressCustomerFormSchema = z.object({
-  country: z.string().min(1, { message: "country is required" }),
-  state: z.string().min(1, { message: "state is required" }),
-  city: z.string().min(1, { message: "city is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  state: z.string().min(1, { message: "State is required" }),
+  city: z.string().min(1, { message: "City is required" }),
   pinCode: z
     .string()
     .trim()
-    .regex(/^[1-9][0-9]{5}$/, "invalid pin code"),
+    .regex(/^[1-9][0-9]{5}$/, "Invalid pin code"),
   address: z.object({
     street1: z.string().min(1, {
-      message: "street1 is required",
+      message: "Street1 is required",
     }),
 
     street2: z.string().min(1, {
-      message: "street2 is required",
+      message: "Street2 is required",
     }),
   }),
   mobile: z
@@ -290,10 +290,10 @@ export type EditAddressCustomerFormSchema = z.infer<
 // contact person schema >>>>>>>>>>>>>>>>>>>>>>>>>>
 export const contactPersonSchema = z.object({
   id: z.string().optional(),
-  salutation: z.string().min(1, { message: "salutation is required" }),
-  firstName: z.string().min(1, { message: "first name is required" }),
-  lastName: z.string().min(1, { message: "last name is required" }),
-  email: z.email({ message: "email is required" }),
+  salutation: z.string().min(1, { message: "Salutation is required" }),
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
+  email: z.email({ message: "Email is required" }),
   workPhone: z
     .string()
     .length(10, { message: "Mobile number must be exactly 10 digits" })
@@ -332,10 +332,10 @@ export const otherDetailsSchema = z.object({
     .optional(),
   // meta info
   websiteUrl: z.url({ message: "Enter a valid website URL" }),
-  department: z.string().min(1, { message: " department is required " }),
-  designation: z.string().min(1, { message: "designation is required " }),
+  department: z.string().min(1, { message: "Department is required " }),
+  designation: z.string().min(1, { message: "Designation is required " }),
   x: z.string().min(1, { message: "X is required" }),
-  facebook: z.string().min(1, { message: "facebook is required" }),
+  facebook: z.string().min(1, { message: "Facebook is required" }),
 });
 export type OtherDetailsSchema = z.infer<typeof otherDetailsSchema>;
 
