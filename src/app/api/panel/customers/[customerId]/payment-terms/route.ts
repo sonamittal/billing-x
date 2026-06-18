@@ -19,12 +19,15 @@ export const GET = async (
       );
     }
     const { customerId } = await params;
-    return  await getPaymentTermsController(customerId);
-  } catch (error: unknown) {
+    return await getPaymentTermsController(customerId);
+  } catch (error) {
     return Response.json(
       {
         success: false,
-        message: `Failed to fetch payment term`
+        message:
+          error instanceof Error
+            ? error.message
+            : `Failed to fetch payment term`,
       },
       { status: 500 },
     );
@@ -46,11 +49,12 @@ export const POST = async (req: Request) => {
     }
     const body = await req.json();
     return await addPaymentTermController(body);
-  } catch (error: unknown) {
+  } catch (error) {
     return Response.json(
       {
         success: false,
-        message: `Failed to add payment term`,
+        message:
+          error instanceof Error ? error.message : `Failed to add payment term`,
       },
       { status: 500 },
     );

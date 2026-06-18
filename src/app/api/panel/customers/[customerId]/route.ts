@@ -22,7 +22,7 @@ export const GET = async (
 
     if (!session || !session?.user?.id) {
       return Response.json(
-        { success: false, error: `Please sign in to access this content.` },
+        { success: false, message: `Please sign in to access this content.` },
         { status: 401 },
       );
     }
@@ -31,7 +31,7 @@ export const GET = async (
 
     if (!customerId) {
       return Response.json(
-        { success: false, error: `Customer id is required` },
+        { success: false, message: `Customer id is required` },
         { status: 400 },
       );
     }
@@ -60,7 +60,7 @@ export const GET = async (
 
     if (!customerRow) {
       return Response.json(
-        { success: false, error: `Customer not found` },
+        { success: false, message: `Customer not found` },
         { status: 404 },
       );
     }
@@ -168,13 +168,12 @@ export const PUT = async (
       },
       { status: 400 },
     );
-  } catch (error: unknown) {
-    console.error(error);
-
+  } catch (error) {
     return Response.json(
       {
         success: false,
-        message: `Internal Server Error`,
+        message:
+          error instanceof Error ? error.message : `Internal Server Error`,
       },
       { status: 500 },
     );
@@ -202,12 +201,12 @@ export const DELETE = async (
     }
     const { customerId } = await params;
     return await deleteCusController(customerId);
-  } catch (error: unknown) {
-    console.error(" Detele Customer Error:", error);
+  } catch (error) {
     return Response.json(
       {
         success: false,
-        message: "Failed to delete Customer",
+        message:
+          error instanceof Error ? error.message : `Failed to delete Customer`,
       },
       { status: 500 },
     );

@@ -22,12 +22,14 @@ export const PUT = async (
     const body = await req.json();
 
     return putCPController(contactId, body);
-  } catch (error: unknown) {
-    console.error("edit Contact Person Error:", error);
+  } catch (error) {
     return Response.json(
       {
         success: false,
-        message: "Failed to update contact person",
+        message:
+          error instanceof Error
+            ? error.message
+            : `Failed to update contact person`,
       },
       { status: 500 },
     );
@@ -51,12 +53,14 @@ export const DELETE = async (
     }
     const { contactId } = await params;
     return deleteCPController(contactId);
-  } catch (error: unknown) {
-    console.error("delete Contact Person Error:", error);
+  } catch (error) {
     return Response.json(
       {
         success: false,
-        message: `Failed to delete contact person`,
+        message:
+          error instanceof Error
+            ? error.message
+            : `Failed to delete contact person`,
       },
       { status: 500 },
     );

@@ -7,7 +7,7 @@ export const deleteCusController = async (customerId: string) => {
     return Response.json(
       {
         success: false,
-        error: `Customer id is required to perform this action.`,
+        message: `Customer id is required to perform this action.`,
       },
       { status: 400 },
     );
