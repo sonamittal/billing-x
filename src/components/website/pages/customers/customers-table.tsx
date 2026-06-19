@@ -42,8 +42,11 @@ interface Customer {
   receivable: number;
   unusedCredit: number;
 }
-interface SelectedUser extends Customer {
-  name: string;
+interface SelectedUser {
+  id: string;
+  user: {
+    name: string;
+  } | null;
 }
 
 // customer table
@@ -56,8 +59,10 @@ const CustomersTable = () => {
   const handleOpenDeleteDialog = (customer: Customer, row: any) => {
     row.toggleSelected(true);
     setSelectedUser({
-      ...customer,
-      name: customer.user.name ?? "Unknown",
+      id: customer.id,
+      user: {
+        name: customer.user.name ?? "Unknown",
+      },
     });
     setSelectedRow(row);
     setIsDeleteOpen(true);
@@ -73,10 +78,12 @@ const CustomersTable = () => {
           params: { name },
         });
         return res.data;
-      } catch (err: any) {
-        throw new Error(
-          err?.response?.data?.message || "Failed to fetch customers",
-        );
+      } catch (error) {
+        const message = axios.isAxiosError(error)
+          ? error.response?.data?.message
+          : undefined;
+
+        throw new Error(message || "Failed to fetch customers");
       }
     },
   });

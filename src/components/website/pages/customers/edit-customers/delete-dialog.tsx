@@ -14,10 +14,16 @@ import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
+
+interface DeleteCustomer {
+  id: string;
+  user: {
+    name: string;
+  } | null;
+}
 
 interface CustomerIdProps {
-  customer: GetCustomerById;
+  customer: DeleteCustomer;
   open: boolean;
   setOpen: (open: boolean) => void;
   callback?: string;

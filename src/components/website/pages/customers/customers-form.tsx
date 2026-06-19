@@ -93,24 +93,23 @@ const AddCustomerForm = ({
     error: addCustomerError,
   } = useMutation({
     mutationFn: async (data: AddCustomerFormSchema) => {
-      try {
-        const res = await axios.post("/api/panel/customers", {
-          type: "customer",
-          userId: selectedUser?.id,
-          ...data,
-        });
-        return res.data;
-      } catch (err: any) {
-        throw new Error(
-          err.response?.data?.message || "failed to create customer",
-        );
-      }
+      const res = await axios.post("/api/panel/customers", {
+        type: "customer",
+        userId: selectedUser?.id,
+        ...data,
+      });
+      return res.data;
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       toast.success("Customer created successfully!");
       form.reset();
       onOpenChange?.(false);
+    },
+
+    onError: (error) => {
+      toast.error(error.message || "failed to create customer");
     },
   });
 

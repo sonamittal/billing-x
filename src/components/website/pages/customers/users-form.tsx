@@ -57,21 +57,22 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
     error: addUserError,
   } = useMutation({
     mutationFn: async (data: UserFormSchema) => {
-      try {
-        const res = await axios.post("/api/panel/customers", {
-          type: "user",
-          ...data,
-        });
-        return res.data;
-      } catch (err: any) {
-        throw new Error(err.response?.data?.message || "Failed to create user");
-      }
+      const res = await axios.post("/api/panel/customers", {
+        type: "user",
+        ...data,
+      });
+      return res.data;
     },
+
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("User created successfully!");
       form.reset();
       onNext?.(data.data);
+    },
+
+    onError: (error) => {
+      toast.error(error.message || "Failed to create user");
     },
   });
 
@@ -127,13 +128,14 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
               </FormItem>
             )}
           />
+          {/* Name */}
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                Name <span className="text-red-500">*</span>
+                  Name <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input type="text" placeholder="eg:sonam" {...field} />
@@ -143,6 +145,7 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
             )}
           />
 
+          {/* email */}
           <FormField
             control={form.control}
             name="email"
