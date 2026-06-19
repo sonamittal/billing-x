@@ -5,12 +5,13 @@ import EditBillingAddressForm from "@/components/website/pages/customers/edit-cu
 import ContactPersonTable from "@/components/website/pages/customers/edit-customers/contact-person";
 import OtherDetailsForm from "@/components/website/pages/customers/edit-customers/other-details";
 import EditRemark from "@/components/website/pages/customers/edit-customers/edit-remark";
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 const EditDetails = ({
   customer,
   callback,
 }: {
-  customer: any;
+  customer: GetCustomerById;
   callback?: string;
 }) => {
   return (

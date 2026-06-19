@@ -23,11 +23,12 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Message from "@/components/ui/message";
 import { useRouter } from "next/navigation";
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 interface Props {
   customerId: string;
   callback?: string;
-  customer: any;
+  customer: GetCustomerById;
 }
 const EditRemark = ({ callback, customer, customerId }: Props) => {
   const queryClient = useQueryClient();
@@ -66,7 +67,7 @@ const EditRemark = ({ callback, customer, customerId }: Props) => {
       }
     },
     onError: (error) => {
-      console.log("Error:", error);
+      toast.error(error.message || "failed to edit Remarks");
     },
   });
 

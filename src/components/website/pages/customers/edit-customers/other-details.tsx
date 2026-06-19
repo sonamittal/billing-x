@@ -32,6 +32,7 @@ import {
   FileUploadList,
 } from "@/components/ui/file-upload";
 import { Plus, Upload, Trash2, Loader2, FileText } from "lucide-react";
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 interface PaymentOption {
   label: string;
@@ -39,7 +40,7 @@ interface PaymentOption {
 }
 interface OtherDetailsFormProps {
   customerId: string;
-  customer?: any;
+  customer: GetCustomerById;
   callback?: string;
 }
 
@@ -162,8 +163,8 @@ const OtherDetailsForm = ({
       }
     },
 
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+    onError: (error) => {
+      toast.error(error.message || "Something went wrong");
     },
   });
 
@@ -248,7 +249,7 @@ const OtherDetailsForm = ({
                           onValueChange={(files) => {
                             // keep old uploaded files
                             const existing = (field.value || []).filter(
-                              (item: any) => !(item instanceof File),
+                              (item) => !(item instanceof File),
                             );
 
                             field.onChange([...existing, ...(files ?? [])]);

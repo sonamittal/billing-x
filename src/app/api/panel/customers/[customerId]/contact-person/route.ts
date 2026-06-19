@@ -20,12 +20,14 @@ export const GET = async (
     }
     const { customerId } = await params;
     return await getCPController(customerId);
-  } catch (error: unknown) {
-    console.error("Contact Person Error:", error);
+  } catch (error) {
     return Response.json(
       {
         success: false,
-        message: `failed to fetch Contact Person `,
+        message:
+          error instanceof Error
+            ? error.message
+            : `failed to fetch Contact Person `,
       },
       { status: 500 },
     );
@@ -47,12 +49,14 @@ export const POST = async (req: Request) => {
     }
     const body = await req.json();
     return await postCPController(body);
-  } catch (error: unknown) {
-    console.error(" Add Contact Person Error:", error);
+  } catch (error) {
     return Response.json(
       {
         success: false,
-        message: `failed to add Contact Person `,
+        message:
+          error instanceof Error
+            ? error.message
+            : `failed to add Contact Person `,
       },
       { status: 500 },
     );

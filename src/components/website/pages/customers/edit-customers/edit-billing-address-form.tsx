@@ -23,11 +23,12 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import Message from "@/components/ui/message";
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 interface Props {
   customerId: string;
   callback?: string;
-  customer: any;
+  customer: GetCustomerById;
 }
 const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
   const queryClient = useQueryClient();
@@ -70,18 +71,12 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
     error: editCustomerError,
   } = useMutation({
     mutationFn: async (data: EditAddressCustomerFormSchema) => {
-      try {
-        const res = await axios.put(`/api/panel/customers/${customerId}`, {
-          id: customerId,
-          action: "billingAddress",
-          ...data,
-        });
-        return res.data;
-      } catch (error: any) {
-        throw new Error(
-          error.response?.data?.message || "Failed to edit customer ",
-        );
-      }
+      const res = await axios.put(`/api/panel/customers/${customerId}`, {
+        id: customerId,
+        action: "billingAddress",
+        ...data,
+      });
+      return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
@@ -93,8 +88,8 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
         }, 1200);
       }
     },
-    onError: (error: any) => {
-      console.error(error);
+    onError: (error) => {
+      toast.error(error.message || "failed to edit billing address");
     },
   });
 

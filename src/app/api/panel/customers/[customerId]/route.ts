@@ -8,7 +8,7 @@ import { putCustomerOtherDetailsController } from "@/app/api/panel/customers/[cu
 import { putCBAController } from "@/app/api/panel/customers/[customerId]/putController";
 import { putCRController } from "@/app/api/panel/customers/[customerId]/putController";
 import { deleteCusController } from "@/app/api/panel/customers/[customerId]/deleteController";
-
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 // get req
 export const GET = async (
   _req: Request,
@@ -75,14 +75,15 @@ export const GET = async (
     const otherDetailsRow = otherDetailsData[0] || null;
 
     //  response
-    return Response.json(
-      {
-        ...customerRow.customer,
-        user: customerRow.user,
-        otherDetails: otherDetailsRow,
-      },
-      { status: 200 },
-    );
+    const responseData: GetCustomerById = {
+      ...customerRow.customer,
+      user: customerRow.user,
+      otherDetails: otherDetailsRow,
+    };
+
+    return Response.json(responseData, {
+      status: 200,
+    });
   } catch (error) {
     return Response.json(
       {

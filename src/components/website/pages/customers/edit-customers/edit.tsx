@@ -37,9 +37,10 @@ import { toast } from "sonner";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 interface CustomerIdProps {
-  customer: any;
+  customer: GetCustomerById;
   callback?: string;
   customerId: string;
 }
@@ -76,19 +77,14 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
     error: editCustomerError,
   } = useMutation({
     mutationFn: async (data: EditCustomerFormSchema) => {
-      try {
-        const res = await axios.put(`/api/panel/customers/${customerId}`, {
-          id: customerId,
-          action: "customer",
-          ...data,
-        });
-        return res.data;
-      } catch (error: any) {
-        throw new Error(
-          error.response?.data?.message || "Failed to edit customer ",
-        );
-      }
+      const res = await axios.put(`/api/panel/customers/${customerId}`, {
+        id: customerId,
+        action: "customer",
+        ...data,
+      });
+      return res.data;
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       toast.success("customer updated successfully!");
@@ -98,6 +94,9 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
           router.push(callback);
         }, 1200);
       }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update customer");
     },
   });
 

@@ -7,8 +7,14 @@ import {
   integer,
   json,
   unique,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { invoice } from "@/drizzle/schema/invoices";
+
+export const customerTypeEnum = pgEnum("customer_type", [
+  "individual",
+  "business",
+]);
 
 export const customer = pgTable("customer", {
   id: text("id").primaryKey(),
@@ -16,7 +22,7 @@ export const customer = pgTable("customer", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" })
     .unique(),
-  customerType: text("customer_type").notNull(),
+  customerType: customerTypeEnum("customer_type").notNull(),
   companyName: text("company_name"),
   currency: text("currency").notNull(),
   language: text("language").notNull(),

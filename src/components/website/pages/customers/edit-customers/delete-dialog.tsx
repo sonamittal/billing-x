@@ -14,8 +14,10 @@ import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
+
 interface CustomerIdProps {
-  customer: any;
+  customer: GetCustomerById;
   open: boolean;
   setOpen: (open: boolean) => void;
   callback?: string;
@@ -49,7 +51,7 @@ const DeleteCustomerDialog = ({
         setOpen(false);
       },
       onError: (error) => {
-        toast.error(error.message);
+        toast.error(error.message || "failed to delete Customer");
       },
     });
   return (
@@ -60,7 +62,7 @@ const DeleteCustomerDialog = ({
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete{" "}
             <span className="font-medium text-foreground">
-              {(customer.user.name ?? "Unknown") + "'s"}
+              {(customer.user?.name ?? "Unknown") + "'s"}
             </span>{" "}
             account and it{"'"}s data from the server.
           </AlertDialogDescription>

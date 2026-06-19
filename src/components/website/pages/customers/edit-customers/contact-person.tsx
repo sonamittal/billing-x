@@ -47,10 +47,14 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
           `/api/panel/customers/${customerId}/contact-person`,
         );
         return res.data.data;
-      } catch (error: any) {
-        throw new Error(
-          error?.response?.data?.message || "Failed to fetch contact person",
-        );
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          throw new Error(
+            error.response?.data?.message || "Failed to fetch contact person",
+          );
+        }
+
+        throw new Error("Failed to fetch contact person");
       }
     },
   });
@@ -99,40 +103,29 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
     error: editCPCustomerError,
   } = useMutation({
     mutationFn: async (data: ContactPersonsSchema) => {
-      try {
-        const hasNewContact = data.contacts.some((contact: any) => !contact.id);
+      const hasNewContact = data.contacts.some((contact) => !contact.id);
 
-        const cpData = data.contacts.map((contact: any) => {
-          // Update
-          if (contact.id) {
-            return axios.put(
-              `/api/panel/customers/${customerId}/contact-person/${contact.id}`,
-              contact,
-            );
-          }
-
-          // Create
-          return axios.post(
-            `/api/panel/customers/${customerId}/contact-person`,
-            {
-              customerId,
-              contacts: [contact],
-            },
+      const cpData = data.contacts.map((contact) => {
+        // Update
+        if (contact.id) {
+          return axios.put(
+            `/api/panel/customers/${customerId}/contact-person/${contact.id}`,
+            contact,
           );
-        });
-        const res = await Promise.all(cpData);
-        return {
-          res,
-          action: hasNewContact ? "create" : "update",
-        };
-      } catch (error: any) {
-        throw new Error(
-          error?.response?.data?.message ||
-            "Failed to edit customer contact person",
-        );
-      }
-    },
+        }
 
+        // Create
+        return axios.post(`/api/panel/customers/${customerId}/contact-person`, {
+          customerId,
+          contacts: [contact],
+        });
+      });
+      const res = await Promise.all(cpData);
+      return {
+        res,
+        action: hasNewContact ? "create" : "update",
+      };
+    },
     onSuccess: (result) => {
       toast.success(
         result.action === "create"
@@ -151,6 +144,9 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
           router.push(callback);
         }, 1200);
       }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to edit customer contact person");
     },
   });
 

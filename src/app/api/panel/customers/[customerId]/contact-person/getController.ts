@@ -1,7 +1,9 @@
 import { db } from "@/lib/database/db-connect";
 import { eq } from "drizzle-orm";
 import { contactPerson } from "@/drizzle/schema";
-export const getCPController = async (customerId: string) => {
+export const getCPController = async (
+  customerId: string,
+): Promise<Response> => {
   const data = await db
     .select()
     .from(contactPerson)

@@ -5,20 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Mail, User, SquarePen, CheckCircle2, XCircle } from "lucide-react";
-
-interface UserData {
-  id: string;
-  name?: string;
-  email?: string;
-  image?: string;
-  banned?: boolean;
-  role?: string;
-  emailVerified?: boolean;
-  createdAt?: string;
-}
+import type { CustomerUser } from "@/app/api/panel/customers/[customerId]/type";
 
 interface UserCardProps {
-  user: UserData;
+  user: CustomerUser;
   userId?: string;
 }
 

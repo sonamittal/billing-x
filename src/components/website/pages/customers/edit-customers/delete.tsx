@@ -9,8 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React, { useState } from "react";
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
+
 interface CustomerIdProps {
-  customer: any;
+  customer: GetCustomerById;
 }
 
 const DeleteCustomer = ({ customer }: CustomerIdProps) => {
@@ -28,7 +30,7 @@ const DeleteCustomer = ({ customer }: CustomerIdProps) => {
           <CardDescription>
             This will permanently delete{" "}
             <span className="text-foreground font-medium">
-              {(customer?.user.name ?? "Unknown") + "'s"}
+              {(customer.user?.name ?? "Unknown") + "'s"}
             </span>{" "}
             account and it{"'"}s data from the server.
           </CardDescription>

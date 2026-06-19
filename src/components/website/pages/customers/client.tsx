@@ -1,7 +1,7 @@
 "use client";
 import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Message from "@/components/ui/message";
 import EditCustomer from "@/components/website/pages/customers/edit-customers/edit";
 import { notFound } from "next/navigation";
@@ -9,6 +9,7 @@ import { ChevronRight } from "lucide-react";
 import UserCard from "@/components/website/pages/customers/edit-customers/user-card";
 import DeleteCustomer from "@/components/website/pages/customers/edit-customers/delete";
 import EditDetails from "@/components/website/pages/customers/edit-customers/edit-details";
+import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 interface props {
   customerId: string;
@@ -16,17 +17,26 @@ interface props {
 
 const CustomersClient = ({ customerId }: props) => {
   // Fetch users
-  const { data, error, isPending, isSuccess } = useQuery({
+  const { data, error, isPending, isSuccess } = useQuery<
+    GetCustomerById,
+    Error
+  >({
     queryKey: ["customers", customerId],
     queryFn: async () => {
       try {
-        const { data } = await axios.get(`/api/panel/customers/${customerId}`);
-        return data;
-      } catch (error: any) {
-        throw new Error(error.response.data.error);
+        const res = await axios.get<GetCustomerById>(
+          `/api/panel/customers/${customerId}`,
+        );
+        return res.data;
+      } catch (error) {
+        const err = error as AxiosError<{ error: string }>;
+        throw new Error(
+          err.response?.data?.error ?? "Failed to fetch customer",
+        );
       }
     },
     retry: false,
+    enabled: !!customerId,
   });
   console.log(data);
 
@@ -49,9 +59,7 @@ const CustomersClient = ({ customerId }: props) => {
             </a>
           </BreadcrumbItem>
           <ChevronRight className="h-4 w-4 mt-1 text-muted-foreground" />
-          <BreadcrumbItem>
-            {data?.user?.name ?? data?.name ?? "Unknown"}
-          </BreadcrumbItem>
+          <BreadcrumbItem>{data.user?.name ?? "Unknown"}</BreadcrumbItem>
         </Breadcrumb>
       )}
 
@@ -65,7 +73,7 @@ const CustomersClient = ({ customerId }: props) => {
               callback="/panel/customers"
             />
             <div className="grid grid-cols-1 gap-5 h-fit">
-              <UserCard user={data.user} userId={data.user.id} />
+              {data.user && <UserCard user={data.user} userId={data.user.id} />}
               <DeleteCustomer customer={data} />
             </div>
           </div>

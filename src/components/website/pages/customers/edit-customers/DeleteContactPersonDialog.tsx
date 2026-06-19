@@ -14,9 +14,10 @@ import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import type { ContactPerson } from "@/app/api/panel/customers/[customerId]/contact-person/type";
 
 interface DeleteContactPersonDialogProps {
-  contact: any;
+  contact: ContactPerson;
   customerId: string;
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -56,9 +57,9 @@ const DeleteContactPersonDialog = ({
       }
     },
 
-    onError: (error: any) => {
+    onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to delete contact person",
+        error.message|| "Failed to delete contact person",
       );
     },
   });
