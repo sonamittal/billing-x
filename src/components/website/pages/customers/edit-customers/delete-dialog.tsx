@@ -15,13 +15,12 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-interface DeleteCustomer {
+ interface DeleteCustomer {
   id: string;
   user: {
     name: string;
-  } | null;
+  };
 }
-
 interface CustomerIdProps {
   customer: DeleteCustomer;
   open: boolean;

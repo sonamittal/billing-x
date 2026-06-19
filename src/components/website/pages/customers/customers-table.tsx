@@ -28,6 +28,8 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import axios from "axios";
 import DeleteCustomerDialog from "@/components/website/pages/customers/edit-customers/delete-dialog";
+import type { Row } from "@tanstack/react-table";
+
 // types
 interface Customer {
   id: string;
@@ -42,28 +44,34 @@ interface Customer {
   receivable: number;
   unusedCredit: number;
 }
-interface SelectedUser {
+export interface selectedUser {
   id: string;
   user: {
     name: string;
-  } | null;
+  };
 }
 
 // customer table
 const CustomersTable = () => {
-  const [selectedRow, setSelectedRow] = React.useState<any | null>(null);
-  const [selectedUser, setSelectedUser] = React.useState<SelectedUser | null>(
+  const [selectedRow, setSelectedRow] = React.useState<Row<Customer> | null>(
     null,
   );
+  const [selectedUser, setSelectedUser] = React.useState<selectedUser | null>(
+    null,
+  );
+
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const handleOpenDeleteDialog = (customer: Customer, row: any) => {
+
+  const handleOpenDeleteDialog = (customer: Customer, row: Row<Customer>) => {
     row.toggleSelected(true);
+
     setSelectedUser({
       id: customer.id,
       user: {
         name: customer.user.name ?? "Unknown",
       },
     });
+
     setSelectedRow(row);
     setIsDeleteOpen(true);
   };
@@ -300,7 +308,7 @@ const CustomersTable = () => {
     columns,
     pageCount: 2,
     initialState: {
-      sorting: [{ id: "name", desc: false } as any],
+      sorting: [{ id: "user", desc: false }],
       columnPinning: { right: ["actions"] },
     },
     getRowId: (row) => row.id,
