@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
 
-export default function Users() {
-  const [invitedOpen, setInvitedOpen] = useState(false);
+const Users = () => {
+  const [Open, setOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -35,16 +35,17 @@ export default function Users() {
               Manage your users and their roles here.
             </p>
           </div>
-          <Button onClick={() => setInvitedOpen(true)}>
+          <Button onClick={() => setOpen(true)}>
             <UserPlus className="mt-0.6 h-4 w-4" />
             Add User
           </Button>
         </div>
         {/* Users table */}
         <UsersTable />
-        {/* invited User btn */}
-        <AddUserForm open={invitedOpen} onOpenChange={setInvitedOpen} />
+        {/* User btn */}
+        <AddUserForm open={Open} onOpenChange={setOpen} />
       </Main>
     </div>
   );
-}
+};
+export default Users;

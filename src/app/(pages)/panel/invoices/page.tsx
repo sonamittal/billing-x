@@ -6,13 +6,12 @@ import { ProfileDropdown } from "@/components/panel/layout/profile-dropdown";
 import { Search } from "@/components/panel/layout/search";
 import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
 import InvoiceTable from "@/components/website/pages/invoices/invoice-table";
-import AddCustomerDailog from "@/components/website/pages/customers/customers-dialog";
+import AddInvoices from "@/components/website/pages/invoices/add-invoices";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Receipt } from "lucide-react";
-
-export default function Users() {
-  const [invitedOpen, setInvitedOpen] = useState(false);
+const Invoices = () => {
+  const [Open, setOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -30,21 +29,25 @@ export default function Users() {
       <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Invoices List</h2>
+            <h2 className="text-2xl font-bold tracking-tight">
+              Customers List
+            </h2>
             <p className="text-muted-foreground">
-              View, manage and track all invoices, payments and billing records.
+              Access and manage all your customer records, including contact and
+              financial details.
             </p>
           </div>
-          <Button onClick={() => setInvitedOpen(true)}>
+          <Button onClick={() => setOpen(true)}>
             <Receipt className="mt-0.6 h-4 w-4" />
-            Add Invoice
+            Add Customer
           </Button>
         </div>
-        {/* customers table */}
+        {/* invoice table */}
         <InvoiceTable />
-        {/* invited User btn */}
-        <AddCustomerDailog open={invitedOpen} onOpenChange={setInvitedOpen} />
+        {/* invoices btn */}
+        <AddInvoices open={Open} onOpenChange={setOpen} />
       </Main>
     </div>
   );
-}
+};
+export default Invoices;

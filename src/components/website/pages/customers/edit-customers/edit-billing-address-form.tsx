@@ -115,7 +115,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
 
   // Submit
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
-    console.log(" form data sbmitted:", data);
+    console.log("form data sbmitted:", data);
     editCustomerBAddress(data);
   };
 

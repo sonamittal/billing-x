@@ -10,17 +10,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
- interface DeleteCustomer {
+interface DeleteCustomer {
   id: string;
   user: {
     name: string;
   };
 }
+
 interface CustomerIdProps {
   customer: DeleteCustomer;
   open: boolean;

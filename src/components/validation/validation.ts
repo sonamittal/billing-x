@@ -387,13 +387,13 @@ export const addInvoiceSchema = z.object({
     .min(1, {
       message: "At least one attachment is required",
     }),
-  subtotal: z.coerce.number().min(0, {
+  subtotal: z.number().min(0, {
     message: "Subtotal cannot be negative",
   }),
-  discount: z.coerce.number().min(0, {
+  discount: z.number().min(0, {
     message: "Discount cannot be negative",
   }),
-  totalAmount: z.coerce.number().min(0, {
+  totalAmount: z.number().min(0, {
     message: "Total amount cannot be negative",
   }),
   customerNotes: z.string().min(1, {

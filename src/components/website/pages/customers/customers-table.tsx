@@ -8,7 +8,6 @@ import {
   Mail,
   Phone,
   ArrowUpRight,
-  ArrowUpLeft,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
@@ -308,7 +307,7 @@ const CustomersTable = () => {
     columns,
     pageCount: 2,
     initialState: {
-      sorting: [{ id: "user", desc: false }],
+      sorting: [{ id: "name", desc: false }],
       columnPinning: { right: ["actions"] },
     },
     getRowId: (row) => row.id,

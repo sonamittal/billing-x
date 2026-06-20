@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
 
-export default function Users() {
-  const [invitedOpen, setInvitedOpen] = useState(false);
+const Customers = () => {
+  const [Open, setOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -38,16 +38,17 @@ export default function Users() {
               financial details.
             </p>
           </div>
-          <Button onClick={() => setInvitedOpen(true)}>
+          <Button onClick={() => setOpen(true)}>
             <UserPlus className="mt-0.6 h-4 w-4" />
             Add Customer
           </Button>
         </div>
         {/* customers table */}
         <CustomersTable />
-        {/* invited User btn */}
-        <AddCustomerDailog open={invitedOpen} onOpenChange={setInvitedOpen} />
+        {/* Customer btn */}
+        <AddCustomerDailog open={Open} onOpenChange={setOpen} />
       </Main>
     </div>
   );
-}
+};
+export default Customers;
