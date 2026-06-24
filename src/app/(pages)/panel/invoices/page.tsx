@@ -29,9 +29,7 @@ const Invoices = () => {
       <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              Customers List
-            </h2>
+            <h2 className="text-2xl font-bold tracking-tight">Invoices List</h2>
             <p className="text-muted-foreground">
               Access and manage all your customer records, including contact and
               financial details.
@@ -39,7 +37,7 @@ const Invoices = () => {
           </div>
           <Button onClick={() => setOpen(true)}>
             <Receipt className="mt-0.6 h-4 w-4" />
-            Add Customer
+            Add Invoices
           </Button>
         </div>
         {/* invoice table */}

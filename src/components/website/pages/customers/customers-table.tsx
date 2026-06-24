@@ -38,7 +38,7 @@ interface Customer {
     image?: string;
   };
   mobile?: string;
-  email: string;
+  email: string;    
   companyName?: string;
   receivable: number;
   unusedCredit: number;

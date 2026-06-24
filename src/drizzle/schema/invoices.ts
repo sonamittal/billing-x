@@ -1,13 +1,7 @@
 import { customer } from "@/drizzle/schema/customer";
 import { relations } from "drizzle-orm";
-import {
-  pgTable,
-  text,
-  timestamp,
-  integer,
-  jsonb,
-  numeric,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, numeric } from "drizzle-orm/pg-core";
+import type { Unit } from "@/drizzle/schema/type";
 
 export const invoice = pgTable("invoice", {
   id: text("id").primaryKey(),
@@ -36,17 +30,7 @@ export const invoice = pgTable("invoice", {
 
   subject: text("subject"),
 
-  attachments: jsonb("attachments").$type<
-    {
-      url: string;
-      key: string;
-      name?: string;
-    }[]
-  >(),
-
-  customerNotes: text("customer_notes").notNull(),
-
-  termsAndConditions: text("terms_and_conditions").notNull(),
+  // summary
   subtotal: numeric("subtotal", {
     precision: 10,
     scale: 2,
@@ -61,6 +45,10 @@ export const invoice = pgTable("invoice", {
     precision: 10,
     scale: 2,
   }).notNull(),
+
+  customerNotes: text("customer_notes").notNull(),
+
+  termsAndConditions: text("terms_and_conditions").notNull(),
 
   status: text("status")
     .$type<"draft" | "sent" | "unpaid" | "paid">()
@@ -93,14 +81,24 @@ export const invoiceItem = pgTable("invoice_item", {
 
   itemName: text("item_name").notNull(),
 
-  unit: text("unit"),
+  description: text("description").notNull(),
 
-  sellingPrice: numeric("selling_price", {
+  unit: text("unit").$type<Unit>().notNull(),
+
+  quantity: numeric("quantity", {
     precision: 10,
     scale: 2,
   }).notNull(),
 
-  description: text("description"),
+  rate: numeric("rate", {
+    precision: 10,
+    scale: 2,
+  }).notNull(),
+
+  amount: numeric("amount", {
+    precision: 10,
+    scale: 2,
+  }).notNull(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
 

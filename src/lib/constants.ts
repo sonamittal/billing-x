@@ -108,3 +108,27 @@ export const Sal_titles = [
   { label: "Miss.", value: "miss." },
   { label: "Dr.", value: "Dr." },
 ];
+
+// units
+export const units = [
+  { value: "pcs", label: "PCS" },
+
+  { value: "cm", label: "CM" },
+  { value: "mm", label: "MM" },
+  { value: "m", label: "Meter (M)" },
+  { value: "km", label: "Kilometer (KM)" },
+  { value: "ft", label: "Feet (FT)" },
+  { value: "in", label: "Inch (IN)" },
+
+  { value: "g", label: "Gram (G)" },
+  { value: "kg", label: "Kilogram (KG)" },
+  { value: "mg", label: "Milligram (MG)" },
+  { value: "lb", label: "Pound (LB)" },
+
+  { value: "ml", label: "Milliliter (ML)" },
+  { value: "l", label: "Liter (L)" },
+
+  { value: "box", label: "Box" },
+  { value: "pack", label: "Pack" },
+  { value: "dozen", label: "Dozen" },
+];

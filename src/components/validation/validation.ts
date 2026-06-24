@@ -1,4 +1,5 @@
 // zod schema >>>>>>>>>>>>>\
+import { UNIT_VALUES } from "@/drizzle/schema/type";
 import * as z from "zod";
 export const supFormSchema = z
   .object({
@@ -361,6 +362,30 @@ export const editCRSchema = z.object({
 });
 export type EditCRSchema = z.infer<typeof editCRSchema>;
 
+// invoice item schema >>>>>>>>>>>>>>>>>>>>>>
+export const itemSchema = z.object({
+  itemName: z.string().min(1, {
+    message: "Item Name is required",
+  }),
+  description: z.string().min(1, {
+    message: "Description is required",
+  }),
+  unit: z.enum(UNIT_VALUES, {
+    message: "Please select a valid unit",
+  }),
+  rate: z.number().min(0, {
+    message: "Rate must be greater than or equal to 0",
+  }),
+  quantity: z.number().positive({
+    message: "Quantity must be greater than 0",
+  }),
+  amount: z.number().min(0, {
+    message: "Amount cannot be negative",
+  }),
+});
+
+export type ItemSchema = z.infer<typeof itemSchema>;
+
 // add invoice schema >>>>>>>>>>>>>>>>>>>>>>>>>>
 export const addInvoiceSchema = z.object({
   customerName: z.string().min(1, {
@@ -376,17 +401,9 @@ export const addInvoiceSchema = z.object({
     message: "Due date is required",
   }),
   subject: z.string().optional(),
-  attachments: z
-    .array(
-      z.object({
-        url: z.string(),
-        key: z.string(),
-        name: z.string().optional(),
-      }),
-    )
-    .min(1, {
-      message: "At least one attachment is required",
-    }),
+  items: z.array(itemSchema).min(1, {
+    message: "At least one item is required",
+  }),
   subtotal: z.number().min(0, {
     message: "Subtotal cannot be negative",
   }),
@@ -405,24 +422,3 @@ export const addInvoiceSchema = z.object({
 });
 
 export type AddInvoiceSchema = z.infer<typeof addInvoiceSchema>;
-
-// add invoice item schema >>>>>>>>>>>>>>>>>>>>>>
-export const addItemSchema = z.object({
-  itemName: z.string().min(1, {
-    message: "Item name is required",
-  }),
-  unit: z.string().min(1, {
-    message:
-      "The item will be measured in terms of this unit (e.g.: kg, dozen)",
-  }),
-
-  sellingPrice: z.coerce.number().min(0, {
-    message: "Selling price must be greater than or equal to 0",
-  }),
-
-  description: z.string().min(1, {
-    message: "Description is required",
-  }),
-});
-
-export type AddItemSchema = z.infer<typeof addItemSchema>;
