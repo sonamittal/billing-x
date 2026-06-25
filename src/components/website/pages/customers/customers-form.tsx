@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Users, MapPin, Loader2, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import MultiSelect from "@/components/ui/multiselect";
+import { SearchCombobox } from "@/components/ui/combobox";
 import { addCustomerFormSchema } from "@/components/validation/validation";
 import type { AddCustomerFormSchema } from "@/components/validation/validation";
 import {
@@ -54,6 +54,26 @@ type AddCustomerPayload = AddCustomerFormSchema & {
   type: "customer";
   userId: string;
 };
+
+type Country = {
+  id: number;
+  name: string;
+};
+
+type State = {
+  id: number;
+  name: string;
+};
+type City = {
+  id: number;
+  name: string;
+};
+
+type Language = {
+  id?: number;
+  name: string;
+};
+
 const AddCustomerForm = ({
   open,
   onOpenChange,
@@ -62,10 +82,10 @@ const AddCustomerForm = ({
 }: Props) => {
   const queryClient = useQueryClient();
 
-  const [countriesList, setCountriesList] = useState<any[]>([]);
-  const [stateList, setStateList] = useState<any[]>([]);
-  const [citiesList, setCitiesList] = useState<any[]>([]);
-  const [languageList, setLanguageList] = useState<any[]>([]);
+  const [countriesList, setCountriesList] = useState<Country[]>([]);
+  const [stateList, setStateList] = useState<State[]>([]);
+  const [citiesList, setCitiesList] = useState<City[]>([]);
+  const [languageList, setLanguageList] = useState<Language[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
 
@@ -124,24 +144,25 @@ const AddCustomerForm = ({
 
   // Fetch states when country changes
   useEffect(() => {
-    if (selectedCountry) {
-      GetState(parseInt(selectedCountry)).then((res) => setStateList(res));
-      setSelectedState(null);
-      form.setValue("state", "");
-      form.setValue("city", "");
-    }
-  }, [selectedCountry, form]);
+    if (!selectedCountry) return;
+
+    GetState(Number(selectedCountry)).then(setStateList);
+
+    setSelectedState(null);
+    form.setValue("state", "");
+    form.setValue("city", "");
+  }, [selectedCountry]);
 
   // Fetch cities when state changes
   useEffect(() => {
-    if (selectedState && selectedCountry) {
-      GetCity(parseInt(selectedCountry), parseInt(selectedState)).then((res) =>
-        setCitiesList(res),
-      );
-      form.setValue("city", "");
-    }
-  }, [selectedState, selectedCountry, form]);
+    if (!selectedState || !selectedCountry) return;
 
+    GetCity(Number(selectedCountry), Number(selectedState)).then(setCitiesList);
+
+    form.setValue("city", "");
+  }, [selectedState, selectedCountry]);
+
+  // submit
   const onSubmit = (data: AddCustomerFormSchema) => {
     if (!selectedUser?.id) {
       toast.error("Please select a user first");
@@ -240,15 +261,13 @@ const AddCustomerForm = ({
                       Currency <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <MultiSelect
+                      <SearchCombobox
                         options={CURRENCY_TYPE.map((c) => ({
                           label: c.label,
                           value: c.value,
                         }))}
-                        darkBg="primary"
-                        mode="single"
                         value={field.value}
-                        onChange={(val) => field.onChange(val)}
+                        onChange={field.onChange}
                         placeholder="Select Currency"
                       />
                     </FormControl>
@@ -266,14 +285,13 @@ const AddCustomerForm = ({
                       Customer Language <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <MultiSelect
+                      <SearchCombobox
                         options={languageList.map((lang) => ({
                           label: lang.name,
                           value: lang.name,
                         }))}
-                        mode="single"
                         value={field.value}
-                        onChange={(val) => field.onChange(val)}
+                        onChange={field.onChange}
                         placeholder="Select Language"
                       />
                     </FormControl>
@@ -305,33 +323,31 @@ const AddCustomerForm = ({
                     </FormLabel>
 
                     <FormControl>
-                      <MultiSelect
+                      <SearchCombobox
+                        value={field.value}
+                        onChange={(val: string) => {
+                          field.onChange(val);
+
+                          setSelectedCountry(val);
+
+                          const country = countriesList.find(
+                            (c) => c.id.toString() === val,
+                          );
+
+                          form.setValue("countryId", val);
+                          form.setValue("country", country?.name ?? "");
+
+                          form.setValue("stateId", "");
+                          form.setValue("state", "");
+                          form.setValue("cityId", "");
+                          form.setValue("city", "");
+
+                          setSelectedState(null);
+                        }}
                         options={countriesList.map((c) => ({
                           label: c.name,
                           value: c.id.toString(),
                         }))}
-                        darkBg="primary"
-                        mode="single"
-                        value={field.value}
-                        onChange={(val) => {
-                          field.onChange(val);
-
-                          if (typeof val === "string") {
-                            setSelectedCountry(val);
-
-                            const country = countriesList.find(
-                              (c) => c.id.toString() === val,
-                            );
-
-                            form.setValue("countryId", val);
-                            form.setValue("country", country?.name ?? "");
-
-                            form.setValue("stateId", "");
-                            form.setValue("state", "");
-                            form.setValue("cityId", "");
-                            form.setValue("city", "");
-                          }
-                        }}
                         placeholder="Select Country"
                       />
                     </FormControl>
@@ -342,7 +358,7 @@ const AddCustomerForm = ({
               {/* State */}
               <FormField
                 control={form.control}
-                name="state"
+                name="stateId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -350,30 +366,27 @@ const AddCustomerForm = ({
                     </FormLabel>
 
                     <FormControl>
-                      <MultiSelect
+                      <SearchCombobox
+                        value={field.value}
+                        onChange={(val: string) => {
+                          field.onChange(val);
+
+                          setSelectedState(val);
+
+                          const state = stateList.find(
+                            (s) => s.id.toString() === val,
+                          );
+
+                          form.setValue("stateId", val);
+                          form.setValue("state", state?.name ?? "");
+                          form.setValue("cityId", "");
+                          form.setValue("city", "");
+                        }}
                         options={stateList.map((s) => ({
                           label: s.name,
                           value: s.id.toString(),
                         }))}
-                        darkBg="primary"
-                        mode="single"
-                        value={field.value}
-                        onChange={(val) => {
-                          field.onChange(val);
-
-                          if (typeof val === "string") {
-                            setSelectedState(val);
-
-                            const state = stateList.find(
-                              (s) => s.id.toString() === val,
-                            );
-
-                            form.setValue("stateId", val);
-                            form.setValue("state", state?.name ?? "");
-                          }
-                        }}
                         placeholder="Select State"
-                        disabled={!selectedCountry}
                       />
                     </FormControl>
                   </FormItem>
@@ -385,7 +398,7 @@ const AddCustomerForm = ({
               {/* City */}
               <FormField
                 control={form.control}
-                name="city"
+                name="cityId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -393,34 +406,30 @@ const AddCustomerForm = ({
                     </FormLabel>
 
                     <FormControl>
-                      <MultiSelect
+                      <SearchCombobox
+                        value={field.value}
+                        onChange={(val: string) => {
+                          field.onChange(val);
+
+                          const city = citiesList.find(
+                            (c) => c.id.toString() === val,
+                          );
+
+                          form.setValue("cityId", val);
+                          form.setValue("city", city?.name ?? "");
+                        }}
                         options={citiesList.map((c) => ({
                           label: c.name,
                           value: c.id.toString(),
                         }))}
-                        darkBg="primary"
-                        mode="single"
-                        value={field.value}
-                        onChange={(val) => {
-                          field.onChange(val);
-
-                          if (typeof val === "string") {
-                            const city = citiesList.find(
-                              (c) => c.id.toString() === val,
-                            );
-
-                            form.setValue("cityId", val);
-                            form.setValue("city", city?.name ?? "");
-                          }
-                        }}
                         placeholder="Select City"
-                        disabled={!selectedState}
                       />
                     </FormControl>
                   </FormItem>
                 )}
               />
-              {/* Pin*/}
+
+              {/* PIN */}
               <FormField
                 control={form.control}
                 name="pinCode"
@@ -428,7 +437,7 @@ const AddCustomerForm = ({
                   <FormItem>
                     <FormLabel>PIN Code</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="4001" {...field} />
+                      <Input type="text" placeholder="411001" {...field} />
                     </FormControl>
                   </FormItem>
                 )}

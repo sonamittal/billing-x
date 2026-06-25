@@ -11,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { editAddressCustomerFormSchema } from "@/components/validation/validation";
 import type { EditAddressCustomerFormSchema } from "@/components/validation/validation";
-import MultiSelect from "@/components/ui/multiselect";
 import { GetCountries, GetState, GetCity } from "react-country-state-city";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,22 +23,37 @@ import axios from "axios";
 import { toast } from "sonner";
 import Message from "@/components/ui/message";
 import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
+import { SearchCombobox } from "@/components/ui/combobox";
 
 interface Props {
   customerId: string;
   callback?: string;
   customer: GetCustomerById;
 }
+
+type Country = {
+  id: number;
+  name: string;
+};
+
+type State = {
+  id: number;
+  name: string;
+};
+
+type City = {
+  id: number;
+  name: string;
+};
 const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const [countriesList, setCountriesList] = useState<any[]>([]);
-  const [stateList, setStateList] = useState<any[]>([]);
-  const [citiesList, setCitiesList] = useState<any[]>([]);
+  const [countriesList, setCountriesList] = useState<Country[]>([]);
+  const [stateList, setStateList] = useState<State[]>([]);
+  const [citiesList, setCitiesList] = useState<City[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
-
   // Fetch countries
   useEffect(() => {
     GetCountries().then((result) => setCountriesList(result));
@@ -102,24 +116,34 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
 
   // Fetch states when country changes
   useEffect(() => {
-    if (selectedCountry) {
-      GetState(parseInt(selectedCountry)).then((res) => setStateList(res));
-      setSelectedState(null);
-      form.setValue("state", "");
-      form.setValue("city", "");
-    }
-  }, [selectedCountry, form]);
+    if (!selectedCountry) return;
+
+    GetState(Number(selectedCountry)).then((res) => {
+      setStateList(res);
+    });
+  }, [selectedCountry]);
 
   // Fetch cities when state changes
   useEffect(() => {
-    if (selectedState && selectedCountry) {
-      GetCity(parseInt(selectedCountry), parseInt(selectedState)).then((res) =>
-        setCitiesList(res),
-      );
-      form.setValue("city", "");
-    }
-  }, [selectedState, selectedCountry, form]);
+    if (!selectedCountry || !selectedState) return;
 
+    GetCity(Number(selectedCountry), Number(selectedState)).then((res) => {
+      setCitiesList(res);
+    });
+  }, [selectedCountry, selectedState]);
+
+  //useEffect
+  useEffect(() => {
+    if (customer.countryId) {
+      setSelectedCountry(customer.countryId);
+    }
+  }, [customer.countryId]);
+
+  useEffect(() => {
+    if (customer.stateId) {
+      setSelectedState(customer.stateId);
+    }
+  }, [customer.stateId]);
   // Submit
   const onSubmit = (data: EditAddressCustomerFormSchema) => {
     console.log("form data sbmitted:", data);
@@ -148,14 +172,9 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                   <FormLabel>Country</FormLabel>
 
                   <FormControl>
-                    <MultiSelect
-                      options={countriesList.map((country) => ({
-                        label: country.name,
-                        value: country.id.toString(),
-                      }))}
+                    <SearchCombobox
                       value={field.value || ""}
-                      mode="single"
-                      onChange={(value) => {
+                      onChange={(value: string) => {
                         field.onChange(value);
 
                         const selected = countriesList.find(
@@ -164,15 +183,21 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
 
                         if (selected) {
                           form.setValue("country", selected.name);
-                          setSelectedCountry(value as string);
 
-                          // reset dependent fields
+                          setSelectedCountry(value);
+                          setSelectedState(null);
+
                           form.setValue("stateId", "");
                           form.setValue("state", "");
                           form.setValue("cityId", "");
                           form.setValue("city", "");
                         }
                       }}
+                      options={countriesList.map((country) => ({
+                        label: country.name,
+                        value: country.id.toString(),
+                      }))}
+                      placeholder="Select Country"
                     />
                   </FormControl>
                 </FormItem>
@@ -187,15 +212,9 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                   <FormLabel>State</FormLabel>
 
                   <FormControl>
-                    <MultiSelect
-                      options={stateList.map((state) => ({
-                        label: state.name,
-                        value: state.id.toString(),
-                      }))}
+                    <SearchCombobox
                       value={field.value || ""}
-                      mode="single"
-                      disabled={!selectedCountry}
-                      onChange={(value) => {
+                      onChange={(value: string) => {
                         field.onChange(value);
 
                         const selected = stateList.find(
@@ -204,13 +223,18 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
 
                         if (selected) {
                           form.setValue("state", selected.name);
-                          setSelectedState(value as string);
 
-                          // reset city
+                          setSelectedState(value);
+
                           form.setValue("cityId", "");
                           form.setValue("city", "");
                         }
                       }}
+                      options={stateList.map((state) => ({
+                        label: state.name,
+                        value: state.id.toString(),
+                      }))}
+                      placeholder="Select State"
                     />
                   </FormControl>
                 </FormItem>
@@ -225,15 +249,9 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                   <FormLabel>City</FormLabel>
 
                   <FormControl>
-                    <MultiSelect
-                      options={citiesList.map((city) => ({
-                        label: city.name,
-                        value: city.id.toString(),
-                      }))}
+                    <SearchCombobox
                       value={field.value || ""}
-                      mode="single"
-                      disabled={!selectedState}
-                      onChange={(value) => {
+                      onChange={(value: string) => {
                         field.onChange(value);
 
                         const selected = citiesList.find(
@@ -244,11 +262,17 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                           form.setValue("city", selected.name);
                         }
                       }}
+                      options={citiesList.map((city) => ({
+                        label: city.name,
+                        value: city.id.toString(),
+                      }))}
+                      placeholder="Select City"
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
+
             {/* Pin*/}
             <FormField
               control={form.control}

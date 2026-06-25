@@ -38,6 +38,7 @@ import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
+import { SearchCombobox } from "@/components/ui/combobox";
 
 interface CustomerIdProps {
   customer: GetCustomerById;
@@ -171,15 +172,13 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                       Currency <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <MultiSelect
+                      <SearchCombobox
                         options={CURRENCY_TYPE.map((c) => ({
                           label: c.label,
                           value: c.value,
                         }))}
-                        darkBg="secondary"
-                        mode="single"
                         value={field.value}
-                        onChange={(val) => field.onChange(val)}
+                        onChange={field.onChange}
                         placeholder="Select Currency"
                       />
                     </FormControl>
@@ -197,15 +196,13 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                       Customer Language <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <MultiSelect
+                      <SearchCombobox
                         options={languageList.map((lang) => ({
                           label: lang.name,
                           value: lang.name,
                         }))}
-                        darkBg="secondary"
-                        mode="single"
                         value={field.value}
-                        onChange={(val) => field.onChange(val)}
+                        onChange={field.onChange}
                         placeholder="Select Language"
                       />
                     </FormControl>

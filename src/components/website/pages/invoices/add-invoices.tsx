@@ -20,9 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { addInvoiceSchema } from "@/components/validation/validation";
 import type { AddInvoiceSchema } from "@/components/validation/validation";
-import { SearchCombobox } from "@/components/ui/combobox";
-
-import MultiSelect from "@/components/ui/multiselect";
+import { SearchCombobox } from "@/components/ui/invoices-combobox";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { User, MapPin, Globe, Hash, Phone } from "lucide-react";
