@@ -48,14 +48,19 @@ export const postUser = async (body: PostUserBody) => {
   };
 };
 
+// type customer
+type CustomerType = "individual" | "business";
 interface PostCustomerBody {
   userId: string;
-  customerType: "individual" | "business";
+  customerType: CustomerType;
   companyName?: string;
   currency: string;
   language: string;
+  countryId: string;
   country: string;
+  stateId: string;
   state: string;
+  cityId: string;
   city: string;
   pinCode: string;
   address: {
@@ -71,8 +76,11 @@ export const postCustomer = async (body: PostCustomerBody) => {
     companyName,
     currency,
     language,
+    countryId,
     country,
+    stateId,
     state,
+    cityId,
     city,
     pinCode,
     address,
@@ -119,12 +127,15 @@ export const postCustomer = async (body: PostCustomerBody) => {
       companyName,
       currency,
       language,
+      countryId,
       country,
+      stateId,
       state,
+      cityId,
       city,
       pinCode,
       street1: address.street1,
-      street2: address.street2,
+      street2: address.street2 ?? null,
     })
     .returning();
 

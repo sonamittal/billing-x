@@ -20,11 +20,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { addInvoiceSchema } from "@/components/validation/validation";
 import type { AddInvoiceSchema } from "@/components/validation/validation";
+import { SearchCombobox } from "@/components/ui/combobox";
 
 import MultiSelect from "@/components/ui/multiselect";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Search, Receipt } from "lucide-react";
+import { User, MapPin, Globe, Hash, Phone } from "lucide-react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,38 +40,48 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-type Customer = {
+type CustomerList = {
   id: string;
-  name: string;
-  street1: string;
-  city: string;
-  state: string;
-  pinCode: string;
+  user: {
+    name: string;
+    image: string | null;
+  } | null;
+  email: string | null;
+  companyName: string | null;
 };
-
-const customers: Customer[] = [
-  {
-    id: "1",
-    name: "Mrs. Rashi Tyagi",
-    street1: "Sector 15",
-    city: "Noida",
-    state: "Uttar Pradesh",
-    pinCode: "201301",
-  },
-  {
-    id: "2",
-    name: "John Doe",
-    street1: "MG Road",
-    city: "Delhi",
-    state: "Delhi",
-    pinCode: "110001",
-  },
-];
-
+type CustomerDetail = {
+  id: string;
+  country: string | null;
+  state: string | null;
+  city: string | null;
+  pinCode: string | null;
+  street1: string | null;
+  mobile: string | null;
+  user: {
+    name: string;
+    image: string | null;
+  } | null;
+};
 const AddInvoices = ({ open, onOpenChange }: Props) => {
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
-    null,
-  );
+  const [selectedId, setSelectedId] = useState<string>("");
+  // fetch data
+  const { data: customers = [] } = useQuery<CustomerList[]>({
+    queryKey: ["customers"],
+    queryFn: async () => {
+      const res = await axios.get("/api/panel/customers");
+      return res.data;
+    },
+  });
+
+  const { data: customerDetail, isLoading } = useQuery<CustomerDetail>({
+    queryKey: ["customer", selectedId],
+    enabled: !!selectedId,
+    queryFn: async () => {
+      const res = await axios.get(`/api/panel/customers/${selectedId}`);
+      return res.data;
+    },
+  });
+
   const form = useForm<AddInvoiceSchema>({
     resolver: zodResolver(addInvoiceSchema),
     defaultValues: {
@@ -83,7 +94,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
         {
           itemName: "",
           description: "",
-         unit: undefined,
+          unit: undefined,
           quantity: 1,
           rate: 0,
           amount: 0,
@@ -97,9 +108,9 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
     },
   });
   // total
-  const discount = form.watch("discount");
+  const discount = form.watch("discount") || 0;
 
-  const items = form.watch("items");
+  const items = form.watch("items") || [];
 
   const subtotal =
     items?.reduce((total, item) => {
@@ -121,7 +132,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
               {/* Customer */}
 
               <FormField
@@ -133,69 +144,78 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                       Customer Name
                       <span className="text-red-500">*</span>
                     </FormLabel>
-
-                    <div className="flex gap-2">
-                      <div className="flex-1">
-                        <FormControl>
-                          <MultiSelect
-                            mode="single"
-                            value={field.value}
-                            placeholder="Select Customer"
-                            options={customers.map((customer) => ({
-                              label: customer.name,
-                              value: customer.id,
-                            }))}
-                            onChange={(value) => {
-                              field.onChange(value);
-
-                              const customer = customers.find(
-                                (item) => item.id === value,
-                              );
-
-                              setSelectedCustomer(customer || null);
-                            }}
-                          />
-                        </FormControl>
-                      </div>
-
-                      <Button size="icon" type="button">
-                        <Search className="h-4 w-4" />
-                      </Button>
-
-                      <Button type="button" variant="outline">
-                        INR
-                      </Button>
+                    <div className="flex-1 w-full relative">
+                      <FormControl>
+                        <SearchCombobox
+                          value={field.value}
+                          placeholder="Select Customer"
+                          searchPlaceholder="Search customer..."
+                          options={customers.map((c) => ({
+                            value: c.id,
+                            label: c.user?.name ?? "Unknown",
+                            image: c.user?.image,
+                            email: c.email,
+                            companyName: c.companyName,
+                          }))}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            setSelectedId(value);
+                          }}
+                        />
+                      </FormControl>
                     </div>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
               {/* Billing Address */}
+              {customerDetail && (
+                <div className="rounded-lg bg-card border p-4  space-y-2 text-sm">
+                  {/* Name */}
+                  <div className="flex items-center gap-2 font-semibold text-base">
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    {customerDetail.user?.name}
+                  </div>
 
-              {selectedCustomer && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">BILLING ADDRESS</CardTitle>
-                  </CardHeader>
+                  {/* Street */}
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <span>{customerDetail.street1}</span>
+                  </div>
 
-                  <CardContent>
-                    <div className="space-y-1 text-sm">
-                      <p>{selectedCustomer.name}</p>
-                      <p>{selectedCustomer.street1}</p>
-                      <p>
-                        {selectedCustomer.city}, {selectedCustomer.state}
-                      </p>
-                      <p>{selectedCustomer.pinCode}</p>
+                  {/* City + State */}
+                  <div className="flex items-start gap-2">
+                    <Globe className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <span>
+                      {customerDetail.city}, {customerDetail.state}
+                    </span>
+                  </div>
+
+                  {/* Country + PIN */}
+                  <div className="flex items-start gap-2">
+                    <Hash className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <span>
+                      {customerDetail.country} - {customerDetail.pinCode}
+                    </span>
+                  </div>
+
+                  {/* Mobile */}
+                  {customerDetail.mobile && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <span>{customerDetail.mobile}</span>
                     </div>
-
-                    <Button type="button" variant="link" className="px-0 mt-2">
-                      New Address
-                    </Button>
-                  </CardContent>
-                </Card>
+                  )}
+                </div>
               )}
+
+              {isLoading && (
+                <p className="text-sm text-muted-foreground">
+                  Loading address...
+                </p>
+              )}
+
               {/* Invoice Details */}
               <FormField
                 control={form.control}
@@ -213,6 +233,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                 )}
               />
               <div className="grid md:grid-cols-2 gap-4">
+                {/* invoice Date */}
                 <FormField
                   control={form.control}
                   name="invoiceDate"
@@ -240,7 +261,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                     </FormItem>
                   )}
                 />
-
+                {/* Due Date */}
                 <FormField
                   control={form.control}
                   name="dueDate"
@@ -269,6 +290,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                   )}
                 />
               </div>
+              {/* subject */}
               <FormField
                 control={form.control}
                 name="subject"
@@ -288,70 +310,120 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                   </FormItem>
                 )}
               />
+
+              {/* item table */}
               <ItemTable form={form} />
+
               {/* Invoice Summary */}
+              <div className="flex flex-col-reverse lg:flex-row   items-end justify-end gap-6">
+                <div className="w-full lg:w-[40%]">
+                  {/* Customer Notes */}
+                  <FormField
+                    control={form.control}
+                    name="customerNotes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Customer Notes</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            placeholder="Add a personal note or message for your customer. This
+                        note will be displayed on the invoice."
+                            rows={4}
+                          />
+                        </FormControl>
 
-              <div className="ml-auto mt-8 w-full lg:w-[55%] md:w-[50%] rounded-xl border bg-background p-6 shadow-sm">
-                <div className="space-y-5">
-                  {/* Subtotal */}
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Sub Total</span>
-                    <span className="font-medium">₹{subtotal.toFixed(2)}</span>
-                  </div>
-
-                  {/* Discount */}
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-muted-foreground text-sm">
-                      Discount
-                    </span>
-
-                    <div className="relative w-32">
-                      <FormField
-                        control={form.control}
-                        name="discount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                {...field}
-                                value={field.value}
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
-                                placeholder="0"
-                                className="pr-10"
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <div className="absolute inset-y-0 right-0 flex items-center border-l px-3 text-sm text-muted-foreground">
-                        %
-                      </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full lg:w-[50%]  rounded-xl border bg-background p-6 shadow-sm">
+                  <div className="space-y-5">
+                    {/* Subtotal */}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Sub Total</span>
+                      <span className="font-medium">
+                        ₹{subtotal.toFixed(2)}
+                      </span>
                     </div>
 
-                    <span className="w-20 text-right font-medium">
-                      {" "}
-                      ₹{discountAmount.toFixed(2)}
-                    </span>
-                  </div>
+                    {/* Discount */}
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-muted-foreground text-sm">
+                        Discount
+                      </span>
 
-                  {/* Divider */}
-                  <div className="border-t" />
+                      <div className="relative w-32">
+                        <FormField
+                          control={form.control}
+                          name="discount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  {...field}
+                                  value={field.value}
+                                  onChange={(e) =>
+                                    field.onChange(Number(e.target.value))
+                                  }
+                                  placeholder="0"
+                                  className="pr-10"
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
 
-                  {/* Total */}
-                  <div className="flex items-center justify-between pt-2">
-                    <span className="text-md font-semibold text-primary">
-                      Total
-                    </span>
+                        <div className="absolute inset-y-0 right-0 flex items-center border-l px-3 text-sm text-muted-foreground">
+                          %
+                        </div>
+                      </div>
 
-                    <span className="text-lg font-bold text-primary">
-                      ₹{totalAmount.toFixed(2)}
-                    </span>
+                      <span className="w-20 text-right font-medium">
+                        {" "}
+                        ₹{discountAmount.toFixed(2)}
+                      </span>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t" />
+
+                    {/* Total */}
+                    <div className="flex items-center justify-between pt-2">
+                      <span className="text-md font-semibold text-primary">
+                        Total
+                      </span>
+
+                      <span className="text-lg font-bold text-primary">
+                        ₹{totalAmount.toFixed(2)}
+                      </span>
+                    </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Terms & Conditions */}
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="termsAndConditions"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Terms & Conditions</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          placeholder="Enter the terms and conditions of your business to be displayed on the invoice."
+                          rows={4}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
               <Button type="submit">Create Invoice</Button>
             </form>

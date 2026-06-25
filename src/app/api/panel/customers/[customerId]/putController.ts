@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 // customer >>>>>>>>>>>>>>>>>>>>
 interface PutCustomerBody {
   id: string;
-  customerType: string;
+customerType: "individual" | "business";
   companyName: string;
   currency: string;
   language: string;
@@ -163,8 +163,11 @@ interface Address {
 }
 interface PutCBABody {
   id: string;
+  countryId: string;
   country: string;
+  stateId: string;
   state: string;
+  cityId: string;
   city: string;
   pinCode: string;
   mobile: string;
@@ -172,7 +175,18 @@ interface PutCBABody {
 }
 
 export const putCBAController = async (body: PutCBABody) => {
-  const { id, country, state, city, pinCode, mobile, address } = body;
+  const {
+    id,
+    countryId,
+    country,
+    stateId,
+    state,
+    cityId,
+    city,
+    pinCode,
+    mobile,
+    address,
+  } = body;
 
   if (!id) {
     return Response.json(
@@ -195,8 +209,11 @@ export const putCBAController = async (body: PutCBABody) => {
   const result = await db
     .update(customer)
     .set({
+      countryId,
       country,
+      stateId,
       state,
+      cityId,
       city,
       pinCode,
       mobile,

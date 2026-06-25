@@ -27,8 +27,11 @@ export const customer = pgTable("customer", {
   currency: text("currency").notNull(),
   language: text("language").notNull(),
   // billing address
+  countryId: text("country_id").notNull(),
   country: text("country").notNull(),
+  stateId: text("state_id").notNull(),
   state: text("state").notNull(),
+  cityId: text("city_id").notNull(),
   city: text("city").notNull(),
   pinCode: text("pin_code").notNull(),
   street1: text("street_1").notNull(),

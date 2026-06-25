@@ -49,10 +49,17 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
   const form = useForm<EditAddressCustomerFormSchema>({
     resolver: zodResolver(editAddressCustomerFormSchema),
     defaultValues: {
-      country: customer?.country || "",
-      state: customer?.state || "",
-      city: customer?.city || "",
+      countryId: customer.countryId || "",
+      country: customer.country || "",
+
+      stateId: customer.stateId || "",
+      state: customer.state || "",
+
+      cityId: customer.cityId || "",
+      city: customer.city || "",
+
       pinCode: customer?.pinCode || "",
+
       address: {
         street1: customer?.street1 || "",
         street2: customer?.street2 || "",
@@ -135,58 +142,75 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
             {/* Country */}
             <FormField
               control={form.control}
-              name="country"
+              name="countryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Country <span className="text-red-500">*</span>
-                  </FormLabel>
+                  <FormLabel>Country</FormLabel>
+
                   <FormControl>
                     <MultiSelect
-                      options={countriesList.map((c) => ({
-                        label: c.name,
-                        value: c.id.toString(),
+                      options={countriesList.map((country) => ({
+                        label: country.name,
+                        value: country.id.toString(),
                       }))}
-                      darkBg="primary"
+                      value={field.value || ""}
                       mode="single"
-                      value={field.value}
-                      onChange={(val) => {
-                        field.onChange(val);
-                        if (typeof val === "string") {
-                          setSelectedCountry(val);
+                      onChange={(value) => {
+                        field.onChange(value);
+
+                        const selected = countriesList.find(
+                          (c) => c.id.toString() === value,
+                        );
+
+                        if (selected) {
+                          form.setValue("country", selected.name);
+                          setSelectedCountry(value as string);
+
+                          // reset dependent fields
+                          form.setValue("stateId", "");
+                          form.setValue("state", "");
+                          form.setValue("cityId", "");
+                          form.setValue("city", "");
                         }
                       }}
-                      placeholder="Select Country"
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
-
             {/* State */}
             <FormField
               control={form.control}
-              name="state"
+              name="stateId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    State <span className="text-red-500">*</span>
-                  </FormLabel>
+                  <FormLabel>State</FormLabel>
+
                   <FormControl>
                     <MultiSelect
-                      options={stateList.map((s) => ({
-                        label: s.name,
-                        value: s.id.toString(),
+                      options={stateList.map((state) => ({
+                        label: state.name,
+                        value: state.id.toString(),
                       }))}
-                      darkBg="primary"
+                      value={field.value || ""}
                       mode="single"
-                      value={field.value}
-                      onChange={(val) => {
-                        field.onChange(val);
-                        if (typeof val === "string") setSelectedState(val);
-                      }}
-                      placeholder="Select State"
                       disabled={!selectedCountry}
+                      onChange={(value) => {
+                        field.onChange(value);
+
+                        const selected = stateList.find(
+                          (s) => s.id.toString() === value,
+                        );
+
+                        if (selected) {
+                          form.setValue("state", selected.name);
+                          setSelectedState(value as string);
+
+                          // reset city
+                          form.setValue("cityId", "");
+                          form.setValue("city", "");
+                        }
+                      }}
                     />
                   </FormControl>
                 </FormItem>
@@ -195,30 +219,36 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
             {/* City */}
             <FormField
               control={form.control}
-              name="city"
+              name="cityId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    City <span className="text-red-500">*</span>
-                  </FormLabel>
+                  <FormLabel>City</FormLabel>
+
                   <FormControl>
                     <MultiSelect
-                      options={citiesList.map((c) => ({
-                        label: c.name,
-                        value: c.id.toString(),
+                      options={citiesList.map((city) => ({
+                        label: city.name,
+                        value: city.id.toString(),
                       }))}
-                      darkBg="primary"
+                      value={field.value || ""}
                       mode="single"
-                      value={field.value}
-                      onChange={(val) => field.onChange(val)}
-                      placeholder="Select City"
                       disabled={!selectedState}
+                      onChange={(value) => {
+                        field.onChange(value);
+
+                        const selected = citiesList.find(
+                          (c) => c.id.toString() === value,
+                        );
+
+                        if (selected) {
+                          form.setValue("city", selected.name);
+                        }
+                      }}
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
-
             {/* Pin*/}
             <FormField
               control={form.control}

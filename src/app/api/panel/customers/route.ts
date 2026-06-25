@@ -39,7 +39,7 @@ export const POST = async (req: Request) => {
 
     return Response.json(result.json, { status: result.status });
   } catch (error) {
-     return Response.json(
+    return Response.json(
       {
         success: false,
         message:

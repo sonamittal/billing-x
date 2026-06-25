@@ -50,7 +50,10 @@ type Props = {
   onBack?: () => void;
   selectedUser?: User | null;
 };
-
+type AddCustomerPayload = AddCustomerFormSchema & {
+  type: "customer";
+  userId: string;
+};
 const AddCustomerForm = ({
   open,
   onOpenChange,
@@ -74,8 +77,11 @@ const AddCustomerForm = ({
       companyName: "",
       currency: "",
       language: "",
+      countryId: "",
       country: "",
+      stateId: "",
       state: "",
+      cityId: "",
       city: "",
       pinCode: "",
       address: {
@@ -93,12 +99,8 @@ const AddCustomerForm = ({
     isSuccess: isAddCustomerSuccess,
     error: addCustomerError,
   } = useMutation({
-    mutationFn: async (data: AddCustomerFormSchema) => {
-      const res = await axios.post("/api/panel/customers", {
-        type: "customer",
-        userId: selectedUser?.id,
-        ...data,
-      });
+    mutationFn: async (data: AddCustomerPayload) => {
+      const res = await axios.post("/api/panel/customers", data);
       return res.data;
     },
 
@@ -148,6 +150,7 @@ const AddCustomerForm = ({
 
     console.log("Form Data Submitted:", data);
     addCustomer({
+      type: "customer",
       userId: selectedUser.id,
       ...data,
     });
@@ -294,12 +297,13 @@ const AddCustomerForm = ({
               {/* Country */}
               <FormField
                 control={form.control}
-                name="country"
+                name="countryId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
                       Country <span className="text-red-500">*</span>
                     </FormLabel>
+
                     <FormControl>
                       <MultiSelect
                         options={countriesList.map((c) => ({
@@ -311,8 +315,21 @@ const AddCustomerForm = ({
                         value={field.value}
                         onChange={(val) => {
                           field.onChange(val);
+
                           if (typeof val === "string") {
                             setSelectedCountry(val);
+
+                            const country = countriesList.find(
+                              (c) => c.id.toString() === val,
+                            );
+
+                            form.setValue("countryId", val);
+                            form.setValue("country", country?.name ?? "");
+
+                            form.setValue("stateId", "");
+                            form.setValue("state", "");
+                            form.setValue("cityId", "");
+                            form.setValue("city", "");
                           }
                         }}
                         placeholder="Select Country"
@@ -331,6 +348,7 @@ const AddCustomerForm = ({
                     <FormLabel>
                       State <span className="text-red-500">*</span>
                     </FormLabel>
+
                     <FormControl>
                       <MultiSelect
                         options={stateList.map((s) => ({
@@ -342,7 +360,17 @@ const AddCustomerForm = ({
                         value={field.value}
                         onChange={(val) => {
                           field.onChange(val);
-                          if (typeof val === "string") setSelectedState(val);
+
+                          if (typeof val === "string") {
+                            setSelectedState(val);
+
+                            const state = stateList.find(
+                              (s) => s.id.toString() === val,
+                            );
+
+                            form.setValue("stateId", val);
+                            form.setValue("state", state?.name ?? "");
+                          }
                         }}
                         placeholder="Select State"
                         disabled={!selectedCountry}
@@ -363,6 +391,7 @@ const AddCustomerForm = ({
                     <FormLabel>
                       City <span className="text-red-500">*</span>
                     </FormLabel>
+
                     <FormControl>
                       <MultiSelect
                         options={citiesList.map((c) => ({
@@ -372,7 +401,18 @@ const AddCustomerForm = ({
                         darkBg="primary"
                         mode="single"
                         value={field.value}
-                        onChange={(val) => field.onChange(val)}
+                        onChange={(val) => {
+                          field.onChange(val);
+
+                          if (typeof val === "string") {
+                            const city = citiesList.find(
+                              (c) => c.id.toString() === val,
+                            );
+
+                            form.setValue("cityId", val);
+                            form.setValue("city", city?.name ?? "");
+                          }
+                        }}
                         placeholder="Select City"
                         disabled={!selectedState}
                       />
@@ -380,7 +420,6 @@ const AddCustomerForm = ({
                   </FormItem>
                 )}
               />
-
               {/* Pin*/}
               <FormField
                 control={form.control}

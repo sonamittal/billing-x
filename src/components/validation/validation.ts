@@ -207,9 +207,26 @@ export const addCustomerFormSchema = z
     companyName: z.string().optional(),
     currency: z.string().min(1, { message: "Currency is required" }),
     language: z.string().trim().min(1, { message: "Language is required" }),
-    country: z.string().min(1, { message: "Country is required" }),
-    state: z.string().min(1, { message: "State is required" }),
-    city: z.string().min(1, { message: "City is required" }),
+    countryId: z.string().min(1, {
+      message: "Country is required",
+    }),
+    country: z.string().min(1, {
+      message: "Country name is required",
+    }),
+
+    stateId: z.string().min(1, {
+      message: "State is required",
+    }),
+    state: z.string().min(1, {
+      message: "State name is required",
+    }),
+
+    cityId: z.string().min(1, {
+      message: "City is required",
+    }),
+    city: z.string().min(1, {
+      message: "City name is required",
+    }),
     pinCode: z
       .string()
       .trim()
@@ -263,9 +280,26 @@ export type EditCustomerFormSchema = z.infer<typeof editCustomerFormSchema>;
 
 // edit address customer from schema >>>>>>>>>>>>>>
 export const editAddressCustomerFormSchema = z.object({
-  country: z.string().min(1, { message: "Country is required" }),
-  state: z.string().min(1, { message: "State is required" }),
-  city: z.string().min(1, { message: "City is required" }),
+  countryId: z.string().min(1, {
+    message: "Country is required",
+  }),
+  country: z.string().min(1, {
+    message: "Country name is required",
+  }),
+
+  stateId: z.string().min(1, {
+    message: "State is required",
+  }),
+  state: z.string().min(1, {
+    message: "State name is required",
+  }),
+
+  cityId: z.string().min(1, {
+    message: "City is required",
+  }),
+  city: z.string().min(1, {
+    message: "City name is required",
+  }),
   pinCode: z
     .string()
     .trim()
