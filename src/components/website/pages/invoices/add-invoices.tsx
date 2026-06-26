@@ -66,6 +66,12 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
   const [selectedId, setSelectedId] = useState<string>("");
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
 
+  // date
+  const formatDate = (date: Date | undefined) => {
+    if (!date) return "";
+    return date.toLocaleDateString("en-CA");
+  };
+
   // fetch data
   const { data: customers = [] } = useQuery<CustomerList[]>({
     queryKey: ["customers"],
@@ -257,13 +263,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                       <FormControl>
                         <Input
                           type="date"
-                          value={
-                            field.value
-                              ? new Date(field.value)
-                                  .toISOString()
-                                  .split("T")[0]
-                              : ""
-                          }
+                          value={formatDate(field.value)}
                           onChange={(e) =>
                             field.onChange(new Date(e.target.value))
                           }
@@ -284,13 +284,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                       <FormControl>
                         <Input
                           type="date"
-                          value={
-                            field.value
-                              ? new Date(field.value)
-                                  .toISOString()
-                                  .split("T")[0]
-                              : ""
-                          }
+                          value={formatDate(field.value)}
                           onChange={(e) =>
                             field.onChange(new Date(e.target.value))
                           }
@@ -441,7 +435,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
           </Form>
         </CardContent>
       </Card>
-      
+
       {/* Invoice Number Dialog */}
       <InvoiceNumberDialog
         open={openInvoiceDialog}

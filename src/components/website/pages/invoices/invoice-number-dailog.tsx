@@ -88,7 +88,7 @@ const InvoiceNumberDialog = ({ open, onOpenChange, onSave }: Props) => {
             onClick={() => {
               const formattedNumber =
                 invoiceMode === "auto"
-                  ? `${prefix}-${nextNumber.padStart(5, "0")}`
+                  ? `${prefix}-${nextNumber.padStart(6, "0")}`
                   : "";
               onSave({
                 mode: invoiceMode,
