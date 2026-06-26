@@ -421,38 +421,43 @@ export const itemSchema = z.object({
 export type ItemSchema = z.infer<typeof itemSchema>;
 
 // add invoice schema >>>>>>>>>>>>>>>>>>>>>>>>>>
-export const addInvoiceSchema = z.object({
-  customerName: z.string().min(1, {
-    message: "Customer name is required",
-  }),
-  invoiceNumber: z.string().min(1, {
-    message: "Invoice number is required",
-  }),
-  invoiceDate: z.date({
-    message: "Invoice date is required",
-  }),
-  dueDate: z.date({
-    message: "Due date is required",
-  }),
-  subject: z.string().optional(),
-  items: z.array(itemSchema).min(1, {
-    message: "At least one item is required",
-  }),
-  subtotal: z.number().min(0, {
-    message: "Subtotal cannot be negative",
-  }),
-  discount: z.number().min(0, {
-    message: "Discount cannot be negative",
-  }),
-  totalAmount: z.number().min(0, {
-    message: "Total amount cannot be negative",
-  }),
-  customerNotes: z.string().min(1, {
-    message: "Customer notes is required",
-  }),
-  termsAndConditions: z.string().min(1, {
-    message: "Terms And Conditions is required",
-  }),
-});
+export const addInvoiceSchema = z
+  .object({
+    customerName: z.string().min(1, {
+      message: "Customer name is required",
+    }),
+    invoiceNumber: z.string().min(1, {
+      message: "Invoice number is required",
+    }),
+    invoiceDate: z.date({
+      message: "Invoice date is required",
+    }),
+    dueDate: z.date({
+      message: "Due date is required",
+    }),
+    subject: z.string().optional(),
+    items: z.array(itemSchema).min(1, {
+      message: "At least one item is required",
+    }),
+    subtotal: z.number().min(0, {
+      message: "Subtotal cannot be negative",
+    }),
+    discount: z.number().min(0).max(100, {
+      message: "Discount cannot exceed 100%",
+    }),
+    totalAmount: z.number().min(0, {
+      message: "Total amount cannot be negative",
+    }),
+    customerNotes: z.string().min(1, {
+      message: "Customer notes is required",
+    }),
+    termsAndConditions: z.string().min(1, {
+      message: "Terms And Conditions is required",
+    }),
+  })
+  .refine((data) => data.dueDate >= data.invoiceDate, {
+    path: ["dueDate"],
+    message: "Due date must be after invoice date",
+  });
 
 export type AddInvoiceSchema = z.infer<typeof addInvoiceSchema>;

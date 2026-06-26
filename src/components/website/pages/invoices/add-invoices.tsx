@@ -23,7 +23,7 @@ import type { AddInvoiceSchema } from "@/components/validation/validation";
 import { SearchCombobox } from "@/components/ui/invoices-combobox";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { User, MapPin, Globe, Hash, Phone } from "lucide-react";
+import { User, MapPin, Globe, Hash, Phone, Settings } from "lucide-react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,6 +32,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import Message from "@/components/ui/message";
 import ItemTable from "@/components/website/pages/invoices/item-table";
+import InvoiceNumberDialog from "@/components/website/pages/invoices/invoice-number-dailog";
 
 interface Props {
   open: boolean;
@@ -60,8 +61,11 @@ type CustomerDetail = {
     image: string | null;
   } | null;
 };
+
 const AddInvoices = ({ open, onOpenChange }: Props) => {
   const [selectedId, setSelectedId] = useState<string>("");
+  const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
+
   // fetch data
   const { data: customers = [] } = useQuery<CustomerList[]>({
     queryKey: ["customers"],
@@ -118,6 +122,11 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
   const discountAmount = (subtotal * discount) / 100;
 
   const totalAmount = subtotal - discountAmount;
+
+  // set val
+  const { setValue } = form;
+
+  // Submit
   const onSubmit = (data: AddInvoiceSchema) => {
     console.log(data);
   };
@@ -223,7 +232,13 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                     <FormLabel>Invoice Number</FormLabel>
 
                     <FormControl>
-                      <Input placeholder="INV-0001" {...field} />
+                      <div className="relative">
+                        <Input placeholder="INV-0001" {...field} />
+                        <Settings
+                          onClick={() => setOpenInvoiceDialog(true)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground cursor-pointer hover:text-primary"
+                        />
+                      </div>
                     </FormControl>
 
                     <FormMessage />
@@ -266,7 +281,6 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Due Date</FormLabel>
-
                       <FormControl>
                         <Input
                           type="date"
@@ -295,7 +309,6 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Subject</FormLabel>
-
                     <FormControl>
                       <Input
                         placeholder="Website Development Invoice"
@@ -428,6 +441,18 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
           </Form>
         </CardContent>
       </Card>
+      
+      {/* Invoice Number Dialog */}
+      <InvoiceNumberDialog
+        open={openInvoiceDialog}
+        onOpenChange={setOpenInvoiceDialog}
+        onSave={(data) => {
+          setValue("invoiceNumber", data.invoiceNumber, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        }}
+      />
     </>
   );
 };
