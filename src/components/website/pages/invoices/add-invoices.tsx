@@ -132,6 +132,19 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
   // set val
   const { setValue } = form;
 
+  //useEffect
+  useEffect(() => {
+    setValue("subtotal", subtotal, {
+      shouldDirty: false,
+      shouldValidate: false,
+    });
+
+    setValue("totalAmount", totalAmount, {
+      shouldDirty: false,
+      shouldValidate: false,
+    });
+  }, [subtotal, totalAmount, setValue]);
+
   // Submit
   const onSubmit = (data: AddInvoiceSchema) => {
     console.log(data);
@@ -332,8 +345,8 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                         <FormControl>
                           <Textarea
                             {...field}
-                            placeholder="Add a personal note or message for your customer. This
-                        note will be displayed on the invoice."
+                            placeholder="Add a personal note or message for your customer.
+                            This note will be displayed on the invoice."
                             rows={4}
                           />
                         </FormControl>
@@ -430,7 +443,18 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                   )}
                 />
               </div>
-              <Button type="submit">Create Invoice</Button>
+              <div className="flex justify-end gap-3">
+                <Button
+                  type="submit"
+                  variant="outline"
+                >
+                  Save as Draft
+                </Button>
+
+                <Button type="submit">
+                  Save & Send
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

@@ -50,10 +50,15 @@ export const invoice = pgTable("invoice", {
 
   termsAndConditions: text("terms_and_conditions").notNull(),
 
-  status: text("status")
-    .$type<"draft" | "sent" | "unpaid" | "paid">()
-    .notNull()
-    .default("draft"),
+ status: text("status")
+  .$type<"draft" | "sent">()
+  .default("draft")
+  .notNull(),
+
+paymentStatus: text("payment_status")
+  .$type<"unpaid" | "paid">()
+  .default("unpaid")
+  .notNull(),
 
   createdAt: timestamp("created_at", {
     mode: "date",

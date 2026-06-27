@@ -1,5 +1,5 @@
 "use client";
-import { useFieldArray, UseFormReturn } from "react-hook-form";
+import { useFieldArray, UseFormReturn, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,20 +11,40 @@ import {
 import type { AddInvoiceSchema } from "@/components/validation/validation";
 import { SearchCombobox } from "@/components/ui/combobox";
 import { units } from "@/lib/constants";
+import { useEffect } from "react";
 
 interface ItemTableProps {
   form: UseFormReturn<AddInvoiceSchema>;
 }
 
 const ItemTable = ({ form }: ItemTableProps) => {
-  const { control, watch } = form;
+  const { control, setValue } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
   });
 
-  const items = watch("items");
+  const items = useWatch({
+    control,
+    name: "items",
+  });
+
+  // useEffect
+  useEffect(() => {
+    items?.forEach((item, index) => {
+      const quantity = Number(item?.quantity ?? 0);
+      const rate = Number(item?.rate ?? 0);
+      const amount = quantity * rate;
+
+      if (item?.amount !== amount) {
+        setValue(`items.${index}.amount`, amount, {
+          shouldDirty: false,
+          shouldValidate: false,
+        });
+      }
+    });
+  }, [items, setValue]);
 
   return (
     <div className="border rounded-md bg-[#1C1917]">
@@ -48,11 +68,7 @@ const ItemTable = ({ form }: ItemTableProps) => {
 
           <tbody>
             {fields.map((fieldItem, index) => {
-              const quantity = Number(items?.[index]?.quantity ?? 0);
-
-              const rate = Number(items?.[index]?.rate ?? 0);
-
-              const amount = quantity * rate;
+              const amount = items?.[index]?.amount ?? 0;
 
               return (
                 <tr key={fieldItem.id}>
@@ -124,7 +140,11 @@ const ItemTable = ({ form }: ItemTableProps) => {
                               type="number"
                               {...field}
                               onChange={(e) =>
-                                field.onChange(Number(e.target.value))
+                                field.onChange(
+                                  e.target.value === ""
+                                    ? undefined
+                                    : Number(e.target.value),
+                                )
                               }
                             />
                           </FormControl>
@@ -145,7 +165,11 @@ const ItemTable = ({ form }: ItemTableProps) => {
                               type="number"
                               {...field}
                               onChange={(e) =>
-                                field.onChange(Number(e.target.value))
+                                field.onChange(
+                                  e.target.value === ""
+                                    ? undefined
+                                    : Number(e.target.value),
+                                )
                               }
                             />
                           </FormControl>
@@ -194,7 +218,7 @@ const ItemTable = ({ form }: ItemTableProps) => {
         >
           + Add Item
         </Button>
-        <Button type="submit">Save All</Button>
+        {/* <Button type="submit">Save All</Button> */}
       </div>
     </div>
   );
