@@ -93,7 +93,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
   const form = useForm<AddInvoiceSchema>({
     resolver: zodResolver(addInvoiceSchema),
     defaultValues: {
-      customerName: "",
+       customerId: "",
       invoiceNumber: "",
       invoiceDate: new Date(),
       dueDate: new Date(),
@@ -163,7 +163,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
 
               <FormField
                 control={form.control}
-                name="customerName"
+                name="customerId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>

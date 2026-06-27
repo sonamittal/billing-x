@@ -423,8 +423,8 @@ export type ItemSchema = z.infer<typeof itemSchema>;
 // add invoice schema >>>>>>>>>>>>>>>>>>>>>>>>>>
 export const addInvoiceSchema = z
   .object({
-    customerName: z.string().min(1, {
-      message: "Customer name is required",
+    customerId: z.string().min(1, {
+      message: "Customer is required",
     }),
     invoiceNumber: z.string().min(1, {
       message: "Invoice number is required",
