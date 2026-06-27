@@ -1,0 +1,1 @@
+ALTER TABLE "invoice" ADD COLUMN "payment_status" text DEFAULT 'unpaid' NOT NULL;

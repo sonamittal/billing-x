@@ -113,6 +113,13 @@
       "when": 1782391002167,
       "tag": "0015_tan_warstar",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1782567639503,
+      "tag": "0016_whole_kingpin",
+      "breakpoints": true
     }
   ]
 }

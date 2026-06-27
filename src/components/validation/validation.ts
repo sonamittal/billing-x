@@ -454,6 +454,9 @@ export const addInvoiceSchema = z
     termsAndConditions: z.string().min(1, {
       message: "Terms And Conditions is required",
     }),
+    status: z.enum(["draft", "sent"], {
+      message: "Invalid invoice status",
+    }),
   })
   .refine((data) => data.dueDate >= data.invoiceDate, {
     path: ["dueDate"],

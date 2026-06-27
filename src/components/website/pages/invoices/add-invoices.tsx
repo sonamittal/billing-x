@@ -23,7 +23,15 @@ import type { AddInvoiceSchema } from "@/components/validation/validation";
 import { SearchCombobox } from "@/components/ui/invoices-combobox";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { User, MapPin, Globe, Hash, Phone, Settings } from "lucide-react";
+import {
+  User,
+  MapPin,
+  Globe,
+  Hash,
+  Phone,
+  Settings,
+  Loader2,
+} from "lucide-react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,6 +73,7 @@ type CustomerDetail = {
 const AddInvoices = ({ open, onOpenChange }: Props) => {
   const [selectedId, setSelectedId] = useState<string>("");
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
+  const [submitType, setSubmitType] = useState<"draft" | "sent" | null>(null);
 
   // date
   const formatDate = (date: Date | undefined) => {
@@ -89,15 +98,16 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
       return res.data;
     },
   });
-
+  // form handling >>>>>>>>>>>
   const form = useForm<AddInvoiceSchema>({
     resolver: zodResolver(addInvoiceSchema),
     defaultValues: {
-       customerId: "",
+      customerId: "",
       invoiceNumber: "",
       invoiceDate: new Date(),
       dueDate: new Date(),
       subject: "",
+      status: "draft",
       items: [
         {
           itemName: "",
@@ -145,9 +155,39 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
     });
   }, [subtotal, totalAmount, setValue]);
 
+  // add invoice form handling >>>>>>>>>>>
+  const {
+    mutate: AddInvoice,
+    isPending: isAddInvoicePending,
+    isSuccess: isAddInvoiceSuccess,
+    error: addInvoiceError,
+  } = useMutation({
+    mutationFn: async (data: AddInvoiceSchema) => {
+      const res = await axios.post("/api/panel/invoices", data);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Invoice created successfully!");
+      form.reset();
+      setSelectedId("");
+      setSubmitType(null);
+    },
+
+    onError: (error) => {
+      toast.error(error.message || "failed to create invoice");
+      setSubmitType(null);
+    },
+  });
+
   // Submit
-  const onSubmit = (data: AddInvoiceSchema) => {
-    console.log(data);
+  const submitInvoice = (status: "draft" | "sent") => {
+    setSubmitType(status);
+    form.handleSubmit((data) => {
+      AddInvoice({
+        ...data,
+        status,
+      });
+    })();
   };
 
   return (
@@ -158,7 +198,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
+            <form className="space-y-7">
               {/* Customer */}
 
               <FormField
@@ -445,14 +485,34 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
               </div>
               <div className="flex justify-end gap-3">
                 <Button
-                  type="submit"
+                  type="button"
+                  disabled={isAddInvoicePending}
                   variant="outline"
+                  onClick={() => submitInvoice("draft")}
                 >
-                  Save as Draft
+                  {isAddInvoicePending && submitType === "draft" ? (
+                    <>
+                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                      please wait
+                    </>
+                  ) : (
+                    "Save as Draft"
+                  )}
                 </Button>
 
-                <Button type="submit">
-                  Save & Send
+                <Button
+                  type="button"
+                  onClick={() => submitInvoice("sent")}
+                  disabled={isAddInvoicePending}
+                >
+                  {isAddInvoicePending && submitType === "sent" ? (
+                    <>
+                      <Loader2 className="animate-spin h-5 w-5 mr-2" /> please
+                      wait
+                    </>
+                  ) : (
+                    "Save & Send"
+                  )}
                 </Button>
               </div>
             </form>
