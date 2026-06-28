@@ -24,6 +24,7 @@ import { SearchCombobox } from "@/components/ui/invoices-combobox";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
+import type { ApiErrorResponse } from "@/http/type";
 import {
   User,
   MapPin,
@@ -73,6 +74,7 @@ type CustomerDetail = {
 };
 
 const AddInvoices = ({ open, onOpenChange }: Props) => {
+  const queryClient = useQueryClient();
   const [selectedId, setSelectedId] = useState<string>("");
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
   const [submitType, setSubmitType] = useState<"draft" | "sent" | null>(null);
@@ -163,6 +165,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
       return res.data;
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
       toast.success(data.message || "Invoice created successfully!");
       form.reset();
       setSelectedId("");
@@ -171,7 +174,11 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
     },
 
     onError: (error) => {
-      toast.error(error.message || "failed to create invoice");
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        toast.error(error.response?.data.message ?? "Failed to create invoice");
+      } else {
+        toast.error("Failed to create invoice");
+      }
       setSubmitType(null);
     },
   });

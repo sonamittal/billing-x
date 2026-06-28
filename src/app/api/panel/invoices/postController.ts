@@ -15,7 +15,7 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
   });
   if (!existingCustomer) {
     return Response.json(
-      { success: false, message: `Custome not found` },
+      { success: false, message: `Customer not found` },
       { status: 404 },
     );
   }

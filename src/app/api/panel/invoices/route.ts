@@ -18,13 +18,19 @@ export const GET = async () => {
     }
     return await getAllInvoices();
   } catch (error) {
-    return Response.json({
-      success: false,
-      message:
-        error instanceof Error ? error.message : `failed to fetch invoice data`,
-    });
+    return Response.json(
+      {
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : `failed to fetch invoice data`,
+      },
+      { status: 500 },
+    );
   }
 };
+
 // post req
 export const POST = async (req: Request) => {
   try {
@@ -50,7 +56,7 @@ export const POST = async (req: Request) => {
     return Response.json(
       {
         success: false,
-        Message:
+        message:
           error instanceof Error ? error.message : `failed to add invoice `,
       },
       { status: 500 },
