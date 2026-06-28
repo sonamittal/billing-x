@@ -23,6 +23,7 @@ import type { AddInvoiceSchema } from "@/components/validation/validation";
 import { SearchCombobox } from "@/components/ui/invoices-combobox";
 import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   User,
   MapPin,
@@ -31,6 +32,7 @@ import {
   Phone,
   Settings,
   Loader2,
+  Receipt,
 } from "lucide-react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -75,12 +77,6 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
   const [submitType, setSubmitType] = useState<"draft" | "sent" | null>(null);
 
-  // date
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "";
-    return date.toLocaleDateString("en-CA");
-  };
-
   // fetch data
   const { data: customers = [] } = useQuery<CustomerList[]>({
     queryKey: ["customers"],
@@ -104,8 +100,8 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
     defaultValues: {
       customerId: "",
       invoiceNumber: "",
-      invoiceDate: new Date(),
-      dueDate: new Date(),
+      invoiceDate: undefined,
+      dueDate: undefined,
       subject: "",
       status: "draft",
       items: [
@@ -171,6 +167,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
       form.reset();
       setSelectedId("");
       setSubmitType(null);
+      onOpenChange(false);
     },
 
     onError: (error) => {
@@ -192,11 +189,17 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Invoice</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="overflow-auto w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
+          <DialogHeader className="text-start">
+            <DialogTitle className="flex items-center gap-2">
+              <Receipt className="h-5 w-5" /> Add Invoice
+            </DialogTitle>
+            <DialogDescription>
+              Fill in the invoice details and save it as a draft or send it to
+              the customer.
+            </DialogDescription>
+          </DialogHeader>
           <Form {...form}>
             <form className="space-y-7">
               {/* Customer */}
@@ -294,7 +297,10 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                       <div className="relative">
                         <Input placeholder="INV-0001" {...field} />
                         <Settings
-                          onClick={() => setOpenInvoiceDialog(true)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setOpenInvoiceDialog(true);
+                          }}
                           className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground cursor-pointer hover:text-primary"
                         />
                       </div>
@@ -314,12 +320,10 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                       <FormLabel>Invoice Date</FormLabel>
 
                       <FormControl>
-                        <Input
-                          type="date"
-                          value={formatDate(field.value)}
-                          onChange={(e) =>
-                            field.onChange(new Date(e.target.value))
-                          }
+                        <DatePicker
+                          value={field.value ?? null}
+                          onChange={(date) => field.onChange(date ?? undefined)}
+                          placeholder="Select invoice date"
                         />
                       </FormControl>
 
@@ -334,13 +338,12 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Due Date</FormLabel>
+
                       <FormControl>
-                        <Input
-                          type="date"
-                          value={formatDate(field.value)}
-                          onChange={(e) =>
-                            field.onChange(new Date(e.target.value))
-                          }
+                        <DatePicker
+                          value={field.value ?? null}
+                          onChange={(date) => field.onChange(date ?? undefined)}
+                          placeholder="Select due date"
                         />
                       </FormControl>
 
@@ -517,8 +520,8 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
               </div>
             </form>
           </Form>
-        </CardContent>
-      </Card>
+        </DialogContent>
+      </Dialog>
 
       {/* Invoice Number Dialog */}
       <InvoiceNumberDialog

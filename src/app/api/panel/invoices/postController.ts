@@ -3,7 +3,7 @@ import { customer, invoice, invoiceItem } from "@/drizzle/schema/index";
 import { nanoid } from "nanoid";
 import { eq } from "drizzle-orm";
 import type { AddInvoiceSchema } from "@/components/validation/validation";
-import type { NewInvoice, NewInvoiceItem } from "@/app/api/panel/invoices/type";
+import type { AddInvoice, AddInvoiceItem } from "@/app/api/panel/invoices/type";
 
 export const postInvoice = async (data: AddInvoiceSchema) => {
   // check cstomer
@@ -25,8 +25,8 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
 
   // Transaction
   await db.transaction(async (tx) => {
-// invoice data
-    const invoiceData: NewInvoice = {
+    // invoice data
+    const invoiceData: AddInvoice = {
       id: invoiceId,
 
       customerId: existingCustomer.id,
@@ -52,7 +52,7 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
     };
     // invoice item
     await tx.insert(invoice).values(invoiceData);
-    const items: NewInvoiceItem[] = data.items.map((item) => ({
+    const items: AddInvoiceItem[] = data.items.map((item) => ({
       id: nanoid(),
       invoiceId,
       itemName: item.itemName,

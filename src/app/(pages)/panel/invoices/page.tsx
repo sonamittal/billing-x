@@ -6,7 +6,7 @@ import { ProfileDropdown } from "@/components/panel/layout/profile-dropdown";
 import { Search } from "@/components/panel/layout/search";
 import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
 import InvoiceTable from "@/components/website/pages/invoices/invoice-table";
-import AddInvoices from "@/components/website/pages/invoices/add-invoices";
+import AddInvoices from "@/components/website/pages/invoices/add";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Receipt } from "lucide-react";
