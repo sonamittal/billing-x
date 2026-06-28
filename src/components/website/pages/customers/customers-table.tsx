@@ -38,7 +38,7 @@ interface Customer {
     image?: string;
   };
   mobile?: string;
-  email: string;    
+  email: string;
   companyName?: string;
   receivable: number;
   unusedCredit: number;
@@ -52,6 +52,10 @@ export interface selectedUser {
 
 // customer table
 const CustomersTable = () => {
+  const formatCustomerId = (id: string) => {
+    return `CUST-${id.slice(0, 4).toUpperCase()}`;
+  };
+
   const [selectedRow, setSelectedRow] = React.useState<Row<Customer> | null>(
     null,
   );
@@ -143,6 +147,7 @@ const CustomersTable = () => {
 
         cell: ({ row }) => {
           const user = row.original.user;
+          const customerId = row.original.id;
           return (
             <div className="flex items-center gap-2">
               {user.image ? (
@@ -156,10 +161,14 @@ const CustomersTable = () => {
                   {user.name.charAt(0).toUpperCase()}
                 </div>
               )}
-
-              <span>
-                {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
-              </span>
+              <div className="flex-col flex gap-0.5">
+                <span>
+                  {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {formatCustomerId(customerId)}
+                </span>
+              </div>
             </div>
           );
         },
@@ -252,7 +261,6 @@ const CustomersTable = () => {
       {
         id: "unusedCredit",
         accessorKey: "unusedCredit",
-        size: 32,
         header: ({ column }: { column: Column<Customer, unknown> }) => (
           <DataTableColumnHeader column={column} label="UnUsed Credit" />
         ),

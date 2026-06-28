@@ -112,9 +112,9 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
       <CardHeader>
         <CardTitle>Edit customer details</CardTitle>
         <CardDescription>
-          Edit account details of{" "}
+          Edit customer account details of{" "}
           <span className="text-foreground font-medium">
-            {customer?.user?.name || "Unknown"}
+            {customer?.user?.name + "'s"}
           </span>{" "}
           account.
         </CardDescription>

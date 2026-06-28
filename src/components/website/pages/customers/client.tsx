@@ -59,7 +59,13 @@ const CustomersClient = ({ customerId }: props) => {
             </a>
           </BreadcrumbItem>
           <ChevronRight className="h-4 w-4 mt-1 text-muted-foreground" />
-          <BreadcrumbItem>{data.user?.name ?? "Unknown"}</BreadcrumbItem>
+          <BreadcrumbItem>
+            {data
+              ? `CUST-${data.id.slice(0, 4).toUpperCase()} - ${
+                  data.user?.name?.trim() || "Unknown User"
+                }`
+              : "Loading..."}
+          </BreadcrumbItem>
         </Breadcrumb>
       )}
 

@@ -149,10 +149,25 @@ const UsersTable = () => {
                 />
               ) : (
                 <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-semibold">
+                  {" "}
                   {user.name.charAt(0).toUpperCase()}
                 </div>
               )}
-              <span>{user.name}</span>
+              <div className="flex flex-col gap-1">
+                <span>
+                  {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
+                </span>
+
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  Customer profile:
+                  <Link
+                    href="/panel/customers"
+                    className="text-xs text-green-600 hover:text-green-700 hover:underline transition"
+                  >
+                    Linked
+                  </Link>
+                </span>
+              </div>
             </div>
           );
         },

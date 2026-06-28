@@ -18,7 +18,7 @@ interface DeleteCustomer {
   id: string;
   user: {
     name: string;
-  };
+  } | null;
 }
 
 interface CustomerIdProps {
@@ -67,7 +67,8 @@ const DeleteCustomerDialog = ({
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete{" "}
             <span className="font-medium text-foreground">
-              {(customer.user?.name ?? "Unknown") + "'s"}
+              CUST-{customer.id.slice(0, 4).toUpperCase()} (
+              {customer.user?.name ?? "Unknown"}'s)
             </span>{" "}
             account and it{"'"}s data from the server.
           </AlertDialogDescription>

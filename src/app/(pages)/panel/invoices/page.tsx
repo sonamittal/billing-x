@@ -31,8 +31,8 @@ const Invoices = () => {
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Invoices List</h2>
             <p className="text-muted-foreground">
-              Access and manage all your customer records, including contact and
-              financial details.
+              View and manage invoices with customer details, invoice items,
+              payment status, due dates, and total amounts.
             </p>
           </div>
           <Button onClick={() => setOpen(true)}>

@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
 import EditBillingAddressForm from "@/components/website/pages/customers/edit-customers/edit-billing-address-form";
@@ -17,7 +23,11 @@ const EditDetails = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Edit customers details</CardTitle>
+        <CardTitle>Edit customer details</CardTitle>
+        <CardDescription>
+          Modify customer details including address, contact person, remarks,
+          and other relevant information.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="other">

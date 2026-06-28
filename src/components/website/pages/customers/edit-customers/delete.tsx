@@ -32,7 +32,7 @@ const DeleteCustomer = ({ customer }: CustomerIdProps) => {
             <span className="text-foreground font-medium">
               {(customer.user?.name ?? "Unknown") + "'s"}
             </span>{" "}
-            account and it{"'"}s data from the server.
+            customer account and it{"'"}s data from the server.
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -13,6 +13,7 @@ import {
   Command,
   GalleryVerticalEnd,
   ReceiptText,
+  User 
 } from "lucide-react";
 
 import { type SidebarData } from "../types";
@@ -52,9 +53,9 @@ export const sidebarData: SidebarData = {
           icon: LayoutDashboard,
         },
         {
-          title: "Users",
+          title: "All Users",
           url: "/panel/users",
-          icon: Users,
+          icon: User,
         },
         {
           title: "Customers",

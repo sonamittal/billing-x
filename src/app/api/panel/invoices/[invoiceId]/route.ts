@@ -16,7 +16,7 @@ export const GET = async (
           message: "Unauthorized - please login",
         },
         {
-          status: 400,
+          status: 401,
         },
       );
     }
