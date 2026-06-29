@@ -5,8 +5,9 @@ import axios, { AxiosError } from "axios";
 import Message from "@/components/ui/message";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import { Invoice } from "@/app/api/panel/invoices/[invoiceId]/type";
+import { invoiceWithRelations } from "@/app/api/panel/invoices/[invoiceId]/type";
 import EditInvoices from "@/components/website/pages/invoices/edit";
+import { ApiErrorResponse } from "@/http/type";
 
 interface props {
   invoiceId: string;
@@ -14,19 +15,26 @@ interface props {
 
 const InvoiceClient = ({ invoiceId }: props) => {
   // Fetch users
-  const { data, error, isPending, isSuccess } = useQuery<Invoice, Error>({
+  const { data, error, isPending, isSuccess } = useQuery<
+    invoiceWithRelations,
+    Error
+  >({
     queryKey: ["invoices", invoiceId],
     queryFn: async () => {
       try {
-        const res = await axios.get<Invoice>(
-          `/api/panel/invoices/${invoiceId}`,
-        );
-        return res.data;
+        const res = await axios.get<{
+          success: true;
+          data: invoiceWithRelations;
+        }>(`/api/panel/invoices/${invoiceId}`);
+
+        return res.data.data;
       } catch (error) {
-        const err = error as AxiosError<{ error: string }>;
-        throw new Error(
-          err.response?.data?.error ?? "Failed to fetch customer",
-        );
+        if (axios.isAxiosError<ApiErrorResponse>(error)) {
+          throw new Error(
+            error.response?.data?.message ?? "Failed to fetch invoice",
+          );
+        }
+        throw new Error("Failed to fetch invoice");
       }
     },
     retry: false,
@@ -60,9 +68,8 @@ const InvoiceClient = ({ invoiceId }: props) => {
       {isPending && "Loading..."}
       {isSuccess && data && (
         <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <EditInvoices />
-            <div className="grid grid-cols-1 gap-5 h-fit"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-1 gap-5">
+            <EditInvoices invoiceId={invoiceId} invoice={data} />
           </div>
         </div>
       )}

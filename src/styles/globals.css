@@ -124,3 +124,40 @@
     @apply bg-background text-foreground;
   }
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+
+input[type="number"] {
+  -webkit-appearance: textfield !important;
+  appearance: textfield !important;
+  -moz-appearance: textfield !important;
+}
+
+/* tiptap editor css*/
+.ProseMirror {
+  min-height: 180px;
+  padding: 16px;
+  outline: none;
+}
+
+.ProseMirror p {
+  margin: 0.5rem 0;
+}
+
+.ProseMirror ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+.ProseMirror ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}

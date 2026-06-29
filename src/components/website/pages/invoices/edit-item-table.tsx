@@ -8,16 +8,16 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import type { AddInvoiceSchema } from "@/components/validation/validation";
+import type { EditInvoiceSchema } from "@/components/validation/validation";
 import { SearchCombobox } from "@/components/ui/combobox";
 import { units } from "@/lib/constants";
 import { useEffect } from "react";
 
-interface ItemTableProps {
-  form: UseFormReturn<AddInvoiceSchema>;
+interface EditItemTableProps {
+  form: UseFormReturn<EditInvoiceSchema>;
 }
 
-const ItemTable = ({ form }: ItemTableProps) => {
+const EditItemTable = ({ form }: EditItemTableProps) => {
   const { control, setValue } = form;
 
   const { fields, append, remove } = useFieldArray({
@@ -49,7 +49,7 @@ const ItemTable = ({ form }: ItemTableProps) => {
   return (
     <div className="border rounded-md bg-[#1C1917]">
       <div className="border-b px-5 py-3">
-        <h2 className="text-lg font-semibold">Item Table</h2>
+        <h2 className="text-lg  font-semibold">Item Table</h2>
       </div>
 
       <div className="overflow-x-auto rounded-md border-b">
@@ -203,27 +203,8 @@ const ItemTable = ({ form }: ItemTableProps) => {
           </tbody>
         </table>
       </div>
-
-      <div className="flex gap-3 p-4">
-        <Button
-          type="button"
-          onClick={() =>
-            append({
-              itemName: "",
-              description: "",
-              unit: "pcs",
-              quantity: 1,
-              rate: 0,
-              amount: 0,
-            })
-          }
-        >
-          + Add Item
-        </Button>
-        {/* <Button type="submit">Save All</Button> */}
-      </div>
     </div>
   );
 };
 
-export default ItemTable;
+export default EditItemTable;

@@ -464,3 +464,14 @@ export const addInvoiceSchema = z
   });
 
 export type AddInvoiceSchema = z.infer<typeof addInvoiceSchema>;
+
+// edit invoice and item schema
+export const editInvoiceSchema = addInvoiceSchema.extend({
+  paymentDate: z.date({
+ message: "payment date is required",
+  }),
+  paymentStatus: z.enum(["unpaid", "paid"], {
+    message: "Invalid payment status",
+  }),
+});
+export type EditInvoiceSchema = z.infer<typeof editInvoiceSchema>;

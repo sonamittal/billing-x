@@ -34,11 +34,11 @@ import {
   Settings,
   Loader2,
   Receipt,
+  Minus,
 } from "lucide-react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import Message from "@/components/ui/message";
@@ -383,8 +383,8 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
               <ItemTable form={form} />
 
               {/* Invoice Summary */}
-              <div className="flex flex-col-reverse lg:flex-row   items-end justify-end gap-6">
-                <div className="w-full lg:w-[40%]">
+              <div className="flex flex-col-reverse lg:flex-row  items-end justify-end gap-6">
+                <div className="w-full lg:w-[50%]">
                   {/* Customer Notes */}
                   <FormField
                     control={form.control}
@@ -451,7 +451,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
 
                       <span className="w-20 text-right font-medium">
                         {" "}
-                        ₹{discountAmount.toFixed(2)}
+                        - ₹{discountAmount.toFixed(2)}
                       </span>
                     </div>
 

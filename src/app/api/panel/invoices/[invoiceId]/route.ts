@@ -18,11 +18,12 @@ export const GET = async (
         {
           status: 401,
         },
-      );
+      );  
     }
-
     const { invoiceId } = await params;
+
     return await getInvoiceById(invoiceId);
+
   } catch (error) {
     return Response.json(
       {
