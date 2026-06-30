@@ -54,7 +54,7 @@ interface invoiceIdProps {
   invoiceId: string;
   invoice: invoiceWithRelations;
 }
-interface Customers {
+interface Customer {
   id: string;
   companyName: string | null;
   email: string | null;
@@ -71,7 +71,7 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
 
   // Queries
-  const { data: customers = [] } = useQuery({
+  const { data: customers = [] } = useQuery<Customer[]>({
     queryKey: ["customers"],
     queryFn: async () => {
       const res = await axios.get("/api/panel/customers");
@@ -198,7 +198,7 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
                           value={field.value}
                           placeholder="Select Customer"
                           searchPlaceholder="Search customer..."
-                          options={customers.map((c: any) => ({
+                          options={customers.map((c) => ({
                             value: c.id,
                             label: c.user?.name ?? "Unknown",
                             image: c.user?.image,

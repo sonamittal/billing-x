@@ -20,6 +20,20 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
     );
   }
 
+  // check invoice number
+  const existingInvoice = await db.query.invoice.findFirst({
+    where: eq(invoice.invoiceNumber, data.invoiceNumber),
+  });
+
+  if (existingInvoice) {
+    return Response.json(
+      {
+        success: false,
+        message: "Invoice number already exists.",
+      },
+      { status: 409 },
+    );
+  }
   // invoice id
   const invoiceId = nanoid();
 

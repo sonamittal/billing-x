@@ -451,7 +451,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
 
                       <span className="w-20 text-right font-medium">
                         {" "}
-                        - ₹{discountAmount.toFixed(2)}
+                        -₹{discountAmount.toFixed(2)}
                       </span>
                     </div>
 

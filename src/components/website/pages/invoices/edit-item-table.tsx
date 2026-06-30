@@ -203,6 +203,23 @@ const EditItemTable = ({ form }: EditItemTableProps) => {
           </tbody>
         </table>
       </div>
+      <div className="p-4">
+        <Button
+          type="button"
+          onClick={() =>
+            append({
+              itemName: "",
+              description: "",
+              unit: "pcs",
+              quantity: 1,
+              rate: 0,
+              amount: 0,
+            })
+          }
+        >
+          + Add Item
+        </Button>
+      </div>
     </div>
   );
 };
