@@ -32,6 +32,7 @@ import { SearchCombobox } from "@/components/ui/invoices-combobox";
 import EditItemTable from "@/components/website/pages/invoices/edit-item-table";
 import InvoiceNumberDialog from "@/components/website/pages/invoices/invoice-number-dailog";
 import RichTextEditor from "@/components/ui/text-editor";
+import {useRouter} from "next/navigation";
 import {
   User,
   MapPin,
@@ -66,6 +67,7 @@ interface Customer {
 
 const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
   const queryClient = useQueryClient();
+    const router = useRouter();
 
   const [selectedId, setSelectedId] = useState("");
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
@@ -97,12 +99,6 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
 
       invoiceDate: new Date(invoice.invoiceDate),
       dueDate: new Date(invoice.dueDate),
-
-      paymentDate: invoice.paymentDate
-        ? new Date(invoice.paymentDate)
-        : undefined,
-
-      paymentStatus: invoice.paymentStatus ?? "unpaid",
 
       subject: invoice.subject ?? "",
 
@@ -155,11 +151,16 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
         queryKey: ["invoices"],
       });
       toast.success(data.message || "Invoice updated successfully!");
+      if(callback){
+        setTimeout(()=>{
+router.push(callback);
+        },1200)
+      }
       setSelectedId("");
     },
 
     onError: () => {
-      toast.error("Failed to create invoice");
+      toast.error("Failed to updated invoice data");
     },
   });
 
@@ -372,7 +373,6 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
                             rows={4}
                           />
                         </FormControl>
-
                         <FormMessage />
                       </FormItem>
                     )}
@@ -423,7 +423,7 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
 
                       <span className="w-20 text-right font-medium">
                         {" "}
-                        - ₹{discountAmount.toFixed(2)}
+                        -₹{discountAmount.toFixed(2)}
                       </span>
                     </div>
 

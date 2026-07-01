@@ -20,7 +20,7 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
     );
   }
 
-  // check invoice number
+  // check duplicate  invoice number
   const existingInvoice = await db.query.invoice.findFirst({
     where: eq(invoice.invoiceNumber, data.invoiceNumber),
   });
@@ -29,7 +29,7 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
     return Response.json(
       {
         success: false,
-        message: "Invoice number already exists.",
+        message: `Invoice number already exists.`,
       },
       { status: 409 },
     );
@@ -59,10 +59,7 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
 
       customerNotes: data.customerNotes,
       termsAndConditions: data.termsAndConditions,
-
       status: data.status,
-      paymentStatus: "unpaid",
-      paymentDate: null,
     };
     // invoice item
     await tx.insert(invoice).values(invoiceData);

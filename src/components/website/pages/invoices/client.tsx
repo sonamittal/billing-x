@@ -69,7 +69,11 @@ const InvoiceClient = ({ invoiceId }: props) => {
       {isSuccess && data && (
         <div>
           <div className="grid grid-cols-1 lg:grid-cols-1 gap-5">
-            <EditInvoices invoiceId={invoiceId} invoice={data} />
+            <EditInvoices
+              invoiceId={invoiceId}
+              invoice={data}
+              callback="/panel/invoices"
+            />
           </div>
         </div>
       )}
