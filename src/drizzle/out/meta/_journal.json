@@ -120,6 +120,13 @@
       "when": 1782567639503,
       "tag": "0016_whole_kingpin",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1782936629055,
+      "tag": "0017_numerous_the_hand",
+      "breakpoints": true
     }
   ]
 }

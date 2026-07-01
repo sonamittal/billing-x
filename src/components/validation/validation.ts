@@ -1,6 +1,7 @@
 // zod schema >>>>>>>>>>>>>\
-import { UNIT_VALUES } from "@/drizzle/schema/type";
+import { UNIT_VALUES, PAYMENT_MODE } from "@/drizzle/schema/type";
 import * as z from "zod";
+import AddInvoices from "../website/pages/invoices/add";
 export const supFormSchema = z
   .object({
     name: z.string().min(1, { message: "Name is  required" }),
@@ -420,6 +421,17 @@ export const itemSchema = z.object({
 
 export type ItemSchema = z.infer<typeof itemSchema>;
 
+// invoice payment schema >>>>>>>>>>>>>>>>>>>>
+export const paymentItemSchema = z.object({
+  amountReceived: z.number().positive({
+    message: "Amount received must be greater than 0",
+  }),
+
+  paymentMode: z.enum(PAYMENT_MODE, {
+    message: "Please select a payment mode",
+  }),
+});
+
 // add invoice schema >>>>>>>>>>>>>>>>>>>>>>>>>>
 export const addInvoiceSchema = z
   .object({
@@ -457,15 +469,61 @@ export const addInvoiceSchema = z
     status: z.enum(["draft", "sent"], {
       message: "Invalid invoice status",
     }),
-  })
-  .refine((data) => data.dueDate >= data.invoiceDate, {
-    path: ["dueDate"],
-    message: "Due date must be after invoice date",
-  });
+    isPaymentReceived: z.boolean(),
 
+    payments: z.array(paymentItemSchema),
+  })
+  .superRefine((data, ctx) => {
+    // Due date validation
+    if (data.dueDate < data.invoiceDate) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["dueDate"],
+        message: "Due date must be after invoice date",
+      });
+    }
+
+    //  is Checkbox  on then payment required
+    if (data.isPaymentReceived && data.payments.length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["payments"],
+        message: "Please add at least one payment",
+      });
+    }
+
+    // Total received invoice amount se jyada nahi hona chahiye
+    const totalReceived = (data.payments ?? []).reduce(
+      (sum, payment) => sum + payment.amountReceived,
+      0,
+    );
+
+    if (totalReceived > data.totalAmount) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["payments"],
+        message: "Received amount cannot exceed invoice total amount",
+      });
+    }
+  });
 export type AddInvoiceSchema = z.infer<typeof addInvoiceSchema>;
 
-// edit invoice and item schema
+// edit invoice and item schema >>>>>>>>>>>>>>>>>>>>>>>>
 export const editInvoiceSchema = addInvoiceSchema;
 
 export type EditInvoiceSchema = z.infer<typeof editInvoiceSchema>;
+
+export const addInvoicePaymentSchema = z.object({
+  invoiceId: z.string().min(1, {
+    message: "Invoice id is required",
+  }),
+
+  customerId: z.string().min(1, {
+    message: "Customer is required",
+  }),
+
+  payments: z.array(paymentItemSchema).min(1, {
+    message: "At least one payment is required",
+  }),
+});
+export type AddInvoicePaymentSchema = z.infer<typeof addInvoicePaymentSchema>;

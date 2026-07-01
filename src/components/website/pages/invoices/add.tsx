@@ -25,6 +25,8 @@ import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
 import type { ApiErrorResponse } from "@/http/type";
+import { Checkbox } from "@/components/ui/checkbox";
+
 import {
   User,
   MapPin,
@@ -44,6 +46,7 @@ import { toast } from "sonner";
 import Message from "@/components/ui/message";
 import ItemTable from "@/components/website/pages/invoices/item-table";
 import InvoiceNumberDialog from "@/components/website/pages/invoices/invoice-number-dailog";
+import InvoicePayment from "@/components/website/pages/invoices/invoice-payment";
 
 interface Props {
   open: boolean;
@@ -106,6 +109,8 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
       dueDate: undefined,
       subject: "",
       status: "draft",
+      isPaymentReceived: false,
+      payments: [],
       items: [
         {
           itemName: "",
@@ -123,6 +128,8 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
       termsAndConditions: "",
     },
   });
+
+  const isPaymentReceived = form.watch("isPaymentReceived");
   // total
   const discount = form.watch("discount") || 0;
 
@@ -493,6 +500,60 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                   )}
                 />
               </div>
+              <FormField
+                control={form.control}
+                name="isPaymentReceived"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div>
+                      <FormLabel className="cursor-pointer">
+                        I have Received the payment
+                      </FormLabel>
+
+                      <p className="mt-3 text-sm text-muted-foreground">
+                        Check this if you have already received payment for this
+                        invoice.
+                      </p>
+                    </div>
+
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          const value = checked === true;
+
+                          field.onChange(value);
+
+                          if (value) {
+                            form.setValue(
+                              "payments",
+                              [
+                                {
+                                  paymentMode: "cash",
+                                  amountReceived: 0,
+                                },
+                              ],
+                              {
+                                shouldDirty: false,
+                                shouldValidate: false,
+                              },
+                            );
+                          } else {
+                            form.setValue("payments", [], {
+                              shouldDirty: false,
+                              shouldValidate: false,
+                            });
+                          }
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {/* invoice payment */}
+              {isPaymentReceived && <InvoicePayment form={form} />}
+
+              {/* bttn */}
               <div className="flex justify-end gap-3">
                 <Button
                   type="button"

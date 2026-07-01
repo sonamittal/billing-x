@@ -32,7 +32,7 @@ import { SearchCombobox } from "@/components/ui/invoices-combobox";
 import EditItemTable from "@/components/website/pages/invoices/edit-item-table";
 import InvoiceNumberDialog from "@/components/website/pages/invoices/invoice-number-dailog";
 import RichTextEditor from "@/components/ui/text-editor";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   User,
   MapPin,
@@ -67,7 +67,7 @@ interface Customer {
 
 const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
   const queryClient = useQueryClient();
-    const router = useRouter();
+  const router = useRouter();
 
   const [selectedId, setSelectedId] = useState("");
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
@@ -151,10 +151,10 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
         queryKey: ["invoices"],
       });
       toast.success(data.message || "Invoice updated successfully!");
-      if(callback){
-        setTimeout(()=>{
-router.push(callback);
-        },1200)
+      if (callback) {
+        setTimeout(() => {
+          router.push(callback);
+        }, 1200);
       }
       setSelectedId("");
     },

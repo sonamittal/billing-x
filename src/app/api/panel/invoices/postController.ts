@@ -1,5 +1,10 @@
 import { db } from "@/lib/database/db-connect";
-import { customer, invoice, invoiceItem } from "@/drizzle/schema/index";
+import {
+  customer,
+  invoice,
+  invoiceItem,
+  invoicePayment,
+} from "@/drizzle/schema/index";
 import { nanoid } from "nanoid";
 import { eq } from "drizzle-orm";
 import type { AddInvoiceSchema } from "@/components/validation/validation";
@@ -37,6 +42,21 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
   // invoice id
   const invoiceId = nanoid();
 
+  // calculate payment status
+const totalReceived = (data.payments ?? []).reduce(
+  (sum, payment) => sum + payment.amountReceived,
+  0,
+);
+
+  let paymentStatus: "unpaid" | "partially_paid" | "paid" = "unpaid";
+
+  if (totalReceived === 0) {
+    paymentStatus = "unpaid";
+  } else if (totalReceived >= data.totalAmount) {
+    paymentStatus = "paid";
+  } else {
+    paymentStatus = "partially_paid";
+  }
   // Transaction
   await db.transaction(async (tx) => {
     // invoice data
@@ -56,6 +76,8 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
       subtotal: data.subtotal.toString(),
       discount: data.discount.toString(),
       totalAmount: data.totalAmount.toString(),
+
+      paymentStatus,
 
       customerNotes: data.customerNotes,
       termsAndConditions: data.termsAndConditions,
@@ -80,6 +102,21 @@ export const postInvoice = async (data: AddInvoiceSchema) => {
     }));
     // insert item
     await tx.insert(invoiceItem).values(items);
+
+    //payments insert
+    if (data.payments?.length) {
+      await tx.insert(invoicePayment).values(
+        data.payments.map((p) => ({
+          id: nanoid(),
+          invoiceId,
+          customerId: existingCustomer.id,
+
+          amountReceived: p.amountReceived.toString(),
+          paymentMode: p.paymentMode,
+          paymentDate: new Date(),
+        })),
+      );
+    }
   });
   return Response.json(
     {

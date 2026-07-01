@@ -9,7 +9,7 @@ import {
   unique,
   pgEnum,
 } from "drizzle-orm/pg-core";
-import { invoice } from "@/drizzle/schema/invoices";
+import { invoice, invoicePayment } from "@/drizzle/schema/invoices";
 
 export const customerTypeEnum = pgEnum("customer_type", [
   "individual",
@@ -143,6 +143,7 @@ export const customerRelations = relations(customer, ({ many, one }) => ({
   contacts: many(contactPerson),
   otherDetails: one(customerOtherDetails),
   invoices: many(invoice),
+  payments: many(invoicePayment),
 }));
 
 // payment terms relations

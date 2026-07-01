@@ -132,3 +132,12 @@ export const units = [
   { value: "pack", label: "Pack" },
   { value: "dozen", label: "Dozen" },
 ];
+
+// payment modes
+export const paymentModes = [
+  { value: "cash", label: "Cash" },
+  { value: "upi", label: "UPI" },
+  { value: "bank", label: "Bank Transfer" },
+  { value: "cheque", label: "Cheque" },
+  { value: "credit card", label: "Credit Card" },
+];

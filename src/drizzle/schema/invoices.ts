@@ -1,7 +1,7 @@
 import { customer } from "@/drizzle/schema/customer";
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, numeric } from "drizzle-orm/pg-core";
-import type { Unit } from "@/drizzle/schema/type";
+import type { Unit, PaymentMode } from "@/drizzle/schema/type";
 
 export const invoice = pgTable("invoice", {
   id: text("id").primaryKey(),
@@ -24,10 +24,6 @@ export const invoice = pgTable("invoice", {
     mode: "date",
   }).notNull(),
 
-  // paymentDate: timestamp("payment_date", {
-  //   mode: "date",
-  // }),
-
   subject: text("subject"),
 
   // summary
@@ -46,16 +42,16 @@ export const invoice = pgTable("invoice", {
     scale: 2,
   }).notNull(),
 
+  paymentStatus: text("payment_status")
+    .$type<"unpaid" | "partially_paid" | "paid">()
+    .default("unpaid")
+    .notNull(),
+
   customerNotes: text("customer_notes").notNull(),
 
   termsAndConditions: text("terms_and_conditions").notNull(),
 
   status: text("status").$type<"draft" | "sent">().default("draft").notNull(),
-
-  // paymentStatus: text("payment_status")
-  //   .$type<"unpaid" | "partially_paid" | "paid">()
-  //   .default("unpaid")
-  //   .notNull(),
 
   createdAt: timestamp("created_at", {
     mode: "date",
@@ -102,11 +98,51 @@ export const invoiceItem = pgTable("invoice_item", {
     scale: 2,
   }).notNull(),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at", {
+    mode: "date",
+  })
+    .defaultNow()
+    .notNull(),
 
-  updatedAt: timestamp("updated_at")
+  updatedAt: timestamp("updated_at", {
+    mode: "date",
+  })
     .defaultNow()
     .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+// Invoce Payment
+export const invoicePayment = pgTable("invoice_payment", {
+  id: text("id").primaryKey(),
+
+  invoiceId: text("invoice_id")
+    .notNull()
+    .references(() => invoice.id, {
+      onDelete: "cascade",
+    }),
+
+  customerId: text("customer_id")
+    .notNull()
+    .references(() => customer.id, {
+      onDelete: "cascade",
+    }),
+
+  amountReceived: numeric("amount_received", {
+    precision: 10,
+    scale: 2,
+  }).notNull(),
+
+  paymentMode: text("payment_mode").$type<PaymentMode>().notNull(),
+
+  paymentDate: timestamp("payment_date", {
+    mode: "date",
+  }).notNull(),
+
+  createdAt: timestamp("created_at", {
+    mode: "date",
+  })
+    .defaultNow()
     .notNull(),
 });
 
@@ -115,12 +151,26 @@ export const invoiceRelations = relations(invoice, ({ one, many }) => ({
     fields: [invoice.customerId],
     references: [customer.id],
   }),
+
   items: many(invoiceItem),
+
+  payments: many(invoicePayment),
 }));
 
 export const invoiceItemRelations = relations(invoiceItem, ({ one }) => ({
   invoice: one(invoice, {
     fields: [invoiceItem.invoiceId],
     references: [invoice.id],
+  }),
+}));
+
+export const invoicePaymentRelations = relations(invoicePayment, ({ one }) => ({
+  invoice: one(invoice, {
+    fields: [invoicePayment.invoiceId],
+    references: [invoice.id],
+  }),
+  customer: one(customer, {
+    fields: [invoicePayment.customerId],
+    references: [customer.id],
   }),
 }));
