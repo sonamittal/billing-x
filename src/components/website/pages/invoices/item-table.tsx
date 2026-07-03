@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import type { AddInvoiceSchema } from "@/components/validation/validation";
 import { SearchCombobox } from "@/components/ui/combobox";
-import { units } from "@/lib/constants";
+import { UNITS } from "@/lib/constants";
 import { useEffect } from "react";
 
 interface ItemTableProps {
@@ -118,7 +118,7 @@ const ItemTable = ({ form }: ItemTableProps) => {
                             <SearchCombobox
                               value={field.value}
                               onChange={field.onChange}
-                              options={units}
+                              options={UNITS}
                               placeholder="Select a Unit"
                             />
                           </FormControl>

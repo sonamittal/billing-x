@@ -30,6 +30,7 @@ import { USER_ROLES, USER_STATUS } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import DeleteUserDialog from "@/components/panel/pages/settings/users/delete-dialog";
+import type { Row } from "@tanstack/react-table";
 
 interface User {
   id: string;
@@ -44,10 +45,10 @@ interface User {
 }
 
 const UsersTable = () => {
-  const [selectedRow, setSelectedRow] = React.useState<any | null>(null);
+  const [selectedRow, setSelectedRow] = React.useState<Row<User> | null>(null);
   const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const handleOpenDeleteDialog = (user: User, row: any) => {
+  const handleOpenDeleteDialog = (user: User, row: Row<User>) => {
     row.toggleSelected(true);
     setSelectedUser({
       ...user,

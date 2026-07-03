@@ -500,6 +500,8 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
                   )}
                 />
               </div>
+
+              {/* invoice payment */}
               <FormField
                 control={form.control}
                 name="isPaymentReceived"

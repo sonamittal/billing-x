@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { SearchCombobox } from "@/components/ui/invoices-combobox";
-import { paymentModes } from "@/lib/constants";
+import { PAYMENT_MODES } from "@/lib/constants";
 import { useFieldArray, UseFormReturn, useWatch } from "react-hook-form";
 import type { AddInvoiceSchema } from "@/components/validation/validation";
 
@@ -95,7 +95,7 @@ const InvoicePayment = ({ form }: InvoicePaymentProps) => {
                             onChange={field.onChange}
                             placeholder="Select payment mode"
                             searchPlaceholder="Search payment mode..."
-                            options={paymentModes}
+                            options={PAYMENT_MODES}
                           />
                         </FormControl>
 

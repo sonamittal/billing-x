@@ -110,34 +110,65 @@ export const Sal_titles = [
 ];
 
 // units
-export const units = [
-  { value: "pcs", label: "PCS" },
+export const UNITS = [
+  { label: "PCS", value: "pcs" },
 
-  { value: "cm", label: "CM" },
-  { value: "mm", label: "MM" },
-  { value: "m", label: "Meter (M)" },
-  { value: "km", label: "Kilometer (KM)" },
-  { value: "ft", label: "Feet (FT)" },
-  { value: "in", label: "Inch (IN)" },
+  { label: "CM", value: "cm" },
+  { label: "MM", value: "mm" },
+  { label: "Meter (M)", value: "m" },
+  { label: "Kilometer (KM)", value: "km" },
+  { label: "Feet (FT)", value: "ft" },
+  { label: "Inch (IN)", value: "in" },
 
-  { value: "g", label: "Gram (G)" },
-  { value: "kg", label: "Kilogram (KG)" },
-  { value: "mg", label: "Milligram (MG)" },
-  { value: "lb", label: "Pound (LB)" },
+  { label: "Gram (G)", value: "g" },
+  { label: "Kilogram (KG)", value: "kg" },
+  { label: "Milligram (MG)", value: "mg" },
+  { label: "Pound (LB)", value: "lb" },
 
-  { value: "ml", label: "Milliliter (ML)" },
-  { value: "l", label: "Liter (L)" },
+  { label: "Milliliter (ML)", value: "ml" },
+  { label: "Liter (L)", value: "l" },
 
-  { value: "box", label: "Box" },
-  { value: "pack", label: "Pack" },
-  { value: "dozen", label: "Dozen" },
+  { label: "Box", value: "box" },
+  { label: "Pack", value: "pack" },
+  { label: "Dozen", value: "dozen" },
 ];
 
 // payment modes
-export const paymentModes = [
-  { value: "cash", label: "Cash" },
-  { value: "upi", label: "UPI" },
-  { value: "bank", label: "Bank Transfer" },
-  { value: "cheque", label: "Cheque" },
-  { value: "credit card", label: "Credit Card" },
+export const PAYMENT_MODES = [
+  { label: "Cash", value: "cash" },
+  { label: "UPI", value: "upi" },
+  { label: "Bank Transfer", value: "bank" },
+  { label: "Cheque", value: "cheque" },
+  { label: "Credit Card", value: "credit card" },
 ];
+
+export const INVOICE_STATUS = [
+  {
+    label: "Draft",
+    value: "draft",
+    color: "text-gray-500",
+  },
+  {
+    label: "Sent",
+    value: "sent",
+    color: "text-green-500",
+  },
+] as const;
+
+export const PAYMENT_STATUS = [
+  {
+    label: "Paid",
+    value: "paid",
+    color: "text-green-500",
+  },
+  {
+    label: "Partially Paid",
+    value: "partially_paid",
+    color: "text-yellow-500",
+  },
+  {
+    label: "Unpaid",
+    value: "unpaid",
+    color: "text-red-500",
+  },
+] as const;

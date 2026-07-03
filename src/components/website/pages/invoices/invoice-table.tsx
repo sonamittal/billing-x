@@ -4,7 +4,19 @@ import * as React from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-import { MoreHorizontal, Pencil, Trash2, Eye, Text } from "lucide-react";
+import {
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Text,
+  CheckCircle2,
+  Clock3,
+  AlertCircle,
+  Send,
+  FileClock,
+} from "lucide-react";
+
+import { INVOICE_STATUS, PAYMENT_STATUS } from "@/lib/constants";
 
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
@@ -12,7 +24,7 @@ import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +37,8 @@ import { parseAsString, useQueryState } from "nuqs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+import { Badge } from "@/components/ui/badge";
+
 //types >>>>>>>>>>>>>>
 
 interface Invoice {
@@ -35,9 +49,14 @@ interface Invoice {
   dueDate: string;
   totalAmount: string;
   status: "draft" | "sent";
-  paymentStatus: "paid" | "unpaid";
+  paymentStatus: "paid" | "partially_paid" | "unpaid";
+  balance: number;
   customer: {
-    name: string;
+    id: string;
+    user: {
+      name: string;
+      image: string | null;
+    };
   };
 }
 
@@ -45,6 +64,11 @@ interface Invoice {
 
 const InvoiceTable = () => {
   const [name] = useQueryState("name", parseAsString.withDefault(""));
+  const [status] = useQueryState("status", parseAsString.withDefault(""));
+  const [paymentStatus] = useQueryState(
+    "paymentStatus",
+    parseAsString.withDefault(""),
+  );
 
   // fetch data
   const { data, isLoading } = useQuery({
@@ -58,12 +82,19 @@ const InvoiceTable = () => {
   const filteredData = React.useMemo(() => {
     if (!data) return [];
 
-    if (!name) return data;
+    return data.filter((invoice) => {
+      const matchName =
+        !name ||
+        invoice.customerName.toLowerCase().includes(name.toLowerCase());
 
-    return data.filter((invoice) =>
-      invoice.customerName.toLowerCase().includes(name.toLowerCase()),
-    );
-  }, [data, name]);
+      const matchStatus = !status || invoice.status === status;
+
+      const matchPaymentStatus =
+        !paymentStatus || invoice.paymentStatus === paymentStatus;
+
+      return matchName && matchStatus && matchPaymentStatus;
+    });
+  }, [data, name, status, paymentStatus]);
 
   // columns
 
@@ -104,33 +135,38 @@ const InvoiceTable = () => {
       // customer
       {
         id: "customer",
-        accessorFn: (row) => row.customer.name,
+        accessorFn: (row) => row.customer?.user?.name,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Customer" />
         ),
         cell: ({ row }) => {
-          const customerName = row.original.customerName;
+          const user = row.original.customer?.user;
 
           return (
             <div className="flex items-center gap-2">
-              {/* Avatar removed → initials only */}
-              <div className="h-8 w-8 rounded-full bg-[#F5F5F5] text-black flex items-center justify-center text-sm font-semibold">
-                {customerName.charAt(0).toUpperCase()}
+              <div className="h-8 w-8 rounded-full bg-[#F5F5F5] flex items-center justify-center overflow-hidden">
+                {user?.image ? (
+                  <img
+                    src={user.image}
+                    alt={user.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm font-semibold">
+                    {user?.name?.charAt(0).toUpperCase() || "U"}
+                  </span>
+                )}
               </div>
 
-              <span>{customerName}</span>
+              <span>
+                {user?.name
+                  ? user.name.charAt(0).toUpperCase() + user.name.slice(1)
+                  : "Unknown"}
+              </span>
             </div>
           );
         },
-        meta: {
-          label: "name",
-          placeholder: "Search customer name ...",
-          variant: "text",
-          icon: Text,
-        },
-        enableColumnFilter: true,
       },
-
       // invoice date
       {
         accessorKey: "invoiceDate",
@@ -141,8 +177,47 @@ const InvoiceTable = () => {
           new Date(row.original.invoiceDate).toLocaleDateString(),
       },
 
-      // due date
+      {
+        accessorKey: "status",
 
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} label="Status" />
+        ),
+
+        cell: ({ row }) => {
+          const status = INVOICE_STATUS.find(
+            (item) => item.value === row.original.status,
+          );
+
+          if (!status) return null;
+
+          return (
+            <Badge
+              variant="outline"
+              className={`flex w-fit items-center gap-1 ${status.color}`}
+            >
+              {status.value === "sent" ? (
+                <Send className="h-4 w-4" />
+              ) : (
+                <FileClock className="h-4 w-4" />
+              )}
+
+              {status.label}
+            </Badge>
+          );
+        },
+
+        meta: {
+          label: "Invoice Status",
+          variant: "multiSelect",
+          options: INVOICE_STATUS.map((status) => ({
+            ...status,
+          })),
+        },
+
+        enableColumnFilter: true,
+      },
+      // due date
       {
         accessorKey: "dueDate",
         header: ({ column }) => (
@@ -151,33 +226,51 @@ const InvoiceTable = () => {
         cell: ({ row }) => new Date(row.original.dueDate).toLocaleDateString(),
       },
 
-      // status
+      // payment Status
       {
-        accessorKey: "status",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} label="Status" />
-        ),
-        cell: ({ row }) => {
-          const status = row.original.status;
+        accessorKey: "paymentStatus",
 
-          const colors = {
-            draft: "bg-gray-100 text-gray-700",
-            sent: "bg-green-100 text-green-700",
-          };
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} label="Payment Status" />
+        ),
+
+        cell: ({ row }) => {
+          const status = PAYMENT_STATUS.find(
+            (item) => item.value === row.original.paymentStatus,
+          );
+
+          if (!status) return null;
 
           return (
-            <span
-              className={`px-2 py-1 rounded-md text-xs capitalize ${colors[status]}`}
+            <Badge
+              variant="outline"
+              className={`flex w-fit items-center gap-1 ${status.color}`}
             >
-              {status}
-            </span>
+              {status.value === "paid" ? (
+                <CheckCircle2 className="h-4 w-4" />
+              ) : status.value === "partially_paid" ? (
+                <Clock3 className="h-4 w-4" />
+              ) : (
+                <AlertCircle className="h-4 w-4" />
+              )}
+
+              {status.label}
+            </Badge>
           );
         },
+
+        meta: {
+          label: "Payment Status",
+          variant: "multiSelect",
+          options: PAYMENT_STATUS.map((status) => ({ ...status })),
+        },
+
+        enableColumnFilter: true,
       },
 
       // total
       {
-        accessorKey: "total",
+        accessorKey: "totalAmount",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Amount" />
         ),
@@ -188,6 +281,26 @@ const InvoiceTable = () => {
         ),
       },
 
+      // Balance Due
+      {
+        accessorKey: "balance",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} label="Balance Due" />
+        ),
+        cell: ({ row }) => {
+          const balance = Number(row.original.balance ?? 0);
+
+          return (
+            <span
+              className={`font-semibold ${
+                balance === 0 ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              ₹{balance.toLocaleString("en-IN")}
+            </span>
+          );
+        },
+      },
       // actions
       {
         id: "actions",
