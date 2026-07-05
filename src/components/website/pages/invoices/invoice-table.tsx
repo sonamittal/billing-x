@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Send,
   FileClock,
+  Eye,
 } from "lucide-react";
 
 import { INVOICE_STATUS, PAYMENT_STATUS } from "@/lib/constants";
@@ -24,7 +25,7 @@ import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import Image from "next/image";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useDataTable } from "@/hooks/use-data-table";
-import { parseAsString, useQueryState } from "nuqs";
+import { parseAsString, useQueryState, parseAsArrayOf } from "nuqs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -63,13 +64,6 @@ interface Invoice {
 // invoice tabel
 
 const InvoiceTable = () => {
-  const [name] = useQueryState("name", parseAsString.withDefault(""));
-  const [status] = useQueryState("status", parseAsString.withDefault(""));
-  const [paymentStatus] = useQueryState(
-    "paymentStatus",
-    parseAsString.withDefault(""),
-  );
-
   // fetch data
   const { data, isLoading } = useQuery({
     queryKey: ["invoices"],
@@ -78,23 +72,6 @@ const InvoiceTable = () => {
       return response.data.data as Invoice[];
     },
   });
-
-  const filteredData = React.useMemo(() => {
-    if (!data) return [];
-
-    return data.filter((invoice) => {
-      const matchName =
-        !name ||
-        invoice.customerName.toLowerCase().includes(name.toLowerCase());
-
-      const matchStatus = !status || invoice.status === status;
-
-      const matchPaymentStatus =
-        !paymentStatus || invoice.paymentStatus === paymentStatus;
-
-      return matchName && matchStatus && matchPaymentStatus;
-    });
-  }, [data, name, status, paymentStatus]);
 
   // columns
 
@@ -111,12 +88,15 @@ const InvoiceTable = () => {
             onCheckedChange={(value) =>
               table.toggleAllPageRowsSelected(!!value)
             }
+            aria-label="Select all"
           />
         ),
+
         cell: ({ row }) => (
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
           />
         ),
         enableSorting: false,
@@ -126,10 +106,18 @@ const InvoiceTable = () => {
 
       // invoice no
       {
+        id: "invoiceNumber",
         accessorKey: "invoiceNumber",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Invoice #" />
         ),
+        meta: {
+          label: "invoiceNumber",
+          placeholder: "Search invoiceNumber...",
+          variant: "text",
+          icon: Text,
+        },
+        enableColumnFilter: true,
       },
 
       // customer
@@ -169,6 +157,7 @@ const InvoiceTable = () => {
       },
       // invoice date
       {
+        id: "invoiceDate",
         accessorKey: "invoiceDate",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Invoice Date" />
@@ -176,9 +165,18 @@ const InvoiceTable = () => {
         cell: ({ row }) =>
           new Date(row.original.invoiceDate).toLocaleDateString(),
       },
-
+      //status
       {
+        id: "status",
         accessorKey: "status",
+
+        filterFn: (row, id, value) => {
+          if (!Array.isArray(value) || value.length === 0) {
+            return true;
+          }
+
+          return value.includes(row.getValue(id));
+        },
 
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Status" />
@@ -210,9 +208,7 @@ const InvoiceTable = () => {
         meta: {
           label: "Invoice Status",
           variant: "multiSelect",
-          options: INVOICE_STATUS.map((status) => ({
-            ...status,
-          })),
+          options: INVOICE_STATUS.map((status) => ({ ...status })),
         },
 
         enableColumnFilter: true,
@@ -227,8 +223,18 @@ const InvoiceTable = () => {
       },
 
       // payment Status
+
       {
+        id: "paymentStatus",
         accessorKey: "paymentStatus",
+
+        filterFn: (row, id, value) => {
+          if (!Array.isArray(value) || value.length === 0) {
+            return true;
+          }
+
+          return value.includes(row.getValue(id));
+        },
 
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Payment Status" />
@@ -270,6 +276,7 @@ const InvoiceTable = () => {
 
       // total
       {
+        id: "totalAmount",
         accessorKey: "totalAmount",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Amount" />
@@ -283,6 +290,7 @@ const InvoiceTable = () => {
 
       // Balance Due
       {
+        id: "balance",
         accessorKey: "balance",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Balance Due" />
@@ -301,6 +309,7 @@ const InvoiceTable = () => {
           );
         },
       },
+      
       // actions
       {
         id: "actions",
@@ -308,27 +317,36 @@ const InvoiceTable = () => {
           const invoiceId = row.original.id;
 
           return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
+            <div className="flex items-center gap-2">
+              {/* View */}
+              <Button variant="outline" size="icon" asChild>
+                <Link href={`/panel/invoices/${invoiceId}`}>
+                  <Eye className="h-4 w-4" />
+                </Link>
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href={`/panel/invoices/${invoiceId}?tab=invoice-details`}
+                    >
+                      <Pencil className="mr-2 h-4 w-4" />
+                      Edit
+                    </Link>
+                  </DropdownMenuItem>
 
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href={`/panel/invoices/${invoiceId}`}>
-                    <Pencil className="mr-2 h-4 w-4" />
-                    Edit
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem className="text-red-500">
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuItem className="text-red-500">
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           );
         },
         size: 32,
@@ -339,9 +357,9 @@ const InvoiceTable = () => {
 
   // table
   const { table } = useDataTable({
-    data: filteredData,
+    data: data ?? [],
     columns,
-    pageCount: Math.ceil(filteredData.length / 10),
+    pageCount: Math.ceil((data?.length ?? 0) / 10),
 
     initialState: {
       sorting: [{ id: "invoiceNumber", desc: true }],

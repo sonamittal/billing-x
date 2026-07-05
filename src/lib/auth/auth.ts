@@ -14,7 +14,7 @@ import {
 interface SendVerificationOtpParams {
   email: string;
   otp: string;
-  type: "sign-in" | "email-verification" | "forget-password";
+  type: "sign-in" | "change-email" | "email-verification" | "forget-password";
 }
 export const auth = betterAuth({
   database: drizzleAdapter(db, {

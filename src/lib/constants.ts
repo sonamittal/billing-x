@@ -87,18 +87,19 @@ export const SETTINGS_ITEM = [
   { id: "expenses", label: "Expenses", icon: DollarSign },
   { id: "email-notification", label: "Email Notification", icon: Mail },
 ];
-// roles
-export const USER_ROLES = [
-  { label: "Admin", value: "admin" },
-  { label: "Staff", value: "staff" },
-  { label: "Staff (Assigned Customers Only)", value: "staffAssigned" },
-  { label: "Timesheet Staff", value: "timesheetStaff" },
-] as const;
-//Status
-export const USER_STATUS = [
-  { label: "Active", value: "false" },
-  { label: "Banned", value: "true" },
-] as const;
+  // roles
+  export const USER_ROLES = [
+    { label: "Admin", value: "admin" },
+    { label: "Staff", value: "staff" },
+    { label: "Staff (Assigned Customers Only)", value: "staffAssigned" },
+    { label: "Timesheet Staff", value: "timesheetStaff" },
+    
+  ] as const;
+  //Status
+  export const USER_STATUS = [
+    { label: "Active", value: "false" },
+    { label: "Banned", value: "true" },
+  ] as const;
 
 // salutation
 export const Sal_titles = [

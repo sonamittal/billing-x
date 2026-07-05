@@ -6,7 +6,7 @@ import Message from "@/components/ui/message";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { invoiceWithRelations } from "@/app/api/panel/invoices/[invoiceId]/type";
-import EditInvoices from "@/components/website/pages/invoices/edit";
+import InvoiceEditDetails from "@/components/website/pages/invoices/edit-details";
 import { ApiErrorResponse } from "@/http/type";
 
 interface props {
@@ -69,7 +69,7 @@ const InvoiceClient = ({ invoiceId }: props) => {
       {isSuccess && data && (
         <div>
           <div className="grid grid-cols-1 lg:grid-cols-1 gap-5">
-            <EditInvoices
+            <InvoiceEditDetails
               invoiceId={invoiceId}
               invoice={data}
               callback="/panel/invoices"

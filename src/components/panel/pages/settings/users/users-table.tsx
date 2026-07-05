@@ -44,6 +44,18 @@ interface User {
   banExpires: string | Date | null;
 }
 
+interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+  banned: boolean;
+  emailVerified: boolean;
+  role: User["role"];
+  banReason: string | null;
+  banExpires: string | Date | null;
+}
+
 const UsersTable = () => {
   const [selectedRow, setSelectedRow] = React.useState<Row<User> | null>(null);
   const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
@@ -57,15 +69,6 @@ const UsersTable = () => {
     setSelectedRow(row);
     setIsDeleteOpen(true);
   };
-  const [name] = useQueryState("name", parseAsString.withDefault(""));
-  const [banned] = useQueryState(
-    "banned",
-    parseAsArrayOf(parseAsString).withDefault([]),
-  );
-  const [role] = useQueryState(
-    "role",
-    parseAsArrayOf(parseAsString).withDefault([]),
-  );
 
   // Fetch users
   const { data: users = [], isLoading } = useQuery({
@@ -76,33 +79,21 @@ const UsersTable = () => {
       });
 
       if (error) throw new Error(error.message);
+      console.log(data?.users);
 
-      return (data?.users || []).map((u: any) => ({
+      return (data?.users as AuthUser[]).map((u) => ({
         id: u.id,
         name: u.name || "Unknown",
         email: u.email,
-        image: u.image || u.avatar_url || "",
+        image: u.image || "",
         banned: u.banned,
         emailVerified: u.emailVerified,
-        role: Array.isArray(u.role)
-          ? (u.role[0] as User["role"])
-          : (u.role as User["role"]),
+        role: u.role as User["role"],
         banReason: u.banReason ?? null,
         banExpires: u.banExpires ?? null,
       }));
     },
   });
-
-  const filteredData = React.useMemo(() => {
-    return users.filter((user) => {
-      const matchName =
-        name === "" || user.name.toLowerCase().includes(name.toLowerCase());
-      const matchesStatus =
-        banned.length === 0 || banned.includes(user.banned ? "true" : "false");
-      const matchesRole = role.length === 0 || role.includes(user.role);
-      return matchName && matchesStatus && matchesRole;
-    });
-  }, [users, name, banned, role]);
 
   const columns = React.useMemo<ColumnDef<User>[]>(
     () => [
@@ -132,6 +123,7 @@ const UsersTable = () => {
         enableHiding: false,
       },
 
+      // name
       {
         id: "name",
         accessorKey: "name",
@@ -181,6 +173,7 @@ const UsersTable = () => {
         enableColumnFilter: true,
       },
 
+      // email
       {
         id: "email",
         accessorKey: "email",
@@ -196,9 +189,19 @@ const UsersTable = () => {
         enableColumnFilter: false,
       },
 
+      // role
+
       {
         id: "role",
         accessorKey: "role",
+
+        filterFn: (row, id, value) => {
+          if (!Array.isArray(value) || value.length === 0) {
+            return true;
+          }
+          return value.includes(row.getValue(id));
+        },
+
         header: ({ column }: { column: Column<User, unknown> }) => (
           <DataTableColumnHeader column={column} label="Role" />
         ),
@@ -210,9 +213,20 @@ const UsersTable = () => {
         enableColumnFilter: true,
       },
 
+      // banned
+
       {
         id: "banned",
         accessorKey: "banned",
+
+        filterFn: (row, id, value) => {
+          if (!Array.isArray(value) || value.length === 0) {
+            return true;
+          }
+
+          return value.includes(String(row.getValue(id)));
+        },
+
         header: ({ column }: { column: Column<User, unknown> }) => (
           <DataTableColumnHeader column={column} label="Status" />
         ),
@@ -273,6 +287,7 @@ const UsersTable = () => {
         enableColumnFilter: true,
       },
 
+      // actions
       {
         id: "actions",
         cell: ({ row }) => {
@@ -280,7 +295,7 @@ const UsersTable = () => {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="outline" size="icon">
                   <MoreHorizontal className="h-4 w-4" />
                   <span className="sr-only">Open menu</span>
                 </Button>
@@ -313,7 +328,7 @@ const UsersTable = () => {
   );
 
   const { table } = useDataTable<User>({
-    data: filteredData,
+    data: users,
     columns,
     pageCount: 2,
     initialState: {
