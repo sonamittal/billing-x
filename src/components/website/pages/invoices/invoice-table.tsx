@@ -309,7 +309,7 @@ const InvoiceTable = () => {
           );
         },
       },
-      
+
       // actions
       {
         id: "actions",
