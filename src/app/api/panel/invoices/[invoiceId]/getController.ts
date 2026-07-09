@@ -8,6 +8,7 @@ export const getInvoiceById = async (invoiceId: string) => {
     with: {
       customer: true,
       items: true,
+      payments: true,
     },
   });
   if (!invoiceData) {

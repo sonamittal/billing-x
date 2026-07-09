@@ -320,7 +320,7 @@ const InvoiceTable = () => {
             <div className="flex items-center gap-2">
               {/* View */}
               <Button variant="outline" size="icon" asChild>
-                <Link href={`/panel/invoices/${invoiceId}`}>
+                <Link href={`/panel/invoices/${invoiceId}?tab=overview`}>
                   <Eye className="h-4 w-4" />
                 </Link>
               </Button>
