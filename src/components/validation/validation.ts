@@ -513,6 +513,7 @@ export const editInvoiceSchema = addInvoiceSchema;
 
 export type EditInvoiceSchema = z.infer<typeof editInvoiceSchema>;
 
+// add invoice payment schema
 export const addInvoicePaymentSchema = z.object({
   invoiceId: z.string().min(1, {
     message: "Invoice id is required",
@@ -527,3 +528,34 @@ export const addInvoicePaymentSchema = z.object({
   }),
 });
 export type AddInvoicePaymentSchema = z.infer<typeof addInvoicePaymentSchema>;
+
+// edit item schema
+
+// Single payment
+export const editInvoicePaymentItemSchema = paymentItemSchema.extend({
+  paymentId: z.string().optional(),
+  paymentDate: z.date({
+    message: "Payment date is required",
+  }),
+});
+
+export type EditInvoicePaymentItemSchema = z.infer<
+  typeof editInvoicePaymentItemSchema
+>;
+
+// Multiple payments
+export const editInvoicePaymentSchema = z.object({
+  invoiceId: z.string().min(1, {
+    message: "Invoice id is required",
+  }),
+
+  customerId: z.string().min(1, {
+    message: "Customer is required",
+  }),
+
+  payments: z.array(editInvoicePaymentItemSchema).min(1, {
+    message: "At least one payment is required",
+  }),
+});
+
+export type EditInvoicePaymentSchema = z.infer<typeof editInvoicePaymentSchema>;

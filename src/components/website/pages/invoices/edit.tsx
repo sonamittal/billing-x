@@ -50,6 +50,7 @@ import {
 } from "@/components/validation/validation";
 import { invoiceWithRelations } from "@/app/api/panel/invoices/[invoiceId]/type";
 
+
 interface invoiceIdProps {
   callback?: string;
   invoiceId: string;
@@ -119,6 +120,8 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
 
       customerNotes: invoice.customerNotes ?? "",
       termsAndConditions: invoice.termsAndConditions ?? "",
+
+   
     },
   });
 

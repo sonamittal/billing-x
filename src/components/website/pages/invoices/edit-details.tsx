@@ -7,6 +7,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 import InvoicePDF from "@/components/website/pages/invoices/pdf/invoice-pdf";
 import type { Invoice as PdfInvoice } from "@/components/website/pages/invoices/pdf/type";
 import { ToWords } from "to-words";
+import EditInvoicePayment from "@/components/website/pages/invoices/edit-invoice-payment";
 
 const toWords = new ToWords({
   localeCode: "en-IN",
@@ -88,6 +89,7 @@ const InvoiceEditDetails = ({ invoiceId, invoice, callback }: Props) => {
         <TabsList className="flex  items-center gap-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="invoice-details">Invoice details</TabsTrigger>
+          <TabsTrigger value="payment-details">Payment details</TabsTrigger>
         </TabsList>
       </div>
 
@@ -107,6 +109,16 @@ const InvoiceEditDetails = ({ invoiceId, invoice, callback }: Props) => {
             callback={callback}
           />
         </div>
+      </TabsContent>
+
+      <TabsContent value="payment-details" className="mt-4">
+        {invoice.payments.length > 0 && (
+          <EditInvoicePayment  invoiceId={invoiceId}
+            invoice={invoice}
+            callback = {callback}
+           
+          />
+        )}
       </TabsContent>
     </Tabs>
   );

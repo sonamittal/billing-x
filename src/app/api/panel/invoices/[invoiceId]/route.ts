@@ -39,8 +39,7 @@ export const GET = async (
   }
 };
 
-// pt req
-
+// put req
 export const PUT = async (
   req: Request,
   { params }: { params: Promise<{ invoiceId: string }> },
