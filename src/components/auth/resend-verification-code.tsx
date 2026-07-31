@@ -1,6 +1,7 @@
+"use client";
 import { useMutation } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth/auth-client";
-
+import { toast } from "sonner";
 const ResendVerificationCode = ({ email }: { email: string }) => {
   // resend otp
   const {
@@ -15,10 +16,10 @@ const ResendVerificationCode = ({ email }: { email: string }) => {
       });
     },
     onSuccess: () => {
-      console.log("OTP sent on your email.");
+      toast.success("OTP sent on your email");
     },
-    onError: (error: any) => {
-      console.log(error.message);
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
