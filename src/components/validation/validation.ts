@@ -89,9 +89,26 @@ export const organizationSchema = z
   .object({
     name: z.string().min(1, { message: " Organization name is  required" }),
     industry: z.string().min(1, { message: "Industry is required" }),
-    country: z.string().min(1, { message: "Country is required" }),
-    state: z.string().min(1, "State is required"),
-    city: z.string().min(1, { message: "City is required" }),
+    countryId: z.string().min(1, {
+      message: "Country is required",
+    }),
+    country: z.string().min(1, {
+      message: "Country name is required",
+    }),
+
+    stateId: z.string().min(1, {
+      message: "State is required",
+    }),
+    state: z.string().min(1, {
+      message: "State name is required",
+    }),
+
+    cityId: z.string().min(1, {
+      message: "City is required",
+    }),
+    city: z.string().min(1, {
+      message: "City name is required",
+    }),
     address: z.string().min(1, { message: "Location is required" }),
     currency: z.string().min(1, { message: "Currency is required" }),
     language: z.string().trim().min(1, { message: "Language is required" }),

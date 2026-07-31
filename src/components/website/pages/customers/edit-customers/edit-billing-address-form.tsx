@@ -5,6 +5,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -269,6 +270,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                       placeholder="Select City"
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -300,6 +302,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                     <FormControl>
                       <Textarea placeholder="Full address..." {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -314,6 +317,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                     <FormControl>
                       <Textarea placeholder="Full address..." {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -330,6 +334,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
                   <FormControl>
                     <Input type="text" placeholder="9876543210" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />

@@ -196,6 +196,9 @@ function checkIsActive(href: string, item: NavItem, mainNav = false) {
     !!item?.items?.some((i) => i.url === href) ||
     (mainNav &&
       href.split("/")[1] !== "" &&
-      href.split("/")[1] === item?.url?.split("/")[1])
+      href.split("/")[1] ===
+        (typeof item?.url === "string"
+          ? item.url.split("/")[1]
+          : item?.url?.pathname?.split("/")[1]))
   );
-}
+}   

@@ -13,6 +13,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -144,6 +145,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                       <SelectItem value="business">Business</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -157,6 +159,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                   <FormControl>
                     <Input {...field} placeholder="ByteWyte" />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -182,6 +185,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                         placeholder="Select Currency"
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -206,6 +210,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                         placeholder="Select Language"
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -226,6 +231,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -248,6 +254,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -266,6 +273,7 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

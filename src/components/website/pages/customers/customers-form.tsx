@@ -14,6 +14,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -229,6 +230,7 @@ const AddCustomerForm = ({
                       <SelectItem value="business">Business</SelectItem>
                     </SelectContent>
                   </Select>
+                   <FormMessage />
                 </FormItem>
               )}
             />
@@ -246,6 +248,7 @@ const AddCustomerForm = ({
                     <FormControl className="w-full">
                       <Input type="text" placeholder="ByteWyte" {...field} />
                     </FormControl>
+                     <FormMessage />
                   </FormItem>
                 )}
               />
@@ -351,6 +354,7 @@ const AddCustomerForm = ({
                         placeholder="Select Country"
                       />
                     </FormControl>
+                     <FormMessage />
                   </FormItem>
                 )}
               />
@@ -389,6 +393,7 @@ const AddCustomerForm = ({
                         placeholder="Select State"
                       />
                     </FormControl>
+                     <FormMessage />
                   </FormItem>
                 )}
               />
@@ -425,6 +430,7 @@ const AddCustomerForm = ({
                         placeholder="Select City"
                       />
                     </FormControl>
+                     <FormMessage />
                   </FormItem>
                 )}
               />
@@ -439,6 +445,7 @@ const AddCustomerForm = ({
                     <FormControl>
                       <Input type="text" placeholder="411001" {...field} />
                     </FormControl>
+                     <FormMessage />
                   </FormItem>
                 )}
               />
@@ -458,6 +465,7 @@ const AddCustomerForm = ({
                     <FormControl>
                       <Textarea placeholder="Full address..." {...field} />
                     </FormControl>
+                     <FormMessage />
                   </FormItem>
                 )}
               />
@@ -472,6 +480,7 @@ const AddCustomerForm = ({
                     <FormControl>
                       <Textarea placeholder="Full address..." {...field} />
                     </FormControl>
+                     <FormMessage />
                   </FormItem>
                 )}
               />

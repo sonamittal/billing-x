@@ -11,12 +11,15 @@ import Image from "next/image";
 import { MoveLeft } from "lucide-react";
 import OrganizationSetupForm from "@/components/website/pages/organization-setup/organization-setup-form";
 import { useSearchParams } from "next/navigation";
+import { authClient } from "@/lib/auth/auth-client";
 const OrganizationSetup = () => {
   // const searchParams = useSearchParams();
   // const callbackUrl = searchParams.get("callbackUrl") || null;
+  const { data: session } = authClient.useSession();
+  const userName = session?.user?.name || "User";
   return (
     <div className="container flex items-center justify-center  w-full h-screen">
-      <Card className="w-full md:w-[50%] mx-auto max-h-[90vh] overflow-auto">
+      <Card className="w-full md:w-[60%] mx-auto max-h-[90vh] overflow-auto">
         <CardHeader>
           <Link
             href="/"
@@ -27,9 +30,10 @@ const OrganizationSetup = () => {
           <div className="flex flex-col-reverse lg:flex-row gap-5 lg:gap-10 items-center justify-between">
             <div className="space-y-2 text-center lg:text-left">
               <CardTitle className="text-2xl">Organization Setup </CardTitle>
-              <CardTitle className="mt-5">Welcome, Mohit Kumawat! 🤝</CardTitle>
+              <CardTitle className="mt-5"> Welcome, {userName}! 🤝</CardTitle>
               <CardDescription>
-                Enter your organization details to start using Ehuna Invoice.
+                Enter your organization details to start using {userName}{" "}
+                Invoice.
               </CardDescription>
             </div>
             <Image
