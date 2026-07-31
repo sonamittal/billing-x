@@ -16,7 +16,7 @@ import Message from "@/components/ui/message";
 import { useSearchParams } from "next/navigation";
 import { forgotPasswordFormSchema } from "@/components/validation/validation";
 import type { ForgotPasswordFormSchema } from "@/components/validation/validation";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 import { Loader2, MoveLeft } from "lucide-react";
 import React, { useState } from "react";
@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/card";
 import SetPasswordForm from "@/components/auth/forgot-password/set-password";
 const ForgotPasswordForm = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || null;
   //form handling
