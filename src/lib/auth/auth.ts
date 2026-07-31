@@ -3,6 +3,9 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/lib/database/db-connect"; // your drizzle instance
 import { emailOTP } from "better-auth/plugins";
 import { admin as adminPlugin } from "better-auth/plugins";
+import { user } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
+
 import {
   ac,
   admin,
@@ -10,6 +13,7 @@ import {
   staffAssigned,
   timesheetStaff,
 } from "@/lib/auth/permissions";
+import { sendVerificationCode } from "@/config/mail/mail-sender";
 
 interface SendVerificationOtpParams {
   email: string;
@@ -36,18 +40,65 @@ export const auth = betterAuth({
         otp,
         type,
       }: SendVerificationOtpParams) {
-        let message: string;
-        if (type === "sign-in") {
-          // Send the OTP for sign in
-          message = `Sign-in OTP:${otp}`;
-        } else if (type === "email-verification") {
-          // Send the OTP for email verification
-          message = `Email Verification OTP: ${otp}`;
-        } else {
-          // Send the OTP for password reset
-          message = `Password Reset OTP: ${otp}`;
+        //   let message: string;
+        //   if (type === "sign-in") {
+        //     // Send the OTP for sign in
+        //     message = `Sign-in OTP:${otp}`;
+        //   } else if (type === "email-verification") {
+        //     // Send the OTP for email verification
+        //     message = `Email Verification OTP: ${otp}`;
+        //   } else {
+        //     // Send the OTP for password reset
+        //     message = `Password Reset OTP: ${otp}`;
+        //   }
+        //   console.log("otp:", { email, otp, message });
+        // },
+        let subject = "Verification Code";
+
+        switch (type) {
+          case "sign-in":
+            subject = "Sign In OTP";
+            break;
+
+          case "email-verification":
+            subject = "Email Verification OTP";
+            break;
+
+          case "forget-password":
+            subject = "Password Reset OTP";
+            break;
+
+          case "change-email":
+            subject = "Change Email OTP";
+            break;
         }
-        console.log("otp:", { email, otp, message });
+        try {
+          const [existingUser] = await db
+            .select({
+              name: user.name,
+            })
+            .from(user)
+            .where(eq(user.email, email))
+            .limit(1);
+
+          await sendVerificationCode(
+            otp,
+            {
+              email,
+              name: existingUser?.name ?? "User",
+            },
+            subject,
+          );
+          console.log(`OTP sent successfully to ${email}`);
+        } catch (error) {
+          console.error("Failed to send OTP:", error);
+
+          if (error instanceof Error) {
+            throw error;
+          }
+
+          throw error;
+        }
       },
     }),
     adminPlugin({

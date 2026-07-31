@@ -87,6 +87,10 @@ export const SETTINGS_ITEM = [
   { id: "expenses", label: "Expenses", icon: DollarSign },
   { id: "email-notification", label: "Email Notification", icon: Mail },
 ];
+
+export const AUTH_SETTINGS = {
+  verificationCodeExpiryTime: 7,
+};
   // roles
   export const USER_ROLES = [
     { label: "Admin", value: "admin" },
