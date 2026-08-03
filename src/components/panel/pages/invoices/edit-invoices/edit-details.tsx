@@ -1,13 +1,13 @@
 "use client";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import EditInvoices from "@/components/website/pages/invoices/edit";
+import EditInvoices from "@/components/panel/pages/invoices/edit-invoices/edit";
 import { invoiceWithRelations } from "@/app/api/panel/invoices/[invoiceId]/type";
 import { useSearchParams } from "next/navigation";
 import { PDFViewer } from "@react-pdf/renderer";
-import InvoicePDF from "@/components/website/pages/invoices/pdf/invoice-pdf";
-import type { Invoice as PdfInvoice } from "@/components/website/pages/invoices/pdf/type";
+import InvoicePDF from "@/components/panel/pages/invoices/pdf/invoice-pdf";
+import type { Invoice as PdfInvoice } from "@/components/panel/pages/invoices/pdf/type";
 import { ToWords } from "to-words";
-import EditInvoicePayment from "@/components/website/pages/invoices/edit-invoice-payment";
+import EditInvoicePayment from "@/components/panel/pages/invoices/edit-invoices/edit-invoice-payment";
 
 const toWords = new ToWords({
   localeCode: "en-IN",

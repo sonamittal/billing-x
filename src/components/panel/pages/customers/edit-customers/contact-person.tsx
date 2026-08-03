@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import DeleteContactPersonDialog from "@/components/website/pages/customers/edit-customers/DeleteContactPersonDialog";
+import DeleteContactPersonDialog from "@/components/panel/pages/customers/edit-customers/DeleteContactPersonDialog";
 
 interface CPProps {
   callback?: string;

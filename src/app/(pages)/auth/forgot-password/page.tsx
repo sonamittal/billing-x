@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import ForgotPasswordForm from "@/app/(pages)/auth/forgot-password/ForgotPassword";
+import ForgotPasswordForm from "@/components/auth/forgot-password/ForgotPassword";
 const ForgotPasswordFormPage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>

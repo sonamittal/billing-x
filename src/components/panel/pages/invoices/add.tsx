@@ -1,12 +1,4 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-
 import {
   Form,
   FormControl,
@@ -15,24 +7,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
-import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
+import { addInvoiceSchema } from "@/components/validation/validation";
+import type { AddInvoiceSchema } from "@/components/validation/validation";
+import { SearchCombobox } from "@/components/ui/invoices-combobox";
+import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
-import { SearchCombobox } from "@/components/ui/invoices-combobox";
-import EditItemTable from "@/components/website/pages/invoices/edit-item-table";
-import InvoiceNumberDialog from "@/components/website/pages/invoices/invoice-number-dailog";
-import RichTextEditor from "@/components/ui/text-editor";
-import { useRouter } from "next/navigation";
+import type { ApiErrorResponse } from "@/http/type";
+import { Checkbox } from "@/components/ui/checkbox";
+
 import {
   User,
   MapPin,
@@ -42,39 +36,53 @@ import {
   Settings,
   Loader2,
   Receipt,
+  Minus,
 } from "lucide-react";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import axios from "axios";
+import { toast } from "sonner";
+import ItemTable from "@/components/panel/pages/invoices/item-table";
+import InvoiceNumberDialog from "@/components/panel/pages/invoices/invoice-number-dailog";
+import InvoicePayment from "@/components/panel/pages/invoices/invoice-payment";
 
-import {
-  editInvoiceSchema,
-  type EditInvoiceSchema,
-} from "@/components/validation/validation";
-import { invoiceWithRelations } from "@/app/api/panel/invoices/[invoiceId]/type";
-
-
-interface invoiceIdProps {
-  callback?: string;
-  invoiceId: string;
-  invoice: invoiceWithRelations;
+interface Props {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
-interface Customer {
+
+type CustomerList = {
   id: string;
-  companyName: string | null;
-  email: string | null;
   user: {
     name: string;
     image: string | null;
   } | null;
-}
+  email: string | null;
+  companyName: string | null;
+};
+type CustomerDetail = {
+  id: string;
+  country: string | null;
+  state: string | null;
+  city: string | null;
+  pinCode: string | null;
+  street1: string | null;
+  mobile: string | null;
+  user: {
+    name: string;
+    image: string | null;
+  } | null;
+};
 
-const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
+const AddInvoices = ({ open, onOpenChange }: Props) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
-
-  const [selectedId, setSelectedId] = useState("");
+  const [selectedId, setSelectedId] = useState<string>("");
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
+  const [submitType, setSubmitType] = useState<"draft" | "sent" | null>(null);
 
-  // Queries
-  const { data: customers = [] } = useQuery<Customer[]>({
+  // fetch data
+  const { data: customers = [] } = useQuery<CustomerList[]>({
     queryKey: ["customers"],
     queryFn: async () => {
       const res = await axios.get("/api/panel/customers");
@@ -82,7 +90,7 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
     },
   });
 
-  const { data: customerDetail, isLoading } = useQuery({
+  const { data: customerDetail, isLoading } = useQuery<CustomerDetail>({
     queryKey: ["customer", selectedId],
     enabled: !!selectedId,
     queryFn: async () => {
@@ -90,101 +98,123 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
       return res.data;
     },
   });
-
-  // Form
-  const form = useForm<EditInvoiceSchema>({
-    resolver: zodResolver(editInvoiceSchema),
+  // form handling >>>>>>>>>>>
+  const form = useForm<AddInvoiceSchema>({
+    resolver: zodResolver(addInvoiceSchema),
     defaultValues: {
-      customerId: invoice.customerId,
-      invoiceNumber: invoice.invoiceNumber,
-
-      invoiceDate: new Date(invoice.invoiceDate),
-      dueDate: new Date(invoice.dueDate),
-
-      subject: invoice.subject ?? "",
-
-      status: invoice.status,
-
-      items: invoice.items.map((item) => ({
-        itemName: item.itemName,
-        description: item.description,
-        unit: item.unit,
-        rate: Number(item.rate),
-        quantity: Number(item.quantity),
-        amount: Number(item.amount),
-      })),
-
-      subtotal: Number(invoice.subtotal),
-      discount: Number(invoice.discount),
-      totalAmount: Number(invoice.totalAmount),
-
-      customerNotes: invoice.customerNotes ?? "",
-      termsAndConditions: invoice.termsAndConditions ?? "",
-
-   
+      customerId: "",
+      invoiceNumber: "",
+      invoiceDate: undefined,
+      dueDate: undefined,
+      subject: "",
+      status: "draft",
+      isPaymentReceived: false,
+      payments: [],
+      items: [
+        {
+          itemName: "",
+          description: "",
+          unit: undefined,
+          quantity: 1,
+          rate: 0,
+          amount: 0,
+        },
+      ],
+      subtotal: 0,
+      discount: 0,
+      totalAmount: 0,
+      customerNotes: "",
+      termsAndConditions: "",
     },
   });
 
-  const items = form.watch("items");
+  const isPaymentReceived = form.watch("isPaymentReceived");
+  // total
   const discount = form.watch("discount") || 0;
 
-  const subtotal =
-    items.reduce(
-      (sum, item) => sum + Number(item.quantity) * Number(item.rate),
-      0,
-    ) || 0;
+  const items = form.watch("items") || [];
 
-  const discountAmount = subtotal * (discount / 100);
+  const subtotal =
+    items?.reduce((total, item) => {
+      return total + Number(item.quantity || 0) * Number(item.rate || 0);
+    }, 0) || 0;
+
+  const discountAmount = (subtotal * discount) / 100;
+
   const totalAmount = subtotal - discountAmount;
 
-  useEffect(() => {
-    form.setValue("subtotal", subtotal);
-    form.setValue("totalAmount", totalAmount);
-  }, [subtotal, totalAmount, form]);
+  // set val
+  const { setValue } = form;
 
-  // edit ivoice form  handling >>>>>>>>>>>>>>>
-  const { mutate: editInvoice, isPending: isEditInvoicePending } = useMutation({
-    mutationFn: async (data: EditInvoiceSchema) => {
-      const res = await axios.put(`/api/panel/invoices/${invoiceId}`, data);
+  //useEffect
+  useEffect(() => {
+    setValue("subtotal", subtotal, {
+      shouldDirty: false,
+      shouldValidate: false,
+    });
+
+    setValue("totalAmount", totalAmount, {
+      shouldDirty: false,
+      shouldValidate: false,
+    });
+  }, [subtotal, totalAmount, setValue]);
+
+  // add invoice form handling >>>>>>>>>>>
+  const {
+    mutate: AddInvoice,
+    isPending: isAddInvoicePending,
+    isSuccess: isAddInvoiceSuccess,
+    error: addInvoiceError,
+  } = useMutation({
+    mutationFn: async (data: AddInvoiceSchema) => {
+      const res = await axios.post("/api/panel/invoices", data);
       return res.data;
     },
-
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ["invoices"],
-      });
-      toast.success(data.message || "Invoice updated successfully!");
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      toast.success(data.message || "Invoice created successfully!");
+      form.reset();
       setSelectedId("");
+      setSubmitType(null);
+      onOpenChange(false);
     },
 
-    onError: () => {
-      toast.error("Failed to updated invoice data");
+    onError: (error) => {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        toast.error(error.response?.data.message ?? "Failed to create invoice");
+      } else {
+        toast.error("Failed to create invoice");
+      }
+      setSubmitType(null);
     },
   });
 
   // Submit
-  const onSubmit = (data: EditInvoiceSchema) => {
-    editInvoice(data);
+  const submitInvoice = (status: "draft" | "sent") => {
+    setSubmitType(status);
+    form.handleSubmit((data) => {
+      AddInvoice({
+        ...data,
+        status,
+      });
+    })();
   };
 
   return (
     <>
-      <Card className="pace-y-6 lg:col-span-2 h-fit">
-        <CardHeader>
-          <CardTitle>Edit customer details</CardTitle>
-          <CardDescription>
-            Edit customer account details of{" "}
-            <span className="text-foreground font-medium"></span> account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="overflow-auto w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
+          <DialogHeader className="text-start">
+            <DialogTitle className="flex items-center gap-2">
+              <Receipt className="h-5 w-5" /> Add Invoice
+            </DialogTitle>
+            <DialogDescription>
+              Fill in the invoice details and save it as a draft or send it to
+              the customer.
+            </DialogDescription>
+          </DialogHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
+            <form className="space-y-7">
               {/* Customer */}
 
               <FormField
@@ -356,10 +386,10 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
               />
 
               {/* item table */}
-              <EditItemTable form={form} />
+              <ItemTable form={form} />
 
               {/* Invoice Summary */}
-              <div className="flex flex-col-reverse lg:flex-row items-end gap-6">
+              <div className="flex flex-col-reverse lg:flex-row  items-end justify-end gap-6">
                 <div className="w-full lg:w-[50%]">
                   {/* Customer Notes */}
                   <FormField
@@ -376,6 +406,7 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
                             rows={4}
                           />
                         </FormControl>
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -456,9 +487,10 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
                     <FormItem>
                       <FormLabel>Terms & Conditions</FormLabel>
                       <FormControl>
-                        <RichTextEditor
-                          value={field.value}
-                          onChange={field.onChange}
+                        <Textarea
+                          {...field}
+                          placeholder="Enter the terms and conditions of your business to be displayed on the invoice."
+                          rows={4}
                         />
                       </FormControl>
 
@@ -468,36 +500,111 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
                 />
               </div>
 
+              {/* invoice payment */}
+              <FormField
+                control={form.control}
+                name="isPaymentReceived"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div>
+                      <FormLabel className="cursor-pointer">
+                        I have Received the payment
+                      </FormLabel>
+
+                      <p className="mt-3 text-sm text-muted-foreground">
+                        Check this if you have already received payment for this
+                        invoice.
+                      </p>
+                    </div>
+
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          const value = checked === true;
+
+                          field.onChange(value);
+
+                          if (value) {
+                            form.setValue(
+                              "payments",
+                              [
+                                {
+                                  paymentMode: "cash",
+                                  amountReceived: 0,
+                                },
+                              ],
+                              {
+                                shouldDirty: false,
+                                shouldValidate: false,
+                              },
+                            );
+                          } else {
+                            form.setValue("payments", [], {
+                              shouldDirty: false,
+                              shouldValidate: false,
+                            });
+                          }
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {/* invoice payment */}
+              {isPaymentReceived && <InvoicePayment form={form} />}
+
+              {/* bttn */}
               <div className="flex justify-end gap-3">
                 <Button
-                  className="w-full"
-                  type="submit"
-                  disabled={isEditInvoicePending}
+                  type="button"
+                  disabled={isAddInvoicePending}
+                  variant="outline"
+                  onClick={() => submitInvoice("draft")}
                 >
-                  {isEditInvoicePending ? (
+                  {isAddInvoicePending && submitType === "draft" ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Please wait
+                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                      please wait
                     </>
                   ) : (
-                    "Update Details"
+                    "Save as Draft"
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  onClick={() => submitInvoice("sent")}
+                  disabled={isAddInvoicePending}
+                >
+                  {isAddInvoicePending && submitType === "sent" ? (
+                    <>
+                      <Loader2 className="animate-spin h-5 w-5 mr-2" /> please
+                      wait
+                    </>
+                  ) : (
+                    "Save & Send"
                   )}
                 </Button>
               </div>
             </form>
           </Form>
-        </CardContent>
-      </Card>
+        </DialogContent>
+      </Dialog>
 
+      {/* Invoice Number Dialog */}
       <InvoiceNumberDialog
         open={openInvoiceDialog}
         onOpenChange={setOpenInvoiceDialog}
         onSave={(data) => {
-          form.setValue("invoiceNumber", data.invoiceNumber);
+          setValue("invoiceNumber", data.invoiceNumber, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
         }}
       />
     </>
   );
 };
 
-export default EditInvoices;
+export default AddInvoices;

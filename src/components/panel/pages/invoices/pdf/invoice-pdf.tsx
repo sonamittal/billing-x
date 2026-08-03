@@ -1,6 +1,6 @@
 "use client";
-import ModernTemplate from "@/components/website/pages/invoices/pdf/templates/modern-template";
-import type { Invoice } from "@/components/website/pages/invoices/pdf/type";
+import ModernTemplate from "@/components/panel/pages/invoices/pdf/templates/modern-template";
+import type { Invoice } from "@/components/panel/pages/invoices/pdf/type";
 
 interface Props {
   template: "modern" | "classic" | "minimal";

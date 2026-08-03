@@ -15,8 +15,8 @@ import {
   Info,
   User,
 } from "lucide-react";
-import CAddUserForm from "@/components/website/pages/customers/users-form";
-import AddCustomerForm from "@/components/website/pages/customers/customers-form";
+import CAddUserForm from "@/components/panel/pages/customers/users-form";
+import AddCustomerForm from "@/components/panel/pages/customers/customers-form";
 import { useQuery } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth/auth-client";
 

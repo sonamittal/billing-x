@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import CustomersClient from "@/components/website/pages/customers/client";
+import CustomersClient from "@/components/website/pages/customers/edit-customers/client";
 interface props {
   params: { customerId: string };
 }

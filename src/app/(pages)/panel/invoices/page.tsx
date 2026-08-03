@@ -1,4 +1,4 @@
-import Invoices from "@/app/(pages)/panel/invoices/invoice";
+import Invoices from "@/components/panel/pages/invoices/client";
 
 const invoicespage = () => {
   return <Invoices />;

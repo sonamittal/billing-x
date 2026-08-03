@@ -7,10 +7,10 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { MapPin } from "lucide-react";
-import EditBillingAddressForm from "@/components/website/pages/customers/edit-customers/edit-billing-address-form";
-import ContactPersonTable from "@/components/website/pages/customers/edit-customers/contact-person";
-import OtherDetailsForm from "@/components/website/pages/customers/edit-customers/other-details";
-import EditRemark from "@/components/website/pages/customers/edit-customers/edit-remark";
+import EditBillingAddressForm from "@/components/panel/pages/customers/edit-customers/edit-billing-address-form";
+import ContactPersonTable from "@/components/panel/pages/customers/edit-customers/contact-person";
+import OtherDetailsForm from "@/components/panel/pages/customers/edit-customers/other-details";
+import EditRemark from "@/components/panel/pages/customers/edit-customers/edit-remark";
 import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 const EditDetails = ({

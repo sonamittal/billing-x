@@ -26,7 +26,7 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import axios from "axios";
-import DeleteCustomerDialog from "@/components/website/pages/customers/edit-customers/delete-dialog";
+import DeleteCustomerDialog from "@/components/panel/pages/customers/edit-customers/delete-dialog";
 import type { Row } from "@tanstack/react-table";
 
 // types

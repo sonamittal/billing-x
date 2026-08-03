@@ -1,8 +1,8 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
-import OrganizationSetup from "@/components/website/pages/organization-setup/organization-setup";
+import OrganizationSetup from "@/components/panel/pages/organization-setup/organization-setup";
 import { redirect } from "next/navigation";
-import OrgAccessInvoiceBtn from "@/components/website/pages/organization-setup/org-access-invoice";
+import OrgAccessInvoiceBtn from "@/components/panel/pages/organization-setup/org-access-invoice";
 import GetFirstOrg from "@/app/_server_actions/organization";
 
 const Page = async () => {

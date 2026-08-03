@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { MoveLeft } from "lucide-react";
-import OrganizationSetupForm from "@/components/website/pages/organization-setup/organization-setup-form";
+import OrganizationSetupForm from "@/components/panel/pages/organization-setup/organization-setup-form";
 import { useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 const OrganizationSetup = () => {

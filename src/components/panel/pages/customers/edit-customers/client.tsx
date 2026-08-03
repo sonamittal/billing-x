@@ -3,12 +3,12 @@ import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Message from "@/components/ui/message";
-import EditCustomer from "@/components/website/pages/customers/edit-customers/edit";
+import EditCustomer from "@/components/panel/pages/customers/edit-customers/edit";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import UserCard from "@/components/website/pages/customers/edit-customers/user-card";
-import DeleteCustomer from "@/components/website/pages/customers/edit-customers/delete";
-import EditDetails from "@/components/website/pages/customers/edit-customers/edit-details";
+import UserCard from "@/components/panel/pages/customers/edit-customers/user-card";
+import DeleteCustomer from "@/components/panel/pages/customers/edit-customers/delete";
+import EditDetails from "@/components/panel/pages/customers/edit-customers/edit-details";
 import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 interface props {

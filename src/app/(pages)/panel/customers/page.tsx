@@ -1,4 +1,4 @@
-import Customers from "@/app/(pages)/panel/customers/customer";
+import Customers from "@/components/panel/pages/customers/client"
 
 const customerPage = () => {
   return <Customers />;

@@ -43,7 +43,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "axios";
 import Message from "@/components/ui/message";
-import type { User } from "@/components/website/pages/customers/customers-dialog";
+import type { User } from "@/components/panel/pages/customers/customers-dialog";
 
 type Props = {
   open?: boolean;

@@ -1,6 +1,6 @@
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import DeleteCustomerDialog from "@/components/website/pages/customers/edit-customers/delete-dialog";
+import DeleteCustomerDialog from "@/components/panel/pages/customers/edit-customers/delete-dialog";
 import {
   Card,
   CardContent,

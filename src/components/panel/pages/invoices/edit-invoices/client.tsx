@@ -6,7 +6,7 @@ import Message from "@/components/ui/message";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { invoiceWithRelations } from "@/app/api/panel/invoices/[invoiceId]/type";
-import InvoiceEditDetails from "@/components/website/pages/invoices/edit-details";
+import InvoiceEditDetails from "@/components/panel/pages/invoices/edit-invoices/edit-details";
 import { ApiErrorResponse } from "@/http/type";
 
 interface props {

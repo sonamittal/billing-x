@@ -20,7 +20,7 @@ import {
   type OtherDetailsSchema,
 } from "@/components/validation/validation";
 import MultiSelect from "@/components/ui/multiselect";
-import AddNewPayTForm from "@/components/website/pages/customers/edit-customers/add-payemt-trems";
+import AddNewPayTForm from "@/components/panel/pages/customers/edit-customers/add-payemt-trems";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";

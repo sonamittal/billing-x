@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import InvoiceClient from "@/components/website/pages/invoices/client";
+import InvoiceClient from "@/components/website/pages/invoices/edit-invoices/client";
 interface props {
   params: { invoiceId: string };
 }

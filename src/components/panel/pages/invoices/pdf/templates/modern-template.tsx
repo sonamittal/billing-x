@@ -1,7 +1,7 @@
 "use client";
 import { Document, Page, Text, View } from "@react-pdf/renderer";
-import { modernStyles } from "@/components/website/pages/invoices/pdf/styles/modern";
-import type { Invoice } from "@/components/website/pages/invoices/pdf/type";
+import { modernStyles } from "@/components/panel/pages/invoices/pdf/styles/modern";
+import type { Invoice } from "@/components/panel/pages/invoices/pdf/type";
 
 interface InvoiceProps {
   invoice: Invoice;
