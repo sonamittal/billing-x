@@ -8,7 +8,7 @@ import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
 import CustomersTable from "@/components/panel/pages/customers/customers-table";
 import AddCustomerDailog from "@/components/panel/pages/customers/customers-dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { UserPlus } from "lucide-react";
 
 const Customers = () => {
@@ -44,7 +44,9 @@ const Customers = () => {
           </Button>
         </div>
         {/* customers table */}
-        <CustomersTable />
+        <Suspense>
+          <CustomersTable />
+        </Suspense>
         {/* Customer btn */}
         <AddCustomerDailog open={Open} onOpenChange={setOpen} />
       </Main>

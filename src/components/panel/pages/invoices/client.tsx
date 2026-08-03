@@ -8,7 +8,7 @@ import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
 import InvoiceTable from "@/components/panel/pages/invoices/invoice-table";
 import AddInvoices from "@/components/panel/pages/invoices/add";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Receipt } from "lucide-react";
 const Invoices = () => {
   const [Open, setOpen] = useState(false);
@@ -41,7 +41,9 @@ const Invoices = () => {
           </Button>
         </div>
         {/* invoice table */}
-        <InvoiceTable />
+        <Suspense>
+          <InvoiceTable />
+        </Suspense>
         {/* invoices btn */}
         <AddInvoices open={Open} onOpenChange={setOpen} />
       </Main>
