@@ -50,7 +50,7 @@ const DeleteUserDialog = ({ user, open, setOpen, callback }: userIdProps) => {
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
-      toast.success("user delete Successfully!!");
+      toast.success("user has been  deleted  Successfully!!");
       if (callback) {
         setTimeout(() => {
           router.push(callback);

@@ -3,11 +3,11 @@ import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Message from "@/components/ui/message";
-import EditUser from "@/components/panel/pages/settings/users/edit";
+import EditUser from "@/components/panel/pages/users/edit";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import UpdateUserPassword from "@/components/panel/pages/settings/users/update-password";
-import DeleteUser from "@/components/panel/pages/settings/users/delete";
+import UpdateUserPassword from "@/components/panel/pages/users/update-password";
+import DeleteUser from "@/components/panel/pages//users/delete";
 
 interface props {
   userId: string;

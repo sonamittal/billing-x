@@ -95,7 +95,7 @@ const EditInvoicePayment = ({
         queryKey: ["invoices"],
       });
 
-      toast.success(data.message || "Invoice updated successfully!");
+      toast.success(data.message || "Invoice payment has been updated successfully!");
       if (callback) {
         setTimeout(() => {
           router.push(callback);

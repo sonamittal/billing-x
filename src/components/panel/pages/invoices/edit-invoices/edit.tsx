@@ -153,7 +153,7 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
       queryClient.invalidateQueries({
         queryKey: ["invoices"],
       });
-      toast.success(data.message || "Invoice updated successfully!");
+      toast.success(data.message || "Invoice has been updated successfully!");
       if (callback) {
         setTimeout(() => {
           router.push(callback);

@@ -19,7 +19,6 @@ import { Loader2 } from "lucide-react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import Message from "@/components/ui/message";
@@ -46,9 +45,8 @@ type City = {
   id: number;
   name: string;
 };
-const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
+const EditBillingAddressForm = ({ customerId, customer }: Props) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   const [countriesList, setCountriesList] = useState<Country[]>([]);
   const [stateList, setStateList] = useState<State[]>([]);
@@ -102,13 +100,7 @@ const EditBillingAddressForm = ({ customerId, callback, customer }: Props) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success("Customer billing  address updated successfully!");
-
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
+      toast.success("Customer billing address has been updated successfully!!");
     },
     onError: (error) => {
       toast.error(error.message || "failed to edit billing address");

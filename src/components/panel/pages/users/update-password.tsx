@@ -23,7 +23,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserPasswordFormSchema } from "@/components/validation/validation";
 import type { UpdateUserPasswordFormSchema } from "@/components/validation/validation";
 import { authClient } from "@/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -44,7 +43,6 @@ interface userIdProps {
 }
 const UpdateUserPassword = ({ user }: userIdProps) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
   // form handling >>>>>>>>>>>>>
   const form = useForm<UpdateUserPasswordFormSchema>({
     resolver: zodResolver(updateUserPasswordFormSchema),
@@ -72,11 +70,7 @@ const UpdateUserPassword = ({ user }: userIdProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      toast.success("User updated successfully");
-      form.reset();
-      setTimeout(() => {
-        router.push("/panel/users");
-      }, 1200);
+      toast.success("Password has been  updated successfully");
     },
     onError: (error: any) => {
       toast.error(error.message);

@@ -23,7 +23,6 @@ import { Sal_titles } from "@/lib/constants";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import DeleteContactPersonDialog from "@/components/panel/pages/customers/edit-customers/DeleteContactPersonDialog";
@@ -37,7 +36,7 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
   const [selectedContact, setSelectedContact] = useState<any>(null);
 
   const queryClient = useQueryClient();
-  const router = useRouter();
+
   // fetch cp data
   const { data: contactPersonsData } = useQuery({
     queryKey: ["contact-persons", customerId],
@@ -138,12 +137,6 @@ const ContactPersonTable = ({ callback, customerId }: CPProps) => {
       queryClient.invalidateQueries({
         queryKey: ["customers"],
       });
-
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
     },
     onError: (error) => {
       toast.error(error.message || "Failed to edit customer contact person");

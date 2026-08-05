@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import UsersClient from "@/components/panel/pages/settings/users/client";
+import UsersClient from "@/components/panel/pages/users/client";
 interface props {
   params: { userId: string };
 }

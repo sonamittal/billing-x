@@ -66,7 +66,7 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
 
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      toast.success("User created successfully!");
+      toast.success("User has been created successfully!");
       form.reset();
       onNext?.(data.data);
     },

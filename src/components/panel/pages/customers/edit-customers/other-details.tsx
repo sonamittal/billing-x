@@ -22,7 +22,6 @@ import {
 import MultiSelect from "@/components/ui/multiselect";
 import AddNewPayTForm from "@/components/panel/pages/customers/edit-customers/add-payemt-trems";
 import { Card, CardContent } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Message from "@/components/ui/message";
 
@@ -70,10 +69,8 @@ const deleteFile = async (key: string) => {
 const OtherDetailsForm = ({
   customerId,
   customer,
-  callback,
 }: OtherDetailsFormProps) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   const [open, setOpen] = useState(false);
 
@@ -156,11 +153,6 @@ const OtherDetailsForm = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       toast.success("customer update details successfully!");
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
     },
 
     onError: (error) => {

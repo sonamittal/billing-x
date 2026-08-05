@@ -29,7 +29,7 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { USER_ROLES, USER_STATUS } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import DeleteUserDialog from "@/components/panel/pages/settings/users/delete-dialog";
+import DeleteUserDialog from "@/components/panel/pages/users/delete-dialog";
 import type { Row } from "@tanstack/react-table";
 
 interface User {

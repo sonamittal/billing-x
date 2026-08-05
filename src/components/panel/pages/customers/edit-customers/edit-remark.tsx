@@ -22,7 +22,6 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Message from "@/components/ui/message";
-import { useRouter } from "next/navigation";
 import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
 interface Props {
@@ -30,9 +29,8 @@ interface Props {
   callback?: string;
   customer: GetCustomerById;
 }
-const EditRemark = ({ callback, customer, customerId }: Props) => {
+const EditRemark = ({ customer, customerId }: Props) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   // form handling
   const form = useForm<EditCRSchema>({
@@ -60,11 +58,6 @@ const EditRemark = ({ callback, customer, customerId }: Props) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       toast.success("Remarks updated successfully");
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
     },
     onError: (error) => {
       toast.error(error.message || "failed to edit Remarks");

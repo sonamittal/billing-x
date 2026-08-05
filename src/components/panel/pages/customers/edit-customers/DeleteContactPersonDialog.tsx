@@ -48,7 +48,7 @@ const DeleteContactPersonDialog = ({
         queryKey: ["contact-persons", customerId],
       });
 
-      toast.success("Contact person deleted successfully");
+      toast.success("Contact person has been deleted successfully!");
       setOpen(false);
       if (callback) {
         setTimeout(() => {

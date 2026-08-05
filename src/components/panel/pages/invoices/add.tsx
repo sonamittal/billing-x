@@ -172,7 +172,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success(data.message || "Invoice created successfully!");
+      toast.success(data.message || "Invoice has been created successfully!");
       form.reset();
       setSelectedId("");
       setSubmitType(null);

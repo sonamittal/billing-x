@@ -37,7 +37,6 @@ import axios from "axios";
 import { toast } from "sonner";
 import Message from "@/components/ui/message";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 import { SearchCombobox } from "@/components/ui/combobox";
 
@@ -47,9 +46,8 @@ interface CustomerIdProps {
   customerId: string;
 }
 
-const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
+const EditCustomer = ({ customer, customerId }: CustomerIdProps) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
   const [languageList, setLanguageList] = useState<any[]>([]);
   // Fetch countries & languages
   useEffect(() => {
@@ -90,12 +88,6 @@ const EditCustomer = ({ customer, customerId, callback }: CustomerIdProps) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       toast.success("customer updated successfully!");
-      form.reset();
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update customer");

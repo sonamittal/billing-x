@@ -91,7 +91,7 @@ const AddUserForm = ({ open, onOpenChange }: AddNewUserFormProps) => {
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
-      toast.success("user create Successfully!! ");
+      toast.success("user has been created Successfully!! ");
       form.reset();
       onOpenChange(false);
     },

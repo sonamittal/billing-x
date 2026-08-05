@@ -106,7 +106,7 @@ const OrganizationSetupForm = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      toast.success(data.message || "organization add successfully");
+      toast.success(data.message || "Organization has been added successfully!");
       reset();
       router.push(callbackUrl || "/auth/callback");
     },
