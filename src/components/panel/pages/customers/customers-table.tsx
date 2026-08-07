@@ -221,7 +221,7 @@ const CustomersTable = () => {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-muted-foreground mt-1" />
-              {row.original.email}
+              {row.original.email ?? "ex@example.com"}
             </div>
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-muted-foreground mt-1" />
@@ -324,7 +324,7 @@ const CustomersTable = () => {
   return (
     <div className="data-table-container">
       {isLoading ? (
-        <div>Loading users...</div>
+        <div>Loading customers ...</div>
       ) : (
         <>
           <DataTable table={table}>

@@ -32,7 +32,6 @@ import { SearchCombobox } from "@/components/ui/invoices-combobox";
 import EditItemTable from "@/components/panel/pages/invoices/edit-invoices/edit-item-table";
 import InvoiceNumberDialog from "@/components/panel/pages/invoices/invoice-number-dailog";
 import RichTextEditor from "@/components/ui/text-editor";
-import { useRouter } from "next/navigation";
 import {
   User,
   MapPin,
@@ -41,7 +40,6 @@ import {
   Phone,
   Settings,
   Loader2,
-  Receipt,
 } from "lucide-react";
 
 import {
@@ -50,6 +48,8 @@ import {
 } from "@/components/validation/validation";
 import { invoiceWithRelations } from "@/app/api/panel/invoices/[invoiceId]/type";
 
+import type { ApiErrorResponse } from "@/http/type";
+import { customer } from "@/drizzle/schema";
 
 interface invoiceIdProps {
   callback?: string;
@@ -68,7 +68,6 @@ interface Customer {
 
 const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   const [selectedId, setSelectedId] = useState("");
   const [openInvoiceDialog, setOpenInvoiceDialog] = useState(false);
@@ -120,8 +119,6 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
 
       customerNotes: invoice.customerNotes ?? "",
       termsAndConditions: invoice.termsAndConditions ?? "",
-
-   
     },
   });
 
@@ -154,16 +151,17 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
         queryKey: ["invoices"],
       });
       toast.success(data.message || "Invoice has been updated successfully!");
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
       setSelectedId("");
     },
 
-    onError: () => {
-      toast.error("Failed to updated invoice data");
+    onError: (error) => {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        toast.error(
+          error.response?.data.message ?? "Failed to updated invoice data",
+        );
+      } else {
+        toast.error("Failed to updated invoice data");
+      }
     },
   });
 
@@ -176,10 +174,14 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
     <>
       <Card className="pace-y-6 lg:col-span-2 h-fit">
         <CardHeader>
-          <CardTitle>Edit customer details</CardTitle>
+          <CardTitle>Edit Invoice details</CardTitle>
           <CardDescription>
-            Edit customer account details of{" "}
-            <span className="text-foreground font-medium"></span> account.
+            Edit Invoice account details of{" "}
+            <span className="text-foreground font-medium">
+              {" "}
+              {invoice.customerName}
+            </span>{" "}
+            account.
           </CardDescription>
         </CardHeader>
         <CardContent>

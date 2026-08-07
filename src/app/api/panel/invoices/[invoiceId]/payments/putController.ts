@@ -21,7 +21,7 @@ export const putPaymentController = async (
   if (!existingInvoice) {
     return Response.json(
       { success: false, message: `Invoice not found` },
-      { status: 404 },
+      { status: 404 },  
     );
   }
 

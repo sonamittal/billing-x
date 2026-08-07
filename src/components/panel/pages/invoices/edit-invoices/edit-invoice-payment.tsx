@@ -40,7 +40,6 @@ interface EditInvoicePaymentProps {
 const EditInvoicePayment = ({
   invoiceId,
   invoice,
-  callback,
 }: EditInvoicePaymentProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -95,12 +94,9 @@ const EditInvoicePayment = ({
         queryKey: ["invoices"],
       });
 
-      toast.success(data.message || "Invoice payment has been updated successfully!");
-      if (callback) {
-        setTimeout(() => {
-          router.push(callback);
-        }, 1200);
-      }
+      toast.success(
+        data.message || "Invoice payment has been updated successfully!",
+      );
     },
 
     onError: (error) => {
@@ -115,12 +111,17 @@ const EditInvoicePayment = ({
   });
 
   const onSubmit = (data: EditInvoicePaymentSchema) => {
+    console.log("sbmiited data", data);
     editPayment(data);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+          console.log("Zod Errors:", errors);
+        })}
+      >
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">Edit Payments</CardTitle>

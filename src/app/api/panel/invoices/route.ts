@@ -3,7 +3,6 @@ import { auth } from "@/lib/auth/auth";
 import { postInvoice } from "@/app/api/panel/invoices/postController";
 import { addInvoiceSchema } from "@/components/validation/validation";
 import { getAllInvoices } from "@/app/api/panel/invoices/getController";
-
 // get req
 export const GET = async () => {
   try {

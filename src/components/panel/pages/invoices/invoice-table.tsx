@@ -65,7 +65,7 @@ interface Invoice {
 
 const InvoiceTable = () => {
   // fetch data
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["invoices"],
     queryFn: async () => {
       const response = await axios.get("/api/panel/invoices");

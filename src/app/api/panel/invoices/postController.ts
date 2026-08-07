@@ -10,7 +10,7 @@ import { eq } from "drizzle-orm";
 import type { AddInvoiceSchema } from "@/components/validation/validation";
 import type { AddInvoice, AddInvoiceItem } from "@/app/api/panel/invoices/type";
 
-export const postInvoice = async (data: AddInvoiceSchema) => {
+export const  postInvoice = async (data: AddInvoiceSchema) => {
   // check cstomer
   const existingCustomer = await db.query.customer.findFirst({
     where: eq(customer.id, data.customerId),

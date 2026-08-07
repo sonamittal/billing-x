@@ -6,7 +6,11 @@ export const getInvoiceById = async (invoiceId: string) => {
   const invoiceData = await db.query.invoice.findFirst({
     where: eq(invoice.id, invoiceId),
     with: {
-      customer: true,
+      customer: {
+        with: {
+          user: true,
+        },
+      },
       items: true,
       payments: true,
     },

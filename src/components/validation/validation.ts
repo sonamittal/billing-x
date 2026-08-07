@@ -449,83 +449,85 @@ export const paymentItemSchema = z.object({
 });
 
 // add invoice schema >>>>>>>>>>>>>>>>>>>>>>>>>>
-export const addInvoiceSchema = z
-  .object({
-    customerId: z.string().min(1, {
-      message: "Customer is required",
-    }),
-    invoiceNumber: z.string().min(1, {
-      message: "Invoice number is required",
-    }),
-    invoiceDate: z.date({
-      message: "Invoice date is required",
-    }),
-    dueDate: z.date({
-      message: "Due date is required",
-    }),
-    subject: z.string().optional(),
-    items: z.array(itemSchema).min(1, {
-      message: "At least one item is required",
-    }),
-    subtotal: z.number().min(0, {
-      message: "Subtotal cannot be negative",
-    }),
-    discount: z.number().min(0).max(100, {
-      message: "Discount cannot exceed 100%",
-    }),
-    totalAmount: z.number().min(0, {
-      message: "Total amount cannot be negative",
-    }),
-    customerNotes: z.string().min(1, {
-      message: "Customer notes is required",
-    }),
-    termsAndConditions: z.string().min(1, {
-      message: "Terms And Conditions is required",
-    }),
-    status: z.enum(["draft", "sent"], {
-      message: "Invalid invoice status",
-    }),
-    isPaymentReceived: z.boolean(),
+export const invoiceBaseSchema = z.object({
+  customerId: z.string().min(1, {
+    message: "Customer is required",
+  }),
+  invoiceNumber: z.string().min(1, {
+    message: "Invoice number is required",
+  }),
+  invoiceDate: z.date({
+    message: "Invoice date is required",
+  }),
+  dueDate: z.date({
+    message: "Due date is required",
+  }),
+  subject: z.string().optional(),
+  items: z.array(itemSchema).min(1, {
+    message: "At least one item is required",
+  }),
+  subtotal: z.number().min(0, {
+    message: "Subtotal cannot be negative",
+  }),
+  discount: z.number().min(0).max(100, {
+    message: "Discount cannot exceed 100%",
+  }),
+  totalAmount: z.number().min(0, {
+    message: "Total amount cannot be negative",
+  }),
+  customerNotes: z.string().min(1, {
+    message: "Customer notes is required",
+  }),
+  termsAndConditions: z.string().min(1, {
+    message: "Terms And Conditions is required",
+  }),
+  status: z.enum(["draft", "sent"], {
+    message: "Invalid invoice status",
+  }),
+  isPaymentReceived: z.boolean(),
 
-    payments: z.array(paymentItemSchema),
-  })
-  .superRefine((data, ctx) => {
-    // Due date validation
-    if (data.dueDate < data.invoiceDate) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["dueDate"],
-        message: "Due date must be after invoice date",
-      });
-    }
+  payments: z.array(paymentItemSchema),
+});
+export const addInvoiceSchema = invoiceBaseSchema.superRefine((data, ctx) => {
+  // Due date validation
+  if (data.dueDate < data.invoiceDate) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["dueDate"],
+      message: "Due date must be after invoice date",
+    });
+  }
 
-    //  is Checkbox  on then payment required
-    if (data.isPaymentReceived && data.payments.length === 0) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["payments"],
-        message: "Please add at least one payment",
-      });
-    }
+  //  is Checkbox  on then payment required
+  if (data.isPaymentReceived && data.payments.length === 0) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["payments"],
+      message: "Please add at least one payment",
+    });
+  }
 
-    // Total received invoice amount se jyada nahi hona chahiye
-    const totalReceived = (data.payments ?? []).reduce(
-      (sum, payment) => sum + payment.amountReceived,
-      0,
-    );
+  // Total received invoice amount se jyada nahi hona chahiye
+  const totalReceived = (data.payments ?? []).reduce(
+    (sum, payment) => sum + payment.amountReceived,
+    0,
+  );
 
-    if (totalReceived > data.totalAmount) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["payments"],
-        message: "Received amount cannot exceed invoice total amount",
-      });
-    }
-  });
+  if (totalReceived > data.totalAmount) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["payments"],
+      message: "Received amount cannot exceed invoice total amount",
+    });
+  }
+});
 export type AddInvoiceSchema = z.infer<typeof addInvoiceSchema>;
 
 // edit invoice and item schema >>>>>>>>>>>>>>>>>>>>>>>>
-export const editInvoiceSchema = addInvoiceSchema;
+export const editInvoiceSchema = invoiceBaseSchema.omit({
+  isPaymentReceived: true,
+  payments: true,
+});
 
 export type EditInvoiceSchema = z.infer<typeof editInvoiceSchema>;
 
