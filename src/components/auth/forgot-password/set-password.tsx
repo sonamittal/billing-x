@@ -107,7 +107,7 @@ const SetPasswordForm = ({ email }: SetPasswordProps) => {
   };
 
   return (
-    <div className="container flex items-center justify-center  w-full h-screen">
+    <div className="container flex items-center mx-auto  px-4 py-6 sm:px-6 md:px-8 lg:px-10 justify-center  w-full h-screen">
       <Card className="w-full md:w-[50%] mx-auto max-h-[90vh] overflow-auto">
         <CardHeader>
           <Link

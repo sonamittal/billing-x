@@ -49,7 +49,6 @@ import {
 import { invoiceWithRelations } from "@/app/api/panel/invoices/[invoiceId]/type";
 
 import type { ApiErrorResponse } from "@/http/type";
-import { customer } from "@/drizzle/schema";
 
 interface invoiceIdProps {
   callback?: string;
@@ -172,7 +171,7 @@ const EditInvoices = ({ invoiceId, invoice, callback }: invoiceIdProps) => {
 
   return (
     <>
-      <Card className="pace-y-6 lg:col-span-2 h-fit">
+      <Card className="space-y-6 lg:col-span-2 h-fit">
         <CardHeader>
           <CardTitle>Edit Invoice details</CardTitle>
           <CardDescription>

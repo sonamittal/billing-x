@@ -123,7 +123,7 @@ const EditInvoicePayment = ({
         })}
       >
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-col gap-3 sm:flex-row  sm:items-center sm:justify-between">
             <CardTitle className="text-base">Edit Payments</CardTitle>
 
             <Button
@@ -146,9 +146,12 @@ const EditInvoicePayment = ({
 
           <CardContent className="space-y-4">
             {fields.map((item, index) => (
-              <div key={item.id} className="grid grid-cols-12 gap-3 items-end">
+              <div
+                key={item.id}
+                className="grid md:grid-cols-2 gap-4 rounded-lg border p-4"
+              >
                 {/* Payment Date */}
-                <div className="col-span-3">
+                <div>
                   <FormField
                     control={control}
                     name={`payments.${index}.paymentDate`}
@@ -170,7 +173,7 @@ const EditInvoicePayment = ({
                 </div>
 
                 {/* Payment Mode */}
-                <div className="col-span-3">
+                <div>
                   <FormField
                     control={control}
                     name={`payments.${index}.paymentMode`}
@@ -195,7 +198,7 @@ const EditInvoicePayment = ({
                 </div>
 
                 {/* Amount */}
-                <div className="col-span-4">
+                <div>
                   <FormField
                     control={control}
                     name={`payments.${index}.amountReceived`}
@@ -221,7 +224,7 @@ const EditInvoicePayment = ({
                 </div>
 
                 {/* Delete */}
-                <div className="col-span-2">
+                <div>
                   <Button
                     type="button"
                     variant="destructive"

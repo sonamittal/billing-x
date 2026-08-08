@@ -180,7 +180,7 @@ const AddCustomerForm = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="overflow-auto w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
+      <DialogContent className="overflow-auto md:w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             Customer Details

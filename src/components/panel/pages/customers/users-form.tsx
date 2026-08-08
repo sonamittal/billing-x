@@ -82,7 +82,7 @@ const CAddUserForm = ({ onBack, onNext }: Props) => {
   };
 
   return (
-    <DialogContent className="overflow-auto w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
+    <DialogContent className="overflow-auto md:w-[60%] md:max-w-[85%] xl:max-w-[70%] max-h-[90vh]">
       <DialogHeader className="text-start">
         <DialogTitle className="flex items-center gap-2">
           <UserPlus className="h-5 w-5" /> Add New User
