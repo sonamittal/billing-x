@@ -8,6 +8,7 @@ import {
   json,
   unique,
   pgEnum,
+  index,
 } from "drizzle-orm/pg-core";
 import { invoice, invoicePayment } from "@/drizzle/schema/invoices";
 
@@ -16,39 +17,46 @@ export const customerTypeEnum = pgEnum("customer_type", [
   "business",
 ]);
 
-export const customer = pgTable("customer", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" })
-    .unique(),
-  customerType: customerTypeEnum("customer_type").notNull(),
-  companyName: text("company_name"),
-  currency: text("currency").notNull(),
-  language: text("language").notNull(),
-  // billing address
-  countryId: text("country_id").notNull(),
-  country: text("country").notNull(),
-  stateId: text("state_id").notNull(),
-  state: text("state").notNull(),
-  cityId: text("city_id").notNull(),
-  city: text("city").notNull(),
-  pinCode: text("pin_code").notNull(),
-  street1: text("street_1").notNull(),
-  street2: text("street_2"),
-  // Primary Contact
-  // salutation: text("salutation"),
-  // firstName: text("first_name"),
-  // lastName: text("last_name"),
-  email: text("email"),
-  workPhone: text("work_phone"),
-  mobile: text("mobile"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
+export const customer = pgTable(
+  "customer",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" })
+      .unique(),
+    customerType: customerTypeEnum("customer_type").notNull(),
+    companyName: text("company_name"),
+    currency: text("currency").notNull(),
+    language: text("language").notNull(),
+    // billing address
+    countryId: text("country_id").notNull(),
+    country: text("country").notNull(),
+    stateId: text("state_id").notNull(),
+    state: text("state").notNull(),
+    cityId: text("city_id").notNull(),
+    city: text("city").notNull(),
+    pinCode: text("pin_code").notNull(),
+    street1: text("street_1").notNull(),
+    street2: text("street_2"),
+    // Primary Contact
+    // salutation: text("salutation"),
+    // firstName: text("first_name"),
+    // lastName: text("last_name"),
+    email: text("email"),
+    workPhone: text("work_phone"),
+    mobile: text("mobile"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("customer_user_id_idx").on(table.userId),
+    index("customer_created_at_idx").on(table.createdAt),
+  ],
+);
 // payment terms
 export const paymentTerms = pgTable("payment_terms", {
   id: text("id").primaryKey(),

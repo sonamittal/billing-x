@@ -1,150 +1,174 @@
 import { customer } from "@/drizzle/schema/customer";
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, numeric } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, numeric, index, unique } from "drizzle-orm/pg-core";
 import type { Unit, PaymentMode } from "@/drizzle/schema/type";
 
-export const invoice = pgTable("invoice", {
-  id: text("id").primaryKey(),
+export const invoice = pgTable(
+  "invoice",
+  {
+    id: text("id").primaryKey(),
 
-  customerId: text("customer_id")
-    .notNull()
-    .references(() => customer.id, {
-      onDelete: "cascade",
-    }),
+    customerId: text("customer_id")
+      .notNull()
+      .references(() => customer.id, {
+        onDelete: "cascade",
+      }),
 
-  customerName: text("customer_name").notNull(),
+    customerName: text("customer_name").notNull(),
 
-  invoiceNumber: text("invoice_number").notNull().unique(),
+    invoiceNumber: text("invoice_number").notNull(),
 
-  invoiceDate: timestamp("invoice_date", {
-    mode: "date",
-  }).notNull(),
+    invoiceDate: timestamp("invoice_date", {
+      mode: "date",
+    }).notNull(),
 
-  dueDate: timestamp("due_date", {
-    mode: "date",
-  }).notNull(),
+    dueDate: timestamp("due_date", {
+      mode: "date",
+    }).notNull(),
 
-  subject: text("subject"),
+    subject: text("subject"),
 
-  // summary
-  subtotal: numeric("subtotal", {
-    precision: 10,
-    scale: 2,
-  }).notNull(),
+    // summary
+    subtotal: numeric("subtotal", {
+      precision: 10,
+      scale: 2,
+    }).notNull(),
 
-  discount: numeric("discount", {
-    precision: 10,
-    scale: 2,
-  }).notNull(),
+    discount: numeric("discount", {
+      precision: 10,
+      scale: 2,
+    }).notNull(),
 
-  totalAmount: numeric("total_amount", {
-    precision: 10,
-    scale: 2,
-  }).notNull(),
+    totalAmount: numeric("total_amount", {
+      precision: 10,
+      scale: 2,
+    }).notNull(),
 
-  paymentStatus: text("payment_status")
-    .$type<"unpaid" | "partially_paid" | "paid">()
-    .default("unpaid")
-    .notNull(),
+    paymentStatus: text("payment_status")
+      .$type<"unpaid" | "partially_paid" | "paid">()
+      .default("unpaid")
+      .notNull(),
 
-  customerNotes: text("customer_notes").notNull(),
+    customerNotes: text("customer_notes").notNull(),
 
-  termsAndConditions: text("terms_and_conditions").notNull(),
+    termsAndConditions: text("terms_and_conditions").notNull(),
 
-  status: text("status").$type<"draft" | "sent">().default("draft").notNull(),
+    status: text("status").$type<"draft" | "sent">().default("draft").notNull(),
 
-  createdAt: timestamp("created_at", {
-    mode: "date",
-  })
-    .defaultNow()
-    .notNull(),
+    createdAt: timestamp("created_at", {
+      mode: "date",
+    })
+      .defaultNow()
+      .notNull(),
 
-  updatedAt: timestamp("updated_at", {
-    mode: "date",
-  })
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
+    updatedAt: timestamp("updated_at", {
+      mode: "date",
+    })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    unique("customer_invoice_number_unique").on(
+      table.customerId,
+      table.invoiceNumber,
+    ),
+    index("invoice_customer_id_idx").on(table.customerId),
+    index("invoice_status_idx").on(table.status),
+    index("invoice_payment_status_idx").on(table.paymentStatus),
+    index("invoice_created_at_idx").on(table.createdAt),
+  ],
+);
 
 // invoice item
-export const invoiceItem = pgTable("invoice_item", {
-  id: text("id").primaryKey(),
+export const invoiceItem = pgTable(
+  "invoice_item",
+  {
+    id: text("id").primaryKey(),
 
-  invoiceId: text("invoice_id")
-    .notNull()
-    .references(() => invoice.id, {
-      onDelete: "cascade",
-    }),
+    invoiceId: text("invoice_id")
+      .notNull()
+      .references(() => invoice.id, {
+        onDelete: "cascade",
+      }),
 
-  itemName: text("item_name").notNull(),
+    itemName: text("item_name").notNull(),
 
-  description: text("description").notNull(),
+    description: text("description").notNull(),
 
-  unit: text("unit").$type<Unit>().notNull(),
+    unit: text("unit").$type<Unit>().notNull(),
 
-  quantity: numeric("quantity", {
-    precision: 10,
-    scale: 2,
-  }).notNull(),
+    quantity: numeric("quantity", {
+      precision: 10,
+      scale: 2,
+    }).notNull(),
 
-  rate: numeric("rate", {
-    precision: 10,
-    scale: 2,
-  }).notNull(),
+    rate: numeric("rate", {
+      precision: 10,
+      scale: 2,
+    }).notNull(),
 
-  amount: numeric("amount", {
-    precision: 10,
-    scale: 2,
-  }).notNull(),
+    amount: numeric("amount", {
+      precision: 10,
+      scale: 2,
+    }).notNull(),
 
-  createdAt: timestamp("created_at", {
-    mode: "date",
-  })
-    .defaultNow()
-    .notNull(),
+    createdAt: timestamp("created_at", {
+      mode: "date",
+    })
+      .defaultNow()
+      .notNull(),
 
-  updatedAt: timestamp("updated_at", {
-    mode: "date",
-  })
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
+    updatedAt: timestamp("updated_at", {
+      mode: "date",
+    })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("invoice_item_invoice_id_idx").on(table.invoiceId)],
+);
 
 // Invoce Payment
-export const invoicePayment = pgTable("invoice_payment", {
-  id: text("id").primaryKey(),
+export const invoicePayment = pgTable(
+  "invoice_payment",
+  {
+    id: text("id").primaryKey(),
 
-  invoiceId: text("invoice_id")
-    .notNull()
-    .references(() => invoice.id, {
-      onDelete: "cascade",
-    }),
+    invoiceId: text("invoice_id")
+      .notNull()
+      .references(() => invoice.id, {
+        onDelete: "cascade",
+      }),
 
-  customerId: text("customer_id")
-    .notNull()
-    .references(() => customer.id, {
-      onDelete: "cascade",
-    }),
+    customerId: text("customer_id")
+      .notNull()
+      .references(() => customer.id, {
+        onDelete: "cascade",
+      }),
 
-  amountReceived: numeric("amount_received", {
-    precision: 10,
-    scale: 2,
-  }).notNull(),
+    amountReceived: numeric("amount_received", {
+      precision: 10,
+      scale: 2,
+    }).notNull(),
 
-  paymentMode: text("payment_mode").$type<PaymentMode>().notNull(),
+    paymentMode: text("payment_mode").$type<PaymentMode>().notNull(),
 
-  paymentDate: timestamp("payment_date", {
-    mode: "date",
-  }).notNull(),
+    paymentDate: timestamp("payment_date", {
+      mode: "date",
+    }).notNull(),
 
-  createdAt: timestamp("created_at", {
-    mode: "date",
-  })
-    .defaultNow()
-    .notNull(),
-});
+    createdAt: timestamp("created_at", {
+      mode: "date",
+    })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("invoice_payment_invoice_id_idx").on(table.invoiceId),
+    index("invoice_payment_customer_id_idx").on(table.customerId),
+  ],
+);
 
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
   customer: one(customer, {

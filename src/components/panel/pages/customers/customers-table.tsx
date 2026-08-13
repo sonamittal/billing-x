@@ -297,7 +297,7 @@ const CustomersTable = () => {
                   variant="destructive"
                   onClick={() => handleOpenDeleteDialog(row.original, row)}
                 >
-                  <Trash2 className="mr-2 h-4 w-4  text-red-400" />
+                  <Trash2 className="h-4 w-4  text-red-400" />
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>

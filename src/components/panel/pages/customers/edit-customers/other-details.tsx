@@ -20,7 +20,6 @@ import {
   type OtherDetailsSchema,
 } from "@/components/validation/validation";
 import MultiSelect from "@/components/ui/multiselect";
-import AddNewPayTForm from "@/components/panel/pages/customers/edit-customers/add-payemt-trems";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import Message from "@/components/ui/message";
@@ -33,10 +32,7 @@ import {
 import { Plus, Upload, Trash2, Loader2, FileText } from "lucide-react";
 import type { GetCustomerById } from "@/app/api/panel/customers/[customerId]/type";
 
-interface PaymentOption {
-  label: string;
-  value: string;
-}
+
 interface OtherDetailsFormProps {
   customerId: string;
   customer: GetCustomerById;
@@ -66,36 +62,8 @@ const deleteFile = async (key: string) => {
   });
 };
 
-const OtherDetailsForm = ({
-  customerId,
-  customer,
-}: OtherDetailsFormProps) => {
+const OtherDetailsForm = ({ customerId, customer }: OtherDetailsFormProps) => {
   const queryClient = useQueryClient();
-
-  const [open, setOpen] = useState(false);
-
-  const [paymentTerms, setPaymentTerms] = useState<PaymentOption[]>([]);
-  // fetch payment terms
-  const { data: paymentTermsData } = useQuery({
-    queryKey: ["payment-terms"],
-    queryFn: async () => {
-      const res = await axios.get(
-        `/api/panel/customers/${customerId}/payment-terms`,
-      );
-      return res.data;
-    },
-  });
-
-  useEffect(() => {
-    if (paymentTermsData?.data) {
-      const dbOptions = paymentTermsData.data.map((t: any) => ({
-        label: t.termName,
-        value: t.id,
-      }));
-
-      setPaymentTerms(dbOptions);
-    }
-  }, [paymentTermsData]);
 
   // form handling >>>>>>>>>>>>>>>>>>>>
   const form = useForm<OtherDetailsSchema>({
@@ -103,7 +71,6 @@ const OtherDetailsForm = ({
 
     defaultValues: {
       pan: customer?.otherDetails?.pan || "",
-      paymentTermId: customer?.otherDetails?.paymentTermId || "",
       documents: customer?.otherDetails?.documents || [],
       websiteUrl: customer?.otherDetails?.websiteUrl || "",
       department: customer?.otherDetails?.department || "",
@@ -191,38 +158,6 @@ const OtherDetailsForm = ({
                   </FormItem>
                 )}
               />
-
-              {/* Payment Terms */}
-              <FormField
-                control={form.control}
-                name="paymentTermId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Payment Terms</FormLabel>
-
-                    <div className="grid md:grid-cols-[70%_30%] gap-3">
-                      <FormControl>
-                        <MultiSelect
-                          darkBg="secondary"
-                          mode="single"
-                          options={paymentTerms}
-                          value={field.value}
-                          onChange={(val) => field.onChange(val)}
-                          placeholder="Select payment terms"
-                        />
-                      </FormControl>
-
-                      <Button type="button" onClick={() => setOpen(true)}>
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Payment Term
-                      </Button>
-                    </div>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               {/* Documents */}
               <FormField
                 control={form.control}
@@ -451,30 +386,6 @@ const OtherDetailsForm = ({
               </Button>
             </form>
           </Form>
-
-          {/* Add Payment Term */}
-          <AddNewPayTForm
-            customerId={customerId}
-            open={open}
-            onOpenChange={setOpen}
-            onAddPaymentTerm={(newTerm) => {
-              const option = {
-                label: newTerm.termName,
-                value: newTerm.id,
-              };
-              setPaymentTerms((prev) => {
-                const exists = prev.some((p) => p.value === option.value);
-                if (exists) return prev;
-                return [...prev, option];
-              });
-
-              form.setValue("paymentTermId", newTerm.id);
-
-              queryClient.invalidateQueries({
-                queryKey: ["payment-terms"],
-              });
-            }}
-          />
         </CardContent>
       </Card>
     </>

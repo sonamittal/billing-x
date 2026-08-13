@@ -12,6 +12,5 @@ export const checkUser = async () => {
     },
   });
 
-  // res.success will be true if the user has permission
   return res.success;
 };

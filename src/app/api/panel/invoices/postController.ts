@@ -6,12 +6,12 @@ import {
   invoicePayment,
 } from "@/drizzle/schema/index";
 import { nanoid } from "nanoid";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import type { AddInvoiceSchema } from "@/components/validation/validation";
 import type { AddInvoice, AddInvoiceItem } from "@/app/api/panel/invoices/type";
 
-export const  postInvoice = async (data: AddInvoiceSchema) => {
-  // check cstomer
+export const postInvoice = async (data: AddInvoiceSchema) => {
+  // check customer
   const existingCustomer = await db.query.customer.findFirst({
     where: eq(customer.id, data.customerId),
     with: {
@@ -25,28 +25,14 @@ export const  postInvoice = async (data: AddInvoiceSchema) => {
     );
   }
 
-  // check duplicate  invoice number
-  const existingInvoice = await db.query.invoice.findFirst({
-    where: eq(invoice.invoiceNumber, data.invoiceNumber),
-  });
-
-  if (existingInvoice) {
-    return Response.json(
-      {
-        success: false,
-        message: `Invoice number already exists.`,
-      },
-      { status: 409 },
-    );
-  }
   // invoice id
   const invoiceId = nanoid();
 
   // calculate payment status
-const totalReceived = (data.payments ?? []).reduce(
-  (sum, payment) => sum + payment.amountReceived,
-  0,
-);
+  const totalReceived = (data.payments ?? []).reduce(
+    (sum, payment) => sum + payment.amountReceived,
+    0,
+  );
 
   let paymentStatus: "unpaid" | "partially_paid" | "paid" = "unpaid";
 
@@ -57,8 +43,27 @@ const totalReceived = (data.payments ?? []).reduce(
   } else {
     paymentStatus = "partially_paid";
   }
-  // Transaction
-  await db.transaction(async (tx) => {
+
+  // Atomic Transaction
+  return await db.transaction(async (tx) => {
+    // Check duplicate invoice number scoped per customer atomically inside transaction
+    const existingInvoice = await tx.query.invoice.findFirst({
+      where: and(
+        eq(invoice.customerId, existingCustomer.id),
+        eq(invoice.invoiceNumber, data.invoiceNumber),
+      ),
+    });
+
+    if (existingInvoice) {
+      return Response.json(
+        {
+          success: false,
+          message: `Invoice number already exists for this customer.`,
+        },
+        { status: 409 },
+      );
+    }
+
     // invoice data
     const invoiceData: AddInvoice = {
       id: invoiceId,
@@ -103,7 +108,7 @@ const totalReceived = (data.payments ?? []).reduce(
     // insert item
     await tx.insert(invoiceItem).values(items);
 
-    //payments insert
+    // payments insert
     if (data.payments?.length) {
       await tx.insert(invoicePayment).values(
         data.payments.map((p) => ({
@@ -117,12 +122,13 @@ const totalReceived = (data.payments ?? []).reduce(
         })),
       );
     }
+
+    return Response.json(
+      {
+        success: true,
+        message: `Invoice created successfully`,
+      },
+      { status: 200 },
+    );
   });
-  return Response.json(
-    {
-      success: true,
-      message: `Invoice created successfully`,
-    },
-    { status: 200 },
-  );
 };

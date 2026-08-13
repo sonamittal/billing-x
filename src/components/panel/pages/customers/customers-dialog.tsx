@@ -91,7 +91,7 @@ const AddCustomerDialog = ({ open, onOpenChange }: Props) => {
         </DialogHeader>
 
         {step === "selectUser" && (
-          <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-2 gap-3 mb-4">
             {/* user exists */}
             <button
               onClick={() => {

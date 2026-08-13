@@ -367,9 +367,6 @@ export type ContactPersonsSchema = z.infer<typeof contactPersonsSchema>;
 // other details schema >>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const otherDetailsSchema = z.object({
   pan: z.string().min(1, { message: "pan is required" }),
-  paymentTermId: z.string().min(1, {
-    message: "Payment terms are required",
-  }),
   documents: z
     .array(
       z.union([

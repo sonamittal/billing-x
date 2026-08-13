@@ -25,7 +25,7 @@ export const auth = betterAuth({
     provider: "pg",
   }),
 
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
   
   emailAndPassword: {
@@ -115,11 +115,11 @@ export const auth = betterAuth({
       },
     }),
   ],
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    },
-  },
+  // socialProviders: {
+  //   google: {
+  //     clientId: process.env.GOOGLE_CLIENT_ID as string,
+  //     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+  //   },
+  // },
   trustedOrigins: [process.env.NEXT_PUBLIC_BETTER_AUTH_URL || ""],
 });
