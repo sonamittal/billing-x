@@ -1,9 +1,7 @@
 "use client";
-import { ConfigSettingDrawer } from "@/components/panel/layout/config-settings-drawer";
 import { Header } from "@/components/panel/layout/header";
 import { Main } from "@/components/panel/layout/main";
 import { ProfileDropdown } from "@/components/panel/layout/profile-dropdown";
-import { Search } from "@/components/panel/layout/search";
 import { ThemeSwitch } from "@/components/panel/layout/theme-switch";
 import InvoiceTable from "@/components/panel/pages/invoices/invoice-table";
 import AddInvoices from "@/components/panel/pages/invoices/add";
@@ -17,10 +15,8 @@ const Invoices = () => {
     <div className="flex flex-col min-h-screen">
       {/* Header */}
       <Header fixed>
-        <Search />
         <div className="ms-auto flex items-center space-x-4">
           <ThemeSwitch />
-          <ConfigSettingDrawer />
           <ProfileDropdown />
         </div>
       </Header>
