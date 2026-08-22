@@ -88,6 +88,7 @@ const AddInvoices = ({ open, onOpenChange }: Props) => {
       const res = await axios.get("/api/panel/customers");
       return res.data;
     },
+    enabled: open,
   });
 
   const { data: customerDetail, isLoading } = useQuery<CustomerDetail>({

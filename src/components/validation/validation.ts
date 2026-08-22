@@ -1,5 +1,5 @@
 // zod schema >>>>>>>>>>>>>\
-import { UNIT_VALUES, PAYMENT_MODE } from "@/drizzle/schema/type";
+import { UNIT_VALUES, PAYMENT_MODE  , INVOICE_STATUS} from "@/drizzle/schema/type";
 import * as z from "zod";
 export const supFormSchema = z
   .object({
@@ -478,7 +478,7 @@ export const invoiceBaseSchema = z.object({
   termsAndConditions: z.string().min(1, {
     message: "Terms And Conditions is required",
   }),
-  status: z.enum(["draft", "sent"], {
+  status: z.enum(INVOICE_STATUS, {
     message: "Invalid invoice status",
   }),
   isPaymentReceived: z.boolean(),

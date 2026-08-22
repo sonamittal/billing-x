@@ -1,7 +1,19 @@
 import { customer } from "@/drizzle/schema/customer";
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, numeric, index, unique } from "drizzle-orm/pg-core";
-import type { Unit, PaymentMode } from "@/drizzle/schema/type";
+import {
+  pgTable,
+  text,
+  timestamp,
+  numeric,
+  index,
+  unique,
+} from "drizzle-orm/pg-core";
+import type {
+  Unit,
+  PaymentMode,
+  InvoiceStatus,
+  InvoicePaymentStatus,
+} from "@/drizzle/schema/type";
 
 export const invoice = pgTable(
   "invoice",
@@ -45,7 +57,7 @@ export const invoice = pgTable(
     }).notNull(),
 
     paymentStatus: text("payment_status")
-      .$type<"unpaid" | "partially_paid" | "paid">()
+      .$type<InvoicePaymentStatus>()
       .default("unpaid")
       .notNull(),
 
@@ -53,7 +65,7 @@ export const invoice = pgTable(
 
     termsAndConditions: text("terms_and_conditions").notNull(),
 
-    status: text("status").$type<"draft" | "sent">().default("draft").notNull(),
+    status: text("status").$type<InvoiceStatus>().default("draft").notNull(),
 
     createdAt: timestamp("created_at", {
       mode: "date",

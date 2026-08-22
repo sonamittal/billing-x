@@ -30,3 +30,17 @@ export const PAYMENT_MODE = [
 ] as const;
 
 export type PaymentMode = (typeof PAYMENT_MODE)[number];
+
+// payment stat
+export const INVOICE_PAYMENTSTATUS = [
+  "unpaid",
+  "partially_paid",
+  "paid",
+] as const;
+
+export type InvoicePaymentStatus = (typeof INVOICE_PAYMENTSTATUS)[number];
+
+//Invoice Status
+export const INVOICE_STATUS = ["draft", "sent"] as const;
+
+export type InvoiceStatus = (typeof INVOICE_STATUS)[number];

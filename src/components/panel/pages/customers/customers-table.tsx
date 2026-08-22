@@ -9,7 +9,7 @@ import {
   Phone,
   ArrowUpRight,
 } from "lucide-react";
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
@@ -98,16 +98,6 @@ const CustomersTable = () => {
       }
     },
   });
-
-  // filter data
-  const filteredData = React.useMemo(() => {
-    return customers.filter((customer) => {
-      const matchName =
-        name === "" ||
-        customer.user.name.toLowerCase().includes(name.toLowerCase());
-      return matchName;
-    });
-  }, [customers, name]);
 
   const columns = React.useMemo<ColumnDef<Customer>[]>(
     () => [
@@ -311,7 +301,7 @@ const CustomersTable = () => {
   );
 
   const { table } = useDataTable<Customer>({
-    data: filteredData,
+    data: customers,
     columns,
     pageCount: 2,
     initialState: {

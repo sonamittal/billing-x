@@ -25,6 +25,12 @@ import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  parseAsArrayOf,
+  parseAsInteger,
+  parseAsString,
+  useQueryState,
+} from "nuqs";
 
 import {
   DropdownMenu,
@@ -34,48 +40,79 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useDataTable } from "@/hooks/use-data-table";
-import { parseAsString, useQueryState, parseAsArrayOf } from "nuqs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 import { Badge } from "@/components/ui/badge";
 
-//types >>>>>>>>>>>>>>
-
-interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  customerName: string;
-  invoiceDate: string;
-  dueDate: string;
-  totalAmount: string;
-  status: "draft" | "sent";
-  paymentStatus: "paid" | "partially_paid" | "unpaid";
-  balance: number;
-  customer: {
-    id: string;
-    user: {
-      name: string;
-      image: string | null;
-    };
-  };
-}
+import type { InvoicesRow } from "@/app/api/panel/invoices/getController";
+import { InvoicesResponse } from "@/app/api/panel/invoices/getController";
+import Image from "next/image";
 
 // invoice tabel
 
 const InvoiceTable = () => {
+  const [status] = useQueryState(
+    "status",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
+  const [paymentStatus] = useQueryState(
+    "paymentStatus",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
+  const [invoiceNumber] = useQueryState(
+    "invoiceNumber",
+    parseAsString.withDefault(""),
+  );
+
+  const [page] = useQueryState("page", parseAsInteger.withDefault(1));
+
+  const [perPage] = useQueryState("pageSize", parseAsInteger.withDefault(10));
+
+  const [sortBy] = useQueryState(
+    "sortBy",
+    parseAsString.withDefault("createdAt"),
+  );
+
+  const [sortOrder] = useQueryState(
+    "sortOrder",
+    parseAsString.withDefault("desc"),
+  );
+
   // fetch data
-  const { data } = useQuery({
-    queryKey: ["invoices"],
+  const { data, isPending } = useQuery<InvoicesResponse>({
+    queryKey: [
+      "invoices",
+      status,
+      paymentStatus,
+      invoiceNumber,
+      page,
+      perPage,
+      sortBy,
+      sortOrder,
+    ],
     queryFn: async () => {
-      const response = await axios.get("/api/panel/invoices");
-      return response.data.data as Invoice[];
+      const response = await axios.get<InvoicesResponse>(
+        "/api/panel/invoices",
+        {
+          params: {
+            status: status.join(","),
+            paymentStatus: paymentStatus.join(","),
+            invoiceNumber: invoiceNumber,
+            page,
+            perPage,
+            sortBy,
+            sortOrder,
+          },
+        },
+      );
+      return response.data;
     },
   });
 
   // columns
 
-  const columns = React.useMemo<ColumnDef<Invoice>[]>(
+  const columns = React.useMemo<ColumnDef<InvoicesRow>[]>(
     () => [
       {
         id: "select",
@@ -134,9 +171,11 @@ const InvoiceTable = () => {
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-[#F5F5F5] flex items-center justify-center overflow-hidden">
                 {user?.image ? (
-                  <img
+                  <Image
                     src={user.image}
                     alt={user.name}
+                    width={500}
+                    height={500}
                     className="h-full w-full object-cover"
                   />
                 ) : (
@@ -162,21 +201,12 @@ const InvoiceTable = () => {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Invoice Date" />
         ),
-        cell: ({ row }) =>
-          new Date(row.original.invoiceDate).toLocaleDateString(),
+        cell: ({ row }) => row.original.invoiceDate,
       },
       //status
       {
         id: "status",
         accessorKey: "status",
-
-        filterFn: (row, id, value) => {
-          if (!Array.isArray(value) || value.length === 0) {
-            return true;
-          }
-
-          return value.includes(row.getValue(id));
-        },
 
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Status" />
@@ -219,7 +249,7 @@ const InvoiceTable = () => {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Due Date" />
         ),
-        cell: ({ row }) => new Date(row.original.dueDate).toLocaleDateString(),
+        cell: ({ row }) => row.original.dueDate,
       },
 
       // payment Status
@@ -227,14 +257,6 @@ const InvoiceTable = () => {
       {
         id: "paymentStatus",
         accessorKey: "paymentStatus",
-
-        filterFn: (row, id, value) => {
-          if (!Array.isArray(value) || value.length === 0) {
-            return true;
-          }
-
-          return value.includes(row.getValue(id));
-        },
 
         header: ({ column }) => (
           <DataTableColumnHeader column={column} label="Payment Status" />
@@ -356,22 +378,20 @@ const InvoiceTable = () => {
   );
 
   // table
-  const { table } = useDataTable({
-    data: data ?? [],
+  const { table } = useDataTable<InvoicesRow>({
+    data: data?.data ?? [],
     columns,
-    pageCount: Math.ceil((data?.length ?? 0) / 10),
-
+    pageCount: data?.pagination?.totalPages ?? 0,
     initialState: {
       sorting: [{ id: "invoiceNumber", desc: true }],
       columnPinning: { right: ["actions"] },
     },
-
     getRowId: (row) => row.id,
   });
 
   return (
     <div className="data-table-container">
-      <DataTable table={table}>
+      <DataTable table={table} isLoading={isPending}>
         <DataTableToolbar table={table} />
       </DataTable>
     </div>

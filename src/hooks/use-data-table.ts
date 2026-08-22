@@ -295,9 +295,9 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    manualSorting: false,
-    manualFiltering: false,
-    manualPagination: false,
+    manualSorting: true,
+    manualFiltering: true,
+    manualPagination: true,
     meta: {
       ...tableProps.meta,
       queryKeys: {
