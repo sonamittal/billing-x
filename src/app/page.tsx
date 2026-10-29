@@ -1,3 +1,4 @@
+
 const Page = () => {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -13,14 +14,13 @@ const Page = () => {
       priceCurrency: "USD",
     },
   };
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <h2>Hello world!!</h2>
+      <h2>hello world!!</h2>
     </>
   );
 };

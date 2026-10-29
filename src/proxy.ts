@@ -5,6 +5,10 @@ import { auth } from "@/lib/auth/auth";
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/auth/signin", request.url));
+  }
+
   if (pathname.startsWith("/panel") || pathname.startsWith("/api/panel")) {
     const session = await auth.api.getSession({
       headers: request.headers,
@@ -27,5 +31,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/panel/:path*", "/api/panel/:path*"],
+  matcher: [ "/" , "/panel/:path*", "/api/panel/:path*"],
 };
